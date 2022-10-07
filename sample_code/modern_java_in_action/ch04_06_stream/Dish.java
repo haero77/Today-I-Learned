@@ -1,4 +1,4 @@
-package example_code.modern_java_in_action.ch04_stream_basic;
+package sample_code.modern_java_in_action.ch04_06_stream;
 
 public class Dish {
     private final String name;
