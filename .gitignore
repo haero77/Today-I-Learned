@@ -1,4 +1,5 @@
 out\
-Main.java
+#Main.java
 Foo.java
 /test
+out
