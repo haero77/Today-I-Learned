@@ -1,4 +1,4 @@
-package sample_code.java_for_framework.interface_ex;
+package sample_code.java_for_framework.java_interface.functions_of_interface;
 
 public class Main {
     public static void main(String[] args) {

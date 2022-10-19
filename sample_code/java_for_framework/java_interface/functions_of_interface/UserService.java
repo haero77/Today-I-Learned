@@ -1,4 +1,4 @@
-package sample_code.java_for_framework.interface_ex;
+package sample_code.java_for_framework.java_interface.functions_of_interface;
 
 public class UserService implements Login {
     // Login 과 UserService가 결합
