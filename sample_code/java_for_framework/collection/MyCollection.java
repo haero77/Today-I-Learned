@@ -1,5 +1,7 @@
 package sample_code.java_for_framework.collection;
 
+import sample_code.java_for_framework.iterator.MyIterator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -35,5 +37,21 @@ public class MyCollection<T> {
 
     public int size() {
         return list.size();
+    }
+
+    public MyIterator<T> iterator() {
+        return new MyIterator<T>() {
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return index < list.size();
+            }
+
+            @Override
+            public T next() {
+                return list.get(index++);
+            }
+        };
     }
 }
