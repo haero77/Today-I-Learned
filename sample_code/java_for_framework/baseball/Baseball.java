@@ -1,4 +1,4 @@
-package sample_code.java_for_framework.baseball.engine;
+package sample_code.java_for_framework.baseball;
 
 import sample_code.java_for_framework.baseball.engine.io.Input;
 import sample_code.java_for_framework.baseball.engine.io.NumberGenerator;
@@ -24,7 +24,7 @@ public class Baseball implements Runnable{
 
     @Override
     public void run() {
-        Numbers answer = generator.generate(COUNT_OF_NUMBERS);
+        Numbers answerNumbers = generator.generate(COUNT_OF_NUMBERS);
 
         while (true) {
             String inputString = input.input("숫자를 맞춰보세요 : ");
@@ -34,7 +34,7 @@ public class Baseball implements Runnable{
                 continue;
             }
 
-            BallCount ballCount = ballCount(answer, inputNumbers.get());
+            BallCount ballCount = ballCount(answerNumbers, inputNumbers.get());
             output.ballCount(ballCount);
 
             if (ballCount.getStrike() == COUNT_OF_NUMBERS) {
@@ -44,14 +44,17 @@ public class Baseball implements Runnable{
         }
     }
 
-    private BallCount ballCount(Numbers answer, Numbers inputNumbers) {
+    private BallCount ballCount(Numbers answerNumbers, Numbers inputNumbers) {
         AtomicInteger strike = new AtomicInteger();
         AtomicInteger ball = new AtomicInteger();
 
-        answer.forEach((answerNumber, i) -> {
-            inputNumbers.forEach((inputNumber, j) -> {
-                if (!answerNumber.equals(inputNumber)) return;
-                if (i.equals(j)) strike.incrementAndGet();
+        answerNumbers.indexedForEach((eachAnswerNumber, i) -> {
+            inputNumbers.indexedForEach((eachInputNumber, j) -> {
+                if (!eachAnswerNumber.equals(eachInputNumber)) return;
+                if (i.equals(j)) {
+                    strike.incrementAndGet();
+                    return;
+                }
                 ball.incrementAndGet();
             });
         });
@@ -67,13 +70,13 @@ public class Baseball implements Runnable{
                 .map(Character::getNumericValue)
                 .filter(i -> i > 0)
                 .distinct()
-                .boxed()
                 .count();
         if (count != COUNT_OF_NUMBERS) return Optional.empty();
 
         return Optional.of(
                 new Numbers(
                         inputString.chars()
+                                .map(Character::getNumericValue)
                                 .boxed()
                                 .toArray(Integer[]::new)
                 )
