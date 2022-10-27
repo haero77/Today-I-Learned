@@ -1,4 +1,4 @@
-package sample_code.jeongsuk_of_java.ch09_exception;
+package sample_code.Java.exception_handling;
 
 public class ExceptionThrowingEx1 {
     public static void main(String[] args) throws Exception {

@@ -1,4 +1,4 @@
-package sample_code.first_java_programming.ch09_basic_API;
+package sample_code.Java.first_java_programming.ch09_basic_API;
 
 import java.util.Arrays;
 import java.util.List;
