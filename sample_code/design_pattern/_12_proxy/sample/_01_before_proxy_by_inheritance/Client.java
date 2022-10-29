@@ -1,4 +1,4 @@
-package sample_code.design_pattern._12_proxy._01_before_proxy_by_inheritance;
+package sample_code.design_pattern._12_proxy.sample._01_before_proxy_by_inheritance;
 
 public class Client {
 
