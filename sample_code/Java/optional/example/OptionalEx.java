@@ -2,24 +2,23 @@ package sample_code.Java.optional.example;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-
-public class Main {
+public class OptionalEx {
 
     public static void main(String[] args) {
 
-        Person person = findPersonByName("Sophia");
+        Optional<Person> optionalPerson = findPersonByName("Sophia");
 
-        if (person != null) {
-            System.out.println(person.getAge());
+        if (optionalPerson.isPresent()) {
+            System.out.println(optionalPerson.get().getAge());
         } else {
             System.out.println(0);
         }
 
     }
 
-    // 일종의 데이터베이스
-    static Person findPersonByName(String name) {
+    static Optional<Person> findPersonByName(String name) {
         List<Person> people = Arrays.asList(
                 new Person("John", 25),
                 new Person("Alice", 27),
@@ -28,10 +27,10 @@ public class Main {
 
         for (Person person : people) {
             if (person.getName().equals(name)) {
-                return person;
+                return Optional.of(person);
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 }
