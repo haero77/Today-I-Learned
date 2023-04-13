@@ -69,7 +69,7 @@
 
 **※ Reference**
 
-- [[인프런] 백기선 - 더 자바, 코드를 조작하는 다양한 방법](https://www.inflearn.com/course/lecture?courseSlug=the-java-code-manipulation&unitId=23414&tab=curriculum)
 - https://www.geeksforgeeks.org/jvm-works-jvm-architecture/
-- https://dzone.com/articles/jvm-architecture-explained
+- _**https://dzone.com/articles/jvm-architecture-explained**_
 - http://blog.jamesdbloom.com/JVMInternals.html
+- [[인프런] 백기선 - 더 자바, 코드를 조작하는 다양한 방법](https://www.inflearn.com/course/lecture?courseSlug=the-java-code-manipulation&unitId=23414&tab=curriculum)
