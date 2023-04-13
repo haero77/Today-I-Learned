@@ -1,5 +1,5 @@
 ![image](https://user-images.githubusercontent.com/65555299/231704151-6950a944-6ad4-4244-b0c7-6f1aede0f609.png)
-(출처: 처음 해보는 자바 프로그래밍 - 오정임 저)
+<br>(출처: 처음 해보는 자바 프로그래밍 - 오정임 저)
 
 ### Java 실행 과정 
 

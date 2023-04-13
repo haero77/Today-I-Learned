@@ -13,7 +13,6 @@
     - 바이트 코드를 특정 OS에 맞게 변환해야하므로
   
   > JVM, JRE, and JDK are platform dependent because the configuration of each OS is different from each other. However, Java is platform independent.
-
  
 
 ### JRE(Java Runtime Environment)

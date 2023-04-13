@@ -29,12 +29,23 @@
 
 ### 메모리
 
+![](https://blog.kakaocdn.net/dn/brvkNA/btrIPYdYwMf/C5wCqtVNLvu642vOaGyCBK/img.png)
+
+**Runtime Data Area란?** <br>
+👉 JVM이 OS로부터 자바 프로그램 실행을 위한 데이터와 명령어를 저장하기 위해 할당받는 메모리 공간이다.
+
+
 - `메소드 영역`
-  - 클래스 수준의 정보(클래스 이름, 부모 클래스 이름, 메소드, 변수) 저장.
+  - 클래스 레벨의 정보(클래스 이름, 부모 클래스 이름, 메소드, 변수) 코드 저장.
   - **모든 쓰레드에서 사용하는 공유 자원**이다.
+  - JVM 구동 시작 시 생성, 종료 시 까지 유지
+  - Runtime Constant Pool
+    - 
+  - (Java8 부터는 static 변수가 힙 영역에 저장)
 - `힙 영역`
-  - 객체(인스턴스)를 저장.
+  - new 연산자를 통해 생성된 객체(=인스턴스. 인스턴스 변수 포함)를 저장. 
   - **모든 쓰레드에서 사용하는 공유자원**이다.
+  - 객체가 더 이상 쓰이지 않거나 null 선언 시 GC가 청소
 - `스택 영역`
   - 쓰레드마다 런타임 스택을 만들고, 메소드 호출을 스택 프레임이라 부르는 블럭을 쌓는다.
   - 쓰레드를 종료하면 런타임 스택도 사라진다.
@@ -44,6 +55,23 @@
 - 네이티브 메소드 스택
   - 네이티브 메소드 호출할 때 생기는 메서드 스택 
   - https://javapapers.com/core-java/java-jvm-run-time-data-areas/#Program_Counter_PC_Register
+
+**Java7의 PermGen과 Java8의 Metaspace**
+
+Java7 HotSpot JVM 구조 <br>
+![image](https://user-images.githubusercontent.com/65555299/231744348-6b61ece2-2bed-4bcd-a64d-f6ff11bae4c5.png)
+<br> (출처 - https://johngrib.github.io/wiki/java8-why-permgen-removed/)
+
+Java8 HotSpot JVM 구조 <br>
+![image](https://user-images.githubusercontent.com/65555299/231744375-921a8b13-f7a8-443a-9722-9cb0f4eb9e12.png)
+<br> (출처 - https://johngrib.github.io/wiki/java8-why-permgen-removed/)
+
+- Permanent
+  - 클래스 내부의 메타 데이터를 저장하는 영역
+  - 메소드 영역으로 사용되었음
+  - Java 8 이후 Metaspace로 대체됨
+- Metaspace
+  - permanent영역과는 다르게 native memory영역으로서 jvm이 아닌 os에서 관리
 
 ### 실행 엔진
 
@@ -72,4 +100,11 @@
 - https://www.geeksforgeeks.org/jvm-works-jvm-architecture/
 - _**https://dzone.com/articles/jvm-architecture-explained**_
 - http://blog.jamesdbloom.com/JVMInternals.html
+- [JVM 내부 구조 & 메모리 영역 💯 총정리](https://inpa.tistory.com/entry/JAVA-%E2%98%95-JVM-%EB%82%B4%EB%B6%80-%EA%B5%AC%EC%A1%B0-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EC%98%81%EC%97%AD-%EC%8B%AC%ED%99%94%ED%8E%B8#%ED%81%B4%EB%9E%98%EC%8A%A4_%EB%A1%9C%EB%8D%94_class_loader)
 - [[인프런] 백기선 - 더 자바, 코드를 조작하는 다양한 방법](https://www.inflearn.com/course/lecture?courseSlug=the-java-code-manipulation&unitId=23414&tab=curriculum)
+- https://johngrib.github.io/wiki/java/run-time-constant-pool/
+- https://8iggy.tistory.com/229
+- https://goodgid.github.io/Java-8-JVM-Metaspace/
+- https://seunghyunson.tistory.com/23
+- https://1-7171771.tistory.com/140
+- https://jgrammer.tistory.com/144
