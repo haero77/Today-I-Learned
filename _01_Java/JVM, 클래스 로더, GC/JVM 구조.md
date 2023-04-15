@@ -39,9 +39,9 @@
   - 클래스 레벨의 정보(클래스 이름, 부모 클래스 이름, 메소드, 변수) 코드 저장.
   - **모든 쓰레드에서 사용하는 공유 자원**이다.
   - JVM 구동 시작 시 생성, 종료 시 까지 유지
-  - Runtime Constant Pool
-    - 
+  - ~~Runtime Constant Pool~~
   - (Java8 부터는 static 변수가 힙 영역에 저장)
+  - 논리적으로는 힙 영역의 일부 
 - `힙 영역`
   - new 연산자를 통해 생성된 객체(=인스턴스. 인스턴스 변수 포함)를 저장. 
   - **모든 쓰레드에서 사용하는 공유자원**이다.
@@ -97,6 +97,8 @@ Java8 HotSpot JVM 구조 <br>
 
 **※ Reference**
 
+- https://stackoverflow.com/questions/9095748/method-area-and-permgen
+- https://jithub.tistory.com/40
 - https://www.geeksforgeeks.org/jvm-works-jvm-architecture/
 - _**https://dzone.com/articles/jvm-architecture-explained**_
 - http://blog.jamesdbloom.com/JVMInternals.html
