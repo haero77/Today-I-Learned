@@ -1,8 +1,21 @@
 # Garbage Collection
 
+## 가비지 컬렉션이란? 
+
 가비지 컬렉션이란, 자바의 메모리 관리 방법 중 하나로 JVM의 Heap 영역에 동적으로 할당했던 메모리 중 더 이상 사용하지 않는 객체를 메모리에서 제거하는 것을 말한다. 
 
 GC는 간단하게 말하면 ***JVM의 Heap 영역에서 더 이상 사용하지 않는 메모리를 제거하는 것***을 말한다.
+
+### 가비지 컬렉션의 장점
+
+- 개발자가 메모리 할당에 대한 리소스가 없으며, 자동으로 메모리를 관리해주기 때문에 비즈니스 개발에 더욱 집중할 수 있도록 돕는다.
+
+### 가비지 컬렉션의 단점
+
+- 가비지 컬렉션이 작동하는 동안 프로그램이 멈추는 `Stop The World` 현상이 발생하여 성능에 영향을 많이 준다.
+- 언제 정확히 작동하는지 판단하기가 어렵기 때문에 제어하기가 힘들다.
+
+---
 
 ### Stop The World
 
@@ -109,7 +122,7 @@ JVM의 Heap 영역은 객체의 생존 기간에 따라 Young Genration(이하 Y
 - **_Java 8까지의 default GC_**
 - 기본적인 GC 과정은 `Serial GC`와 동일하나, `Parallel GC`는 _**여러 쓰레드를 사용하여 Parallel하게 GC를 수행함으로써 GC의 오버헤드를 상당히 줄여준다.**_ 
 
-### CMS GC
+### CMS GC(Concurrent Mark Sweep GC)
 
 - _**`Parallel GC`와 마찬가지로 여러 개의 쓰레드를 이용하여 GC를 수행하나, `Serial GC`, `Parallel GC`와는 다르게 `Mark-and-Sweep`을 Concurrent 하게 수행한다**_ (다른 스레드가 실행 중인 상태에서 Mark and Sweep 수행). 
 
