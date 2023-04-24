@@ -161,3 +161,33 @@ where
     and info.ingredient_type like 'fruit_based'
 order by fh.total_order desc;
 ```
+
+## 6.12세 이하인 여자 환자 목록 출력하기
+
+> 출처: https://school.programmers.co.kr/learn/courses/30/lessons/132201
+
+![](https://velog.velcdn.com/images/balparang/post/2028e805-6e6e-4d1a-b416-e9b6513e5308/image.png)
+
+**풀이 - CASE WHEN 활용**
+
+```sql
+# 환자 정보 patient 테이블
+# 12세 이하 & gend_cd가 여자 
+# 전화번호가 없는 경우 none 출력
+# 나이 기준 내림차순, 나이 같다면 환자이름 오름차순
+select 
+    pt_name, 
+    pt_no, 
+    gend_cd, 
+    age, 
+    case 
+        when tlno is null then 'NONE'
+        else tlno
+        end as tlno
+from patient
+where 
+    gend_cd like 'W'   
+    and age <= 12
+order by age desc, pt_name asc;
+```
+
