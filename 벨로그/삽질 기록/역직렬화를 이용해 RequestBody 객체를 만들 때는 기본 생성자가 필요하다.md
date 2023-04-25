@@ -1,3 +1,5 @@
+## 발단 
+
 ```java
 Resolved [org.springframework.http.converter.HttpMessageNotReadableException:
 JSON parse error: Cannot construct instance of `jpabook.jpashop.api.
@@ -7,22 +9,38 @@ deserialize from Object value (no delegate- or property-based Creator);
 
 `@RequestBody` 를 이용해서 Request DTO를 생성할 때  
 
-### 무엇이 문제였나
+## 원인
 
-![img.png](img.png)
-
-
-### 어떻게 해결했나 
-
-![img_1.png](img_1.png)
-
+```java
+// MemberApi.UpdateMemberRequest(Request DTO로 사용된 이너 클래스) 
+@Data
+@AllArgsConstructor
+private static class UpdateMemberRequest {
+    private String name;
+}
+```
 
 ### 그럼 왜 Reflection은 기본 생성자가 필요한가
+
+## 해결
+
+```java
+// MemberApi.UpdateMemberRequest(Request DTO로 사용된 이너 클래스) 
+@Data
+@NoArgsConstructor // Reflection을 위한 기본 생성자 추가
+@AllArgsConstructor
+private static class UpdateMemberRequest {
+    private String name;
+}
+```
+
+
+
 
 ### 결론 
 
 
-<br>
+---
 
 ※ References
 

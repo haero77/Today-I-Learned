@@ -166,7 +166,7 @@ order by fh.total_order desc;
 
 > 출처: https://school.programmers.co.kr/learn/courses/30/lessons/132201
 
-![](https://velog.velcdn.com/images/balparang/post/2028e805-6e6e-4d1a-b416-e9b6513e5308/image.png)
+<img src="https://velog.velcdn.com/images/balparang/post/2028e805-6e6e-4d1a-b416-e9b6513e5308/image.png" width="500">
 
 **풀이 - CASE WHEN 활용**
 
