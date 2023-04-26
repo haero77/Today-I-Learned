@@ -57,3 +57,9 @@
   - 왼쪽 테이블에만 있고 오른쪽 테이블에는 없는 튜플에 대해서는 컬럼값을 null로 표현 
 
 <img src="https://velog.velcdn.com/images/balparang/post/51006d45-4ceb-4bce-b974-fbd6c80541fa/image.png" width="500">
+
+### Q. 인덱스를 사용하면 조인이 빨라지는 이유?
+
+- 조인은 NestedLoop
+- Driving 테이블, Driven 테이블
+  - 바깥 for문 테이블, 내부 for문 테이블
