@@ -191,3 +191,29 @@ where
 order by age desc, pt_name asc;
 ```
 
+<br>
+
+# Level 2
+
+## 3월에 태어난 여성 회원 목록 출력하기
+
+> 출처: https://school.programmers.co.kr/learn/courses/30/lessons/131120
+
+![](https://velog.velcdn.com/images/balparang/post/386cc93f-a178-41dc-820b-a67517c3c66e/image.png)
+
+```sql
+# 식당 리뷰 사이트의 회원정보
+# 생일이 3월이상, 여성 회원
+# id, 이름, 성별, 생년월일 조회
+# 전화번호가 null일 경우 제외
+# 회원 id 오름차순 정렬
+# 결과 date format 
+select member_id, member_name, gender, date_format(date_of_birth, '%Y-%m-%d') as date_of_birth
+from member_profile
+where month(date_of_birth) = 3 
+    and gender = 'W'
+    and tlno is not null
+order by member_id asc;
+```
+
+<br>
