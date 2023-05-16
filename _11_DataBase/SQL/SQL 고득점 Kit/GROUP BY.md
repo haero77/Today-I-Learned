@@ -26,6 +26,26 @@ group by ingredient_type
 order by total_order asc;
 ```
 
+## 진료과별 총 예약 횟수 출력하기
+
+
+> 출처: https://school.programmers.co.kr/learn/courses/30/lessons/132202
+
+<img src="https://velog.velcdn.com/images/balparang/post/4f683d39-5e56-4e64-86e8-613e513ce45f/image.png" width="800">
+
+```sql
+# appointment: 진료 예약 정보
+
+# 2022년 5월에 예약한 환자 수를 '진료과코드' 별로 조회 -> 같은 환자 중복?
+# 컬럼명 -> '진료과 코드', '5월 예약 건수'
+# 진료과별 예약한 환자 수 기준 오름차순 -> 진료과 코드 기준 오름차순 
+
+select mcdp_cd as 진료과코드, count(*) as 5월예약건수
+from appointment
+where date_format(apnt_ymd, '%y-%m') like '22-05'
+group by mcdp_cd
+order by 5월예약건수 asc, 진료과코드 asc; # 따옴표를 쓰면 정렬 불가
+```
 
 # Level 3
 
