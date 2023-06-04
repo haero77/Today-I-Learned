@@ -20,3 +20,9 @@
 <details>
     <summary><b>필터와 인터셉터 차이?</b></summary>
 </details>
+
+## AOP
+
+<details>
+    <summary><b>스프링 AOP?(무하유 기출)</b></summary>
+</details>
