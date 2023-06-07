@@ -27,7 +27,7 @@
 </details>
 
 <details>
-    <summary><b>✅ TCP Vs. UDP?</b></summary>
+    <summary><b>✅ TCP Vs. UDP? ⭐️</b></summary>
 
 - TCP
   - 연결형, 신뢰성 전송 프로토콜
@@ -72,15 +72,76 @@
     - 오류 제어, 흐름 제어, 혼잡 제어가 이를 가능케한다.
   - 흐름 제어 
     - 데이터를 보내는 속도와 데이터를 받는 속도의 균형을 맞추는 것
+  - 오류 제어
+    - 훼손된 segment의 감지 및 재전송, 손실된 segment의 재전송
+    - TCP헤더의 checksum, 확인-응답, 타임아웃 등을 통해 수행됨
 
+<img width="1052" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/2221311a-d1ed-4071-9080-0d8378ac6918">
+
+### UDP
+
+- 비연결성, 비신뢰성 프로토콜
+- 비연결성
+  - 논리적 연결을 성립하지 않고, datagram을 보낸다.
+- 비신뢰성
+  - 흐름 제어, 오류 제어, 혼잡 제어를 제공하지 않음
+  - 패킷이 손실되어도 상관 없음
+- 파일을 다운로드 하는 경우, 파일이 훼손되면 안 되므로 TCP
+- 실시간 방송인 경우 한 프레임 정도 사라져도 인식을 못하므로 UDP
+
+<img width="1005" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/a94e774a-2f00-4da4-851b-3bdacbfea371">
+
+- 세션 수립 과정 없다.
+- 패킷 순서 보장하지 않음
 
 ### UDP(User Datagram Protocol)
 
 </details>
 
 <details>
-    <summary><b>3 way handshake란?</b></summary>
+    <summary><b>✅ 3 way handshake란? 그 과정은?</b></summary>
+
+> - 3-way handshake란 TCP/IP 프로토콜로 통신하기 전 정확한 데이터 전송을 위해 상대방 호스트와 세션을 수립하는 과정.(=TCP 연결 초기화)
+> - 과정
+>   1. 클라이언트가 서버에게 접속을 요청하는 `SYN(싱크)` 패킷을 보냄
+>   2. 서버는 요청을 수락하는 ACK 패킷을 포함하여 `SYN + ACK` 패킷을 클라이언트로 전송
+>   3. 클라이언트가 이것을 수신한 후, 다시 `ACK` 패킷을 서버에 발송하면 연결이 이루어지고, 이로써 데이터를 주고받을 수 있게 됨.
+> 
+---  
+
+- `HTTP 1.1`과 `2.0` 버전 모두 TCP 프로토콜을 이용 
+  - 👉 우리가 네이버에 접속할 때마다 네이버의 서버와 나의 서버가 3 way handshake를 하게 된다.
+
+### 3-way handshaking
+
+<img width="773" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/b8305312-12b1-4ff9-9659-00d0e914c24f">
+
+TCP 통신은 3단계 과정을 거친다.
+
+1. Connection Setup (TCP 연결 초기화) 👉 `3-way handshaking` 이용
+   - 우리가 공부한 `3-way handshaking`이 Connection Setup 과정인 것 
+2. Data Transfer (데이터 전송)
+3. Connection Termination (TCP 연결 종료) 👉 `4-way handshaking` 이용
+
 </details>
+
+<details>
+    <summary><b>🔼 4 way handshaking?</b></summary>
+
+> - TCP 연결 시 3 way handshaking을 이용하여 Connection Setup을 하고,  
+> - Connection Termination시에는 4 way handshaking을 이용.
+
+---
+
+### 4-way handshaking
+
+<img width="859" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/063a08c7-3b02-4f7d-bf83-37acc1b2714d">
+
+`TCP Connection Termination`은 양방향으로 2개의 연결이 독립적으로 닫히기 때문에 `4-way handshaking`을 사용한다.
+
+
+</details>
+
 
 ---
 
@@ -135,7 +196,7 @@
 </details>
 
 <details>
-    <summary><b>HTTP request 메서드 중 GET Vs. POST 비교 설명</b></summary>
+    <summary><b>✅ HTTP request 메서드 중 GET Vs. POST 비교 설명 ⭐️⭐️</b></summary>
 
 > - GET은 클라이언트가 서버에게 `리소스`를 요청할 때 사용하는 메서드고, POST는 서버에게 데이터 처리(주로 생성)를 요청할 때 사용하는 메서드.
 > - GET 요청의 경우 필요한 정보를 특정하기 위해 URL뒤에 Query String을 추가하여 정보를 조회하고, POST의 경우 전달할 데이터를 Body 부분에 포함하여 통신 
@@ -364,5 +425,5 @@
 </details>
 
 <details>
-    <summary><b>CORS를 Spring에서 어떻게 해결할까</b></summary>
+    <summary><b>CORS 해결 방법이란?</b></summary>
 </details>
