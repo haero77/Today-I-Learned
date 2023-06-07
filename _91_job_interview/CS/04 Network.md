@@ -1,41 +1,85 @@
-# REST API
+# TCP/IP
 
 <details>
-    <summary><b>REST API란? RESTful 하다는게 무슨 의미인지? 1️⃣</b></summary>
+    <summary><b>✅ OSI 7계층과 TCP/IP 4계층 모델을 비교설명</b></summary>
 
-### API(Application Programming Interface)
+- OSI 7계층은 네트워크 통신을 표준화한 모델
+- OSI 모델이 실무적으로 사용하기에는 복잡하기 때문에, 실제 인터넷은 이를 단순화한 TCP/IP 4계층을 사용
 
-- 다른 소프트웨어 시스템과 통신하기 위해 따라야하는 규칙들을 정의한 것
-  - 예를 들어 회원 리소스를 얻고 싶을 때는 어떤 URL을 써야하고, 어떤 데이터가 응답되는지 등을 정의 
-- 클라이언트와 웹 리소스 사이의 게이트웨이
+<img width="778" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/da5cce3e-07c3-4ce9-a43f-d48ed7ce6c2f">
 
+- OSI 7계층과 TCP/IP 4계층 모델에서 각 계층은 하위 계층의 기능을 이용하고, 상위 계층에게 기능을 제공 
+  - 예) 응용 계층의 HTTP 프로토콜은 전송 계층의 TCP, 네트워크 계층의 IP를 이용
+- 일반적으로 상위 계층은 소프트웨어로, 하위 계층은 하드 웨어로 구성.
+  - 예) 물리 계층의 통신은 케이블을 이용한 전기 신호로 이루어짐.
+  
+</details>
+
+<details>
+    <summary><b>✅ 캡슐화, 역캡슐화</b></summary>
+
+- 캡슐화: 전송하고자 하는 데이터에, 각 프로토콜의 정보를 헤더에 포함시켜서 하위 계층에 전달하는 것.
+- 역캡슐화: 상대측에서 헤더를 역순으로 제거해가며 상위 계층으로 데이터를 전달하는 것. 최종 적으로 원본 데이터 수신 
+
+<img width="1044" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/6ca24708-8299-4f04-9b37-db60e9fe983c">
+
+
+</details>
+
+<details>
+    <summary><b>✅ TCP Vs. UDP?</b></summary>
+
+- TCP
+  - 연결형, 신뢰성 전송 프로토콜
+  - 연결지향적 서비스를 하기 위해 데이터 전송 전 `3way handshaking`을 통해 두 호스트 사이에 논리적인 연결을 만든다.
+  - 신뢰성 있는 서비스를 제공하기 위해 오류 제어, 흐름 제어, 혼잡 제어 등을 실행
+  - 신뢰성을 보장하기 위해 헤더가 더 크고 속도가 비교적 느리다. 
+  - 신뢰성이 중요한 통신인 HTTP, 파일 전송 등에 쓰인다.
+- UDP
+  - 비연결형 프로토콜 👉 `3way handshaking` 등 세션 수립과정이 없음
+  - 빈신뢰성 프로토콜 👉 오류 제어, 흐름 제어, 혼잡 제어 제공하지 않음
+  - 단순성 덕분에 적은양의 오버헤드를 갖고, 수신 여부를 확인하지 않아 속도가 더 빠르다.
+  - 실시간성이 중요한 통신인 동영상 스트리밍 등에 쓰인다.
+  
 ---
 
-- [RESTful API란 무엇인가요? - AWS](https://aws.amazon.com/ko/what-is/restful-api/) 
-- [REST API 제대로 알고 사용하기 - NHN](https://meetup.nhncloud.com/posts/92)
-- [What is a REST API? - Red Hat](https://www.redhat.com/en/topics/api/what-is-a-rest-api)
+### TCP/IP
+
+- 인터넷에서 사용되는 프로토콜 그룹을 `TCP/IP` 라고 부른다.
+  - 4계층 또는 5계층으로 나뉨
+    - application layer
+    - transport
+    - network(internet)
+    - data link, physical 
+- 전송 계층은 두 응용 계층 사이에서 `process-to-process` 통신을 제공
+- 전송 계층은 응용 계층에서 보낸 메시지를 받아 전송 계층으로 캡슐화하여 하위 계층에 전송
+  - TCP로 전송하는 패킷을 `segment`라고 한다.
+  - UDP로 전송하는 패킷을 `datagram`이라고 한다. 
+
+> 💡 패킷 = 헤더 부분 + 데이터(payload) 부분
+
+<img width="1005" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/99914dd5-40f8-4be9-94d5-886f4a631f71">
+
+### TCP(Transmission Control Protocol)
+
+- 연결형, 신뢰성 프로토콜
+- 연결형
+  - 연결지향적 서비스를 제공하기 위해, 데이터 전송 전 `3way handshaking`을 통해 세션 수립
+  - 그 후 데이터를 전송하고, 데이터 전송이 끝나면 연결을 끊는다. 
+  - TCP 통신은 이렇게 `connection setup` -> `data transfer` -> `connection termination` 세 단계로 나뉨
+- 신뢰성 
+  - 신뢰성 있는 서비스를 제공하기 위해 TCP가 **전체 스트림을 순서에 맞게, 오류 없이, 부분적 손실이나 중복 없이 전송하는 것을 보장.**
+    - 오류 제어, 흐름 제어, 혼잡 제어가 이를 가능케한다.
+  - 흐름 제어 
+    - 데이터를 보내는 속도와 데이터를 받는 속도의 균형을 맞추는 것
+
+
+### UDP(User Datagram Protocol)
 
 </details>
 
 <details>
-    <summary><b>RESTful 규약을 다 지켜서 개발하는지? 1️⃣</b></summary>
-</details>
-
-<details>
-    <summary><b>Redirect Vs. Forward</b></summary>
-</details>
-
-<details>
-    <summary><b>Redirect, Forward 어떻게 구현하는지?</b></summary>
-</details>
-
-
-<details>
-    <summary><b>(플젝) HTTP Referer 가 뭔지?</b></summary>
-</details>
-
-<details>
-    <summary><b>(플젝) HTTP Referer를 어떻게 식별하는가?</b></summary>
+    <summary><b>3 way handshake란?</b></summary>
 </details>
 
 ---
@@ -103,7 +147,7 @@
 
 
 <details>
-    <summary><b>PUT Vs. PATCH 비교 설명</b></summary>
+    <summary><b>PUT Vs. PATCH 비교 설명, 멱등성?</b></summary>
 
 > - PUT과 PATCH 메소드 모두 서버의 리소스를 업데이트하는 메소드
 > - PUT의 경우 모든 리소스를 수정, 대체하고 PATCH 경우 리소스 일부만 수정
@@ -160,7 +204,7 @@
 </details>
 
 <details>
-    <summary><b>401 Vs. 403?</b></summary>
+    <summary><b>✅ 401 Vs. 403?</b></summary>
 
 > - 두 상태코드 모두 400번대로 클라이언트의 요청에 문제가 있음을 나타냄
 > - `401`은 인증이 되지 않은 상태에서, 인증이 필요한 리소스에 접근함 
@@ -198,20 +242,13 @@
 
 </details>
 
+<details>
+    <summary><b>도메인, URI Vs. URL?</b></summary>
+</details>
+
 ---
 
-# TCP/IP
 
-<details>
-    <summary><b>OSI 7계층과 TCP/IP 4계층 모델을 비교설명</b></summary>
-
-
-
-</details>
-
-<details>
-    <summary><b>3 way handshake란?</b></summary>
-</details>
 
 ---
 
@@ -223,4 +260,109 @@
 
 <details>
     <summary><b>쿠키와 세션을 이용한 로그인 방식을 화이트보드에 설명 </b></summary>
+</details>
+
+---
+
+# REST API
+
+<details>
+    <summary><b>✅ REST API란? RESTful 하다는게 무슨 의미인지? 1️⃣</b></summary>
+
+> - REST API는 REST 아키텍처 스타일을 따르는 API.
+    >   - URI를 이용하여 사용할 자원을 지정하고, HTTP 메서드를 이용하여 자원의 접근 방식을 지정함으로써 요청 형식만으로 어떤 요청인지 추론이 가능 👉 협업을 가능케함
+> - REST란 HTTP URI를 이용하여 사용할 자원을 지정하고, HTTP 메서드를 이용하여 자원의 접근 방식을 지정하는 소프트웨어 아키텍쳐
+> - REST 원칙을 전부 지키기는 어려우므로 RESTful API를 사용.
+> - RESTful API를 사용하여 구현한 웹 애플리케이션을 RESTful 웹 서비스라고 함.
+
+### API(Application Programming Interface)
+
+- 소프트웨어가 다른 소프트웨어로부터 지정된 형식으로 요청, 명령을 받을 수 있는 수단
+- 다른 소프트웨어 시스템과 통신하기 위해 따라야하는 규칙들을 정의한 것
+  - 예를 들어 회원 리소스를 얻고 싶을 때는 어떤 URL을 써야하고, 어떤 데이터가 응답되는지 등을 정의
+- 클라이언트와 웹 리소스 사이의 게이트웨이
+
+
+---
+
+- [RESTful API란 ? - 이동규(씨유)님](https://brainbackdoor.tistory.com/53)
+- [[Network] REST란? REST API란? RESTful이란?](https://gmlwjd9405.github.io/2018/09/21/rest-and-restful.html)
+- [RESTful API란 무엇인가요? - AWS](https://aws.amazon.com/ko/what-is/restful-api/)
+- [REST API 제대로 알고 사용하기 - NHN](https://meetup.nhncloud.com/posts/92)
+- [What is a REST API? - Red Hat](https://www.redhat.com/en/topics/api/what-is-a-rest-api)
+- [REST API 란 무엇입니까? - IBM](https://www.youtube.com/watch?v=lsMQRaeKNDk)
+- [REST API가 뭔가요? - 얄코](https://www.youtube.com/watch?v=iOueE9AXDQQ)
+- [면접 단골 질문! API, REST API가 뭔가요? (개발 필수지식)](https://www.youtube.com/watch?v=C7yhysF_wAg)
+
+- [[10분 테코톡] 정의 REST API](https://www.youtube.com/watch?v=Nxi8Ur89Akw)
+- [It is okay to use POST - Roy T. Fielding(REST 창시자)](https://roy.gbiv.com/untangled/2009/it-is-okay-to-use-post)
+
+</details>
+
+<details>
+    <summary><b>✅ RESTful 규약을 다 지켜서 개발하는지? 1️⃣</b></summary>
+
+> - 그렇지 않다.
+> - Uniform Interface `HATEOS` 등을
+> - 따라서 엄밀한 의미이 REST의 장점을 계승하는 RESTful API를 사
+>
+
+- HATEOS: 하이퍼링크를 통해 리소스의 상태를 전이할 수 있어야함
+  - 예: Location 등에 접근 가능한 URI를 제공.
+
+</details>
+
+<details>
+    <summary><b>Redirect Vs. Forward</b></summary>
+</details>
+
+<details>
+    <summary><b>Redirect, Forward 어떻게 구현하는지?</b></summary>
+</details>
+
+
+<details>
+    <summary><b>(플젝) HTTP Referer 가 뭔지?</b></summary>
+</details>
+
+<details>
+    <summary><b>(플젝) HTTP Referer를 어떻게 식별하는가?</b></summary>
+</details>
+
+---
+
+# 캐시
+
+<details>
+    <summary><b>캐시란?</b></summary>
+
+- 웹 캐시는 자주 쓰이는 문서의 사본을 자동으로 보관하는 HTTP 장치
+- 웹 요청이 캐시에 도착했을 때, 캐시된 로컬 사본이 존재한다면, 그 문서는 원 서버가 아니라 그 캐시로부터 제공
+- 장점
+  - 불필요한 데이터 전송을 줄여서, 네트워크 요금으로 인한 비용을 줄여 준다.
+  - 원 서버에 대한 요청을 줄여준다. 서버는 부하를 줄일 수 있으며 더 빨리 응답할 수 있게 된다.
+- 단점
+  - 
+
+---
+
+- https://brainbackdoor.tistory.com/53 
+
+</details>
+
+<details>
+    <summary><b>브라우저 캐시란?</b></summary>
+</details>
+
+
+---
+
+# CORS
+
+<details>
+    <summary><b>CORS란?</b></summary>
+</details>
+
+<details>
+    <summary><b>CORS를 Spring에서 어떻게 해결할까</b></summary>
 </details>
