@@ -30,6 +30,35 @@ class CafekioskTest {
 		assertThat(cafekiosk.getBeverages().get(0).getName()).isEqualTo("아메리카노");
 	}
 
+	/**
+	 * 테스트 케이스 세분화
+	 * - 해피 케이스
+	 * - 예외 케이스
+	 */
+	@Test
+	void addSeveralBeverages() {
+		Cafekiosk cafekiosk = new Cafekiosk();
+		Americano americano = new Americano();
+
+		cafekiosk.add(americano, 2); // 현재 자료구조에서는 같은 음료에 대해 같은 인스턴스를 사용.
+
+		assertThat(cafekiosk.getBeverages().get(0)).isEqualTo(americano);
+		assertThat(cafekiosk.getBeverages().get(1)).isEqualTo(americano);
+	}
+
+	/**
+	 * 경계값 테스트
+	 */
+	@Test
+	void addZeroBeverages() {
+		Cafekiosk cafekiosk = new Cafekiosk();
+		Americano americano = new Americano();
+
+		assertThatThrownBy(() -> cafekiosk.add(americano, 0))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("음료는 1잔 이상 주문하실 수 있습니다.");
+	}
+
 	@Test
 	void remove() {
 		Cafekiosk cafekiosk = new Cafekiosk();
