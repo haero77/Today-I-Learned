@@ -148,7 +148,7 @@ TCP 통신은 3단계 과정을 거친다.
 # HTTP
 
 <details>
-    <summary><b>HTTP란?</b></summary>
+    <summary><b>✅ HTTP란?</b></summary>
 
 > - `HyperText Transfer Protocol`의 약자로, 클라이언트-서버 모델을 따르면서 request-response 구조로 웹 상에서 정보를 주고받을 수 있는 프로토콜
 > - TCP/IP 기반으로 동작하며, 가장 큰 특징은 `Connectionless`와 `Stateless`
@@ -184,10 +184,12 @@ TCP 통신은 3단계 과정을 거친다.
 </details>
 
 <details>
-    <summary><b>HTTP Vs. HTTPS?</b></summary>
+    <summary><b>🔼 HTTP Vs. HTTPS?</b></summary>
 
-- HTTP는 정보를 text형태로 주고받기 때문에, 중간에 인터셉트될 경우 데이터 유출될 수 있음
-- HTTP에 암호화를 추가한 프로토콜이 `HTTPS`
+> - HTTP는 정보를 text형태로 주고받기 때문에, 중간에 인터셉트될 경우 데이터 유출될 수 있음
+> - HTTP에 암호화를 추가한 프로토콜이 `HTTPS`
+
+
 
 </details>
 
@@ -459,23 +461,6 @@ TCP 통신은 3단계 과정을 거친다.
 
 </details>
 
-<details>
-    <summary><b>Redirect Vs. Forward</b></summary>
-</details>
-
-<details>
-    <summary><b>Redirect, Forward 어떻게 구현하는지?</b></summary>
-</details>
-
-
-<details>
-    <summary><b>(플젝) HTTP Referer 가 뭔지?</b></summary>
-</details>
-
-<details>
-    <summary><b>(플젝) HTTP Referer를 어떻게 식별하는가?</b></summary>
-</details>
-
 ---
 
 # 캐시
@@ -513,3 +498,82 @@ TCP 통신은 3단계 과정을 거친다.
 <details>
     <summary><b>CORS 해결 방법이란?</b></summary>
 </details>
+
+--- 
+
+# WAS, Web Server
+
+<details>
+    <summary><b>✅ Web Server Vs. WAS?</b></summary>
+
+- Web Server
+  - 클라이언트의 요청(Request)을 받아 `정적인 컨텐츠(HTML, CSS, JS)`를 응답(Response)하는 서버
+  - HTTP 기반으로 동
+  - 예) Apache, Nginx
+- WAS(Web Application Server)
+  - 클라이언트의 요청을 받아 DB 조회 또는 어떤 로직을 처리해야하는 `동적인 컨텐츠`를 응답하는 서버 
+  - 웹 서버 기능 포함(정적 리소스 제공 가능)
+  - 예) Tomcat
+
+- 차이점?
+  - 어떤 타입의 컨텐츠(정적, 동적)를 제공하느냐
+  - 웹서버와 WAS는 각각 독립적으로 존재가능
+  - 대부분의 WAS는 정적인 컨텐츠를 제공해주고 있기 때문에, 웹 서버 없이 WAS 만 존재할 수 있다.
+  - 즉, WAS는 웹 서버를 포함하는 개념이라고 할 수 있다.
+
+### 웹 서버를 사용하는 이유?
+
+- WAS의 부담을 줄이기 위해서
+
+  ![image](https://github.com/haero77/Today-I-Learned/assets/65555299/4a449898-037f-4300-8d82-b28629d5bc21)
+  - WAS 이전에 웹 서버를 배치하고 웹 서버는 정적인 문서만 처리하도록 함.
+  - WAS는 애플리케이션 로직만 수행하도록 기능 분배
+
+- WAS의 환경 설정 파일을 외부에 노출시키지 않도록 하기 위해서
+
+> 우리가 웹 어플리케이션을 개발할 때 사용하는 Apache Tomcat 은 WAS(Tomcat)가 웹 서버(Apache) 기능을 포함하고 있기 때문에 Apache Tomcat 이라고 부르기도 하고, 실제로 WAS 앞에 웹 서버를 두어서 Apache Tomcat 이라고 부르기도 한다.
+
+
+### Ref.
+
+- https://doozi316.github.io/web/2020/09/13/WEB26/
+
+
+</details>
+
+<details><summary><b>🔼 웹 컨테이너란?</b></summary>
+
+- 웹 컨테이너는 Java 서블렛과 상호작용하는 WAS의 구성요소이다.
+- 서블릿의 생명주기를 관리한다
+- 쉽게 말해 WAS 내부에서 개발자 대신 서블릿을 관리하는 녀석
+
+</details>
+
+<details><summary><b>✅ 서블릿이란?</b></summary>
+
+<img width="880" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/315a8725-67e5-403d-8eed-6114488c9609">
+
+- WAS에서는 중요한 비즈니스로직만 처리하고 싶은데, HTTP 메시지 파싱 등 불필요한 작업이 많음.
+- 비즈니스 로직을 제외한 일을 함 
+  - HTTP Request Message 파싱
+  - HTTP Response Message 생성  
+
+
+</details>
+
+
+<details><summary><b>✅ 동시 요청 - 멀티쓰레드</b></summary>
+
+<img width="1283" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/0a547b7c-d024-4877-8720-6c26ec0bfb00">
+
+- 쓰레드가 서블릿을 실행해서 요청을 처리함
+- 요청이 올 때마다 쓰레드를 할당해서 요청을 처리하고, 처리가 끝나면 쓰레드를 쓰레들 풀에 반납
+- 쓰레드 풀이 있어서, 여러 클라이언트의 요청을 처리 가능
+  - 톰캣은 일반적으로 200개
+- 쓰레드 풀의 쓰레드가 모두 사용 중이면, 요청을 거절하거나 대기하게 할 수 있음.
+- 개발자는 편하게 싱글 쓰레드로 사용하는 것처럼 개발 가능
+  - **멀티 쓰레드 환경이므로 싱글톤 객체(서블릿, 스프링 빈)은 주의해서 사용**
+
+</details>
+
+<details><summary><b></b></summary></details>
