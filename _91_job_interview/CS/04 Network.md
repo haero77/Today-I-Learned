@@ -1,7 +1,7 @@
 # 이력서 기반
 
 <details>
-    <summary><b>Redirect Vs. Forward</b></summary>
+    <summary><b>✅ Redirect Vs. Forward</b></summary>
 
 > - 두 가지 모두 다른 URL로 이동 시킨다는 공통점, 같은 웹 컨테이너 내에서의 이동인지 아닌지에 차이가 있다..
 > - Forward의 경우,
@@ -44,7 +44,7 @@
 </details>
 
 <details>
-    <summary><b>Redirect, Forward 어떻게 구현하는지?</b></summary>
+    <summary><b>✅ Redirect, Forward 어떻게 구현하는지?</b></summary>
 
 - 같은 도메인을 쓰는 경우
   - `redirect`, `forward` prefix 사용
@@ -55,15 +55,30 @@
 
 
 <details>
-    <summary><b>HTTP Referer 가 뭔지?</b></summary>
+    <summary><b>✅ HTTP Referer가 뭔지?</b></summary>
+
+- HTTP 헤더에 있는 값 중 하나 
+- 현재 표시하는 웹 페이지가 어떤 웹 페이지에서 요청되었는지 알 수 있음
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGnqus%2FbtrRc8M1JW2%2F9G70EPL2Klpul9moDLfjBk%2Fimg.png)
+
+### Ref.
+
+- [Referer - Mozilla](https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Referer)
+- [HTTP referer 란? - Inpa](https://inpa.tistory.com/entry/WEB-%F0%9F%93%9A-HTTP-referer-%EB%9E%80) 
+- [유입 분석을 위한 HTTP 리퍼러(Referrer) 이해하기](https://ogaeng.com/http-referrer/)
+
 </details>
 
 <details>
-    <summary><b> HTTP Referer를 어떻게 식별하는가?</b></summary>
+    <summary><b>✅ HTTP Referer를 어떻게 식별하는가?</b></summary>
+
+- HttpServletRequest의 헤더값을 가져와서, 특정 문자열을 포함하는지 확인.
+- 지정한 Referer 문자열을 포함하지 않으면 기타로 표기
+
 </details>
 
-<details><summary><b>application/json Vs. application/x-www-form-urlencoded 1️⃣</b></summary>
-
+<details><summary><b>✅ application/json Vs. application/x-www-form-urlencoded 1️⃣</b></summary>
 
 - application/json
   - {key : value} 구조로 전송
