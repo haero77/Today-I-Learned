@@ -1,3 +1,92 @@
+# 이력서 기반
+
+<details>
+    <summary><b>Redirect Vs. Forward</b></summary>
+
+> - 두 가지 모두 다른 URL로 이동 시킨다는 공통점, 같은 웹 컨테이너 내에서의 이동인지 아닌지에 차이가 있다..
+> - Forward의 경우,
+>   - 같은 웹 컨테이너 내에서의 이동
+>   - 이전의 요청 정보가 그대로 유지. Request, Response 객체 유지 
+>   - 웹 브라우저에서 호출한 최초 URL 유지.
+>   - 게시글 작성 같은 경우, forward 를 사용하여 새로고침을 하게 되면 여러번 글 작성이 된다. 👉 
+> - Redirect의 경우,
+>   - 이전의 요청 정보는 그대로 유지 되지 않음.
+>   - 서버가 URL을 응답하면, 웹 브라우저는 해당 URL로 다시 호출
+>   - Request, Response 새로 생성
+
+### Forward
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb9U3fY%2FbtqyeoHglrc%2Fl6VDZbutBoO49LXwQEf8D1%2Fimg.png)
+
+- forward는 웹 컨테이너 차원에서의 이동
+- 웹 브라우저는 다른 페이지로 이동했음을 알 수 없음.
+  - 웹 브라우저에는 최초 호출한 URL만 표기. 이동한 페이지의 URL은 알 수 없음.
+- 이동할 URL로 요청정보를 그대로 전달
+  - Request, Response 객체 유지
+- 글쓰기 같은 응답 페이지에서, 새로고침을 고의로 누르면 이전 요청 정보가 남아있기 때문에 계속 글이 작성된다.
+  - 리소스 변화 없는 단순 조회의 경우에 사용 
+
+### Redirect
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FF3O4A%2FbtqydA2GDYr%2FtgFznDMjbIe9YK2buOruvK%2Fimg.png)
+
+- 웹 컨테이너로 명령이 들어오면, 웹 브라우저에게 다른 페이지로 이동하라고 명령
+  - 브라우저는 URL을 지시된 URL로 바꾸고 해당 주소로 이동
+- 다른 웹 컨테이너로 이동하여 새로운 페이지에서 Request, Response 객체는 새로 생성
+- 게시글 작성 응답 시에 새로고침을 해도 이전 요청 정보가 남아있지 않기 때문에 게시글 작성되지 않음
+- 리소스 변경이 있는 로직에 사용
+
+### Ref.
+
+- [[Web] Forward와 Redirect 차이 - 망나니 개발자](https://mangkyu.tistory.com/51)
+- https://stir.tistory.com/225
+
+</details>
+
+<details>
+    <summary><b>Redirect, Forward 어떻게 구현하는지?</b></summary>
+
+- 같은 도메인을 쓰는 경우
+  - `redirect`, `forward` prefix 사용
+- 다른 도메인로 Redirect할 경우
+  - 상태 코드 `301` & Header의 Location에 `URL` 지정
+
+</details>
+
+
+<details>
+    <summary><b>HTTP Referer 가 뭔지?</b></summary>
+</details>
+
+<details>
+    <summary><b> HTTP Referer를 어떻게 식별하는가?</b></summary>
+</details>
+
+<details><summary><b>application/json Vs. application/x-www-form-urlencoded 1️⃣</b></summary>
+
+
+- application/json
+  - {key : value} 구조로 전송
+  - `POST` 
+- application/x-www-form-urlencoded
+  - HTML Form Submit 에서 주로 사용 
+  - `key=value&key=value` 구조로 전송
+  - 모든 문자를 서버로 보내기 전 URL 인코딩. 그 후 웹 서버로 보낸다. 
+
+### application/x-www-form-urlencoded
+
+
+<img width="932" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/be997161-d490-4e86-8139-89878d0a60dd">
+
+- HTML form `POST` 메서드로 보내면 `application/x-www-form-urlencoded` 사용
+
+
+</details>
+
+<details><summary><b>메시지 큐란? 1️⃣</b></summary></details>
+
+---
+
 # TCP/IP
 
 <details>
@@ -306,8 +395,13 @@ TCP 통신은 3단계 과정을 거친다.
 </details>
 
 <details>
-    <summary><b>도메인, URI Vs. URL?</b></summary>
+    <summary><b>URI Vs. URL?</b></summary>
 </details>
+
+<details>
+    <summary><b>도메인, DNS?</b></summary>
+</details>
+
 
 ---
 
