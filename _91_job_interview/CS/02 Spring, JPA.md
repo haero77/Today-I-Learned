@@ -180,18 +180,151 @@ public void setMemberRepository(MemberRepository memberRepository) {
 
 ---
 
-## AOP, 프록시
+## 프록시, AOP
 
 <details>
-    <summary><b>AOP란?</b></summary>
+    <summary><b>✅ 프록시란? 프록시 패턴이란?</b></summary>
+
+### 프록시
+
+- 클라이언트가 요청한 결과를 서버에 직접 요청하는 것이 아닌, **대리자를 통해서 간접적으로 요청**할 수 있는데, 여기서 대리자를 `프록시`라 한다.
+- 클라이언트 ➡️ 프록시 ➡️ 서버
+
+- 특징 
+  - `대체 가능성` 
+    - 객체에서 프록시가 되려면, 클라이언트는 실제 서버에게 요청했는지 프록시에게 요청했는지 조차 몰라야한다.
+
+- 주요 기능 
+  - `접근 제어`
+    - 권한에 따른 접근 차단
+    - 캐싱
+    - 지연 로딩
+  - `부가 기능 추가`
+    - 원래 서버가 제공하는 기능에 대해 부가 기능 수행
+    - 예) 요청값이나 응답값을 조
+
+### 프록시 패턴 
+
+- 프록시를 이용하여 **특정 객체에 대한 접근을 제어하거나 기능을 추가**할 수 있는 패턴
+
+- 예시
+  - JPA에서, 연관된 엔티티를 조회할 때 `Lazy Loading`으로 설정한 경우 프록시 객체가 주입됨.
+  - `@Transactional`을 이용하면 스프링 AOP로 인해 해당 객체의 프록시 객체를 만들어서 주입하여 사용.
+
+- 장점
+  - `OCP` 만족
+    - 기능은 확장하면서, 기존 객체의 변경은 없음 👉 `OCP`
+
+- 단점
+  - 프록시 객체가 생성됨에 따라 복잡도 증가. 처리 속도 증가
+
+</details>
+
+
+
+<details>
+    <summary><b>✅ AOP란? (+ AOP 용어)</b></summary>
+
+### AOP (Aspect-Oriented Programming)
+
+- **애플리케이션 로직을 핵심 기능과 부가 기능으로 나누고, 여러 곳에서 사용되는 부가 기능. 즉 공통 관심 사항을 분리하는 방식의 프로그래밍**을 말한다.
+  - 예) 로깅, 데이터베이스 연결
+  
+- 장점
+  - **중복 코드가 줄어듦**
+  - **변경 지점이 하나**가 되도록 잘 모듈화 시킴 👉 OOP 단점 극복
+
+### 용어 정리
+
+
+
 </details>
 
 <details>
-    <summary><b>Spring AOP를 어떤 기능에 적용하여 활용해봤는지</b></summary>
+    <summary><b>✅ AOP 적용 방식에는 어떤 것들이 있는지?</b></summary>
+
+### 1. 컴파일 시점 
+
+- `.java` 파일을 컴파일러를 이용해서 `.class`를 만드는 시점에 부가 로직을 추가하는 방식.
+
+- 단점
+  - AspectJ가 제공하는 별도의 컴파일러를 사용해야하고, 설정이 복잡. 
+  - `AspectJ`를 직접 사용해야한다
+
+- 조인 포인트
+  - 모든 지점(생성자, 필드값 접근, static 메서드 접근 & 실행)
+
+> 💡 조인 포인트?
+> - 생성자, static 메서드 접근 & 실행 등 **AOP를 적용할 수 있는 지점**
+   
+### 2. 클래스 로딩 시점 
+
+- `.class` 파일을 `JVM`에 올리기 전에 바이트코드를 조작하여 위빙하는 방식(로드타임 위빙)
+
+- 단점
+  - 자바를 실행할 때 별도의 옵션(java -javaagent)을 통해 클래스 로더 조작기를 지정해야함
+    - 번거롭고 운영하기 어려움
+  - `AspectJ`를 직접 사용해야한다
+
+- 조인 포인트
+  - 모든 지점(생성자, 필드값 접근, static 메서드 접근 & 실행)
+
+> 💡 위빙
+> - 원본 로직에 부가 로직이 추가되는 것
+> - 애스펙트와 실제 코드를 연결해서 붙이는 것
+
+### 3. 런타임 시점
+
+- 클래스 로더에 클래스가 올라가고, **자바가 이미 실행되고 난 후에 부가로직을 추가하는 방식**
+- 실제 대상 코드는 그대로 유지. 프록시를 통해 부가 기능이 적용
+  - 항상 프록시를 통해야 부가 기능을 사용할 수 있다.
+- `Spring AOP`가 사용하는 방식
+
+- 장점
+  - 별도의 컴파일러나 실행 옵션을 지정하지 않아도 된다. 스프링만 있으면 사용가능.
+
+- 조인 포인트
+  - **메서드 실행 시점으로 제한**된다.
+    - **프록시는 메서드 오버라이딩 개념으로 동작**하기 때문에 생성자나 static 메서드, 필드값 접근에는 사용 불가.
+
+---
+
+> 💡스프링은 AspectJ의 문법을 차용하고 프록시 방식의 AOP를 적용한다. AspectJ를 직접 사용하는 것이 아니다. 
+
 </details>
 
 <details>
-    <summary><b>Springjdk dynamic proxy vs CGLIB(code Generator Library) 차이점은?</b></summary>
+    <summary><b>✅ Spring이 프록시 방식의 AOP를 사용하는 이유? 그냥 AspectJ 사용하면 되지 않나요?</b></summary>
+
+- 그냥 AspectJ를 사용하면 `런타임`이 아닌 `컴파일 타임`과 `클래스 로드` 시점에 애스펙트를 적용해야함
+- 그러기 위해서는 **별도의 컴파일러**를 사용하거나 **자바 실행옵션**, **AspectJ 전용 문법**등 번거롭고 복잡함
+- 👉 스프링만 있으면 사용가능한 DI, IoC 개념 등을 이용하여 프록시를 이용해 AOP를 적용 가능. 
+
+</details>
+
+<details>
+    <summary><b>Spring AOP를 어떤 기능에 적용하여 활용해봤는지?</b></summary>
+</details>
+
+<details>
+    <summary><b>🔼 Spring JDK dynamic proxy vs CGLIB(code Generator Library) 차이점은?</b></summary>
+
+- Spring AOP를 통해 프록시 객체를 생성할 때, 해당 객체가 인터페이스를 구현 유무의 차이
+  - 구현하는 경우 👉 JDK dynamic proxy
+  - 구현 안 하는 경우 👉 CGLIB
+
+- JDK Dynamic Proxy
+  - Reflection을 이용하여 프록시 객체를 생성 
+  - 인터페이스가 있어야 한다.
+- CGLIB
+  - 바이트 코드를 조작해서 프록시를 만듦으로 빠르다.
+  - Spring Boot의 기본 방식
+
+---
+
+- https://huisam.tistory.com/entry/springAOP
+- https://gmoon92.github.io/spring/aop/2019/04/20/jdk-dynamic-proxy-and-cglib.html
+
 </details>
 
 <br>
