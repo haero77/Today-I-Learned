@@ -780,15 +780,45 @@ public class HelloBean {}
 ## JPA, ORM, Hibernate
 
 <details>
-    <summary><b>JPA와 같은 ORM을 사용하는 이유가 뭔가요?</b></summary>
+    <summary><b>✅ JPA? ORM? Hibernate?</b></summary>
+
+### JPA(Java Persistence API)
+
+- JPA는 자바 진영에서 ORM 기술의 표준.
+- JPA는 ORM을 사용하기 위한 인터페이스의 모음. 
+  - 즉, 단순한 명세이기 때문에 **구현이 없다.**  👉 `Hibernate`는 JPA를 구현한 **구현체**
+
+![](https://gmlwjd9405.github.io/images/inflearn-jpa/jpa-basic-structure.png)
+
+- JPA는 애플리케이션과 JDBC사이에서 동작
+
+### ORM(Object-Relational Mapping)
+
+- 객체와 관계형 데이터베이스를 매핑해주는 기술
+- 객체와 관계형 데이터베이스가 갖는 서로 다른 패러다임의 불일치를 해결하기 위해서 사용.
+- 객체는 객체대로, 관계형 데이터베이스는 관계형 데이터베이스대로 설계. 👉 ORM 프레임워크가 중간에서 매핑을 해준다.
+
+### Hibernate
+
+- JPA는 ORM을 사용하기위한 인터페이스의 모음. 
+- Hibernate 는 명세된 기능을 사용하기 위한 JPA의 구현체
+
 </details>
 
 <details>
-    <summary><b>JPA와 같은 ORM을 사용하는 이유가 뭔가요?</b></summary>
-</details>
+    <summary><b>✅ JPA와 같은 ORM을 사용하는 이유가 뭔가요?</b></summary>
 
-<details>
-    <summary><b>Hibernate란?</b></summary>
+> 👉 "**객체와 관계형 데이터베이스가 갖는 서로 다른 패러다임의 불일치를 해결하기 위해서 사용.**" 
+
+--- 
+
+- 애플리케이션이 발전해가면서 내부의 **복잡성**도 커짐
+- **비즈니스 요구사항을 정의한 도메인 모델도 객체로 모델링**하면 객체지향 언어가 가진 장점들을 활용하여 복잡성 제어 가능
+- 장점: 추상화, 캡슐화 등 복잡성을 제어 가능
+- **관계형 데이터베이스는 데이터 중심으로 구조화**되고, 객체 지향과 같은 개념들이 없음.
+- 👉 객체를 RDB에 저장하고 조회하기 위해 수많은 보일러 플레이트 코드들이  비용으로 발생함.
+- 패러다임의 불일치 문제를 해결함으로써 이같은 문제 해결
+
 </details>
 
 <br>
