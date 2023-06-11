@@ -1,6 +1,14 @@
 # Spring Framework
 
 <details>
+    <summary><b>🔼 Spring 은 왜 쓰나요?</b></summary>
+
+- Java 기반의 프레임워크 👉  **Java가 갖는 객체 지향 언어의 특성을 잘 살릴 수 있는 프레임워크** 
+- 예) IoC, DI의 개념을 활용하여 다형성을 충분히 만족시킴   
+
+</details>
+
+<details>
     <summary><b>✅ Spring Framework?</b></summary>
 
 - 자바 엔터프라이즈 개발을 편하게 해주는 **경량급 오픈소스 애플리케이션 프레임워크**
@@ -309,15 +317,25 @@ public void setMemberRepository(MemberRepository memberRepository) {
 <details>
     <summary><b>🔼 Spring JDK dynamic proxy vs CGLIB(code Generator Library) 차이점은?</b></summary>
 
+- 기존 Proxy 패턴을 이용한 프록시의 문제
+  - 부가 기능 코드의 중복이 생긴다
+  - 매번 프록시 객체를 생성해야함 👉코드의 복잡도 증가 
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FezX5oG%2FbtrOY9OTpAj%2ForkSBdcoHI8SHP1WeVmQHK%2Fimg.png)
+
 - Spring AOP를 통해 프록시 객체를 생성할 때, 해당 객체가 인터페이스를 구현 유무의 차이
   - 구현하는 경우 👉 JDK dynamic proxy
   - 구현 안 하는 경우 👉 CGLIB
 
+- ProxyBeanFactory
+  - Spring에서 프록시를 Bean으로 만들어주는 하나의 객체
+
 - JDK Dynamic Proxy
-  - Reflection을 이용하여 프록시 객체를 생성 
+  - Reflection을 이용하여 프록시 객체를 생성 👉 속도가 느리다. (동적으로 Class를 Load 하고, Heap에 객체를 띄우는 선행 절차가 존재하기에 나타나는 결과이다.)
   - 인터페이스가 있어야 한다.
 - CGLIB
   - 바이트 코드를 조작해서 프록시를 만듦으로 빠르다.
+  - 상속 방식으로 구현되어 인터페이스가 없어도된다.
   - Spring Boot의 기본 방식
 
 ---
@@ -335,24 +353,86 @@ public void setMemberRepository(MemberRepository memberRepository) {
 ## Spring Bean
 
 <details>
-    <summary><b>스프링 컨테이너란?</b></summary>
+    <summary><b>✅ 스프링 컨테이너란?</b></summary>
+
+- **자바 객체의 생명 주기를 관리하며, 생성된 자바 객체들에게 추가적인 기능을 제공하는 역할**
+- 예를 들면, 스프링 빈을 생성하고, 의존성 주입이 필요한 곳에 레퍼런스를 할당해준다.
+- `ApplicationContext`를 스프링 컨테이너라고 한다. 
+
 </details>
 
 <details>
-    <summary><b>스프링 빈</b></summary>
+    <summary><b>✅ 스프링 Bean이란?</b></summary>
+
+- 스프링 컨테이너 안에 들어있는 객체
+- 스프링 컨테이너 초기화 시 빈 객체 생성, 의존 객체 주입 및 초기화
+- 스프링 컨테이너 종료 시 빈 객체 소멸
+
 </details>
 
 <details>
-    <summary><b>빈 등록과정</b></summary>
+    <summary><b>빈 등록과정(교재 보고)</b></summary>
+
+
+
 </details>
 
 <details>
-    <summary><b>빈 스코프</b></summary>
+    <summary><b>✅ 빈 스코프</b></summary>
+
+- 빈 스코프란, **빈이 존재할 수 있는 범위**를 의미
+
+### 스프링이 지원하는 다양한 스코프 범위
+
+- `싱글톤 스코프`
+  - 스프링 빈의 기본 스코프
+  - 스프링 컨테이너의 시작과 종료까지 1개의 객체로 유지
+  - **싱글톤 빈 객체는 여러 쓰레드에 의해 공유되기 때문에 Stateless로 설계하는 것이 중요**
+
+- `프로토타입 스코프`
+  - 빈의 생성, 의존관계 주입, 초기화까지만 관여하고 더 이상 컨테이너가 관리하지 않는 스코프
+  - 매번 **요청마다 생성하고** 클라이언트에게 반환한다음에 더 이상 관리 안 함
+  - **싱글톤은 스프링 컨테이너가 생성될 때 빈이 생성되는데, 프로토타입은 요청이 있을 때만 생성됨**
+  - @Autowired의 지원을 받을 수 있음 -> DI 가능 
+  - [언제 사용하는가](https://www.inflearn.com/questions/415649/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9E%85-%EB%B9%88%EC%97%90-%EB%8C%80%ED%95%9C-%EC%A7%88%EB%AC%B8)
+
+```java
+@Scope("prototype")
+@Component
+public class HelloBean {}
+```
+
+- 웹 관련 스코프
+  - `request`
+    - 웹 요청이 들어오고 나갈 때까지 유지되는 스코프
+    - 로깅을 하기 위해 요청이 들어올 때 생성할 때 로깅, 빈이 종료되기전에 `@PreDestroy`로 로깅 남긴다.
+  - `session`
+    - 웹 세션이 생성되고 종료될 때까지 유지되는 스코프
+  - `application`
+    - 웹의 서블릿 컨텍스트와 같은 범위로 유지되는 스코프
+      - 서블릿 컨텍스트는 web application내에 있는 모든 서블릿들을 관리하며 정보공유할 수 있게 도와 주는 역할 을 하는데, 톰캣 컨테이너가 실행 시 애플리케이션 하나당 한개의 서블릿컨텍스트가 생성된다.
+      - 생명 주기는 보통 톰캣의 시작과 종료와 일치한다.
+
 </details>
 
 <details>
-    <summary><b>빈 라이프사이클</b></summary>
+    <summary><b>🔼 빈 생명주기</b></summary>
+
+> 스프링 컨테이너 생성 -> 스프링 빈 생성 -> 의존 관계 주입 -> 초기화 콜백 -> 사용 -> 소멸 전 콜백 -> 스프링 컨테이너 종료
+- 스프링 컨테이너에 의해 생명주기가 관리된다.
+- 스프링 컨테이너 초기화 시 빈 객체 생성, 의존 관계를 주입하고 초기화 
+- 싱글톤 빈들은 컨테이너 종료 전 소멸 전 콜백이 발생
+- 초기화와 소멸 메서드는 애노테이션으로 @PostConstruct, @PreDestroy 를 사용하는 것이 권장된다
+
 </details>
+
+<details>
+    <summary><b>빈 생명주기 콜백</b></summary>
+
+
+
+</details>
+
 
 <details>
     <summary><b>@Component, @Controller, @Service, @Repository</b></summary>
@@ -365,15 +445,115 @@ public void setMemberRepository(MemberRepository memberRepository) {
 ## MVC
 
 <details>
-    <summary><b>MVC 패턴</b></summary>
+    <summary><b>✅ Spring MVC란?</b></summary>
+
+- **웹 애플리케이션 개발을 위한 MVC 패턴 기반의 Spring 프레임워크**
+- `디스패처 서블릿` 등을 활용하여 해당 애플리케이션으로 들어오는 모든 요청을 핸들링 & 공통 작업을 처리
+
 </details>
 
 <details>
-    <summary><b>디스패처 서블릿이란? 동작과정?</b></summary>
+    <summary><b>🔼 MVC 패턴이란?</b></summary>
+
+- 정의
+  - 애플리케이션의 개발 영역을 Model, View, Controller로 나눠 각 역할에 맞는 코드를 작성
+  - 사용자 인터페이스(UI)와 도메인 로직을 분리함으로써 서로에게 영향이 가지 않게한다. 
+    - 👉 각자의 독립적인 개발과 유지보수를 용이하게 함
+
+- MVC
+  - Model
+    - 데이터와 비즈니스 로직을 처리  
+    - 비즈니스 로직을 처리한 데이터의 결과
+  - View
+    - 클라이언트에게 보여줄 화면을 처리 
+  - Controller
+    - 클라이언트에게 요청을 받는 엔드포인트
+    - Model에게 요청을 전달하고, 데이터를 리턴 받아 처리 & View로 리턴
+
+- 장점
+  - 과거에는 Controller에 다 담아두고 처리했다.
+  - 기능 별로 코드를 분리하여, 가독성을 높이고 재사용성을 증가시킨다.
+
+- 단점  
+  - 프로그램 규모가 커짐에 따라 유지보수가 쉽지 않음(why?)
+
 </details>
 
 <details>
-    <summary><b>프론트 컨트롤러(패턴)</b></summary>
+    <summary><b>✅ Spring MVC 동작원리?</b></summary>
+
+![](https://camo.githubusercontent.com/d7cef9e49a490593b9ef01173bc8b685394a898e62d254e323ea5a6931279763/68747470733a2f2f6261636b746f6e792e6769746875622e696f2f6173736574732f696d672f706f73742f696e746572766965772f736572766c65742d362e504e47)
+
+1. 디스패처 서블릿이 요청을 받음
+2. 핸들러 매핑을 통해 요청을 처리할 핸들러 조회
+3. 핸들러에게 요청을 위임할 핸들러 어댑터를 조회, 핸들러에게 요청 위임
+4. 핸들러는 비즈니스 로직을 수행하고 `ModelAndView` 로 변환해서 반환
+   - ModelAndView: 
+     - 디스패처 서블릿에 의해 처리될 뷰를 직접 지정할 수 있고 Model(entity)부분에 있는 데이터를 전달 할 수 있도록 하는 객체
+5. viewResolver를 호출
+   - 적절한 viewResolver를 찾고 해당 viewResolver를 호출한다.
+   - RestController라면 이 과정과 이후 과정 없이 컨버터를 이용해 바로 결과값을 리턴한다.
+   - `ViewResolver`:
+     - ModelAndView 객체를 View 영역으로 전달하기 위해 알맞은 View 정보를 설정하는 역할 
+6. view 반환
+   - viewResolver는 뷰의 논리 이름을 물리 이름으로 바꾸고, 렌더링 역할을 담당하는 뷰 객체를 반환
+7. view 렌더링
+   
+
+</details>
+
+<details>
+    <summary><b>✅ 디스패처 서블릿이란? 동작원리?</b></summary>
+
+- 정의
+  - HTTP 프로토콜로 들어오는 모든 **요청을 가장 먼저 받아**, **적합한 컨트롤러를 찾아 요청을 위임하는 `프론트 컨트롤러`**
+  
+- 장점
+  - 과거에는 서블릿에 대해 URL을 매핑하기 위해 web.xml 에 모두 등록해줘야 했음 
+  - 👉 **디스패처 서블릿의 등장으로 해당 어플리케이션으로 들어오는 모든 요청을 핸들링**해주고 `공통 작업`을 처리
+  - **컨트롤러만 구현해두면 디스패처 서블릿이 알아서 요청을 위임해주게 됨**
+
+- 동작원리 
+
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbImFbg%2FbtrGzZMTuu2%2FCkY4MiKvl5ivUJPoc5I3zk%2Fimg.png)
+
+1. 클라이언트의 요청을 디스패처 서블릿이 받음
+2. 요청을 위임할 컨트롤러 조회 
+   - 핸들러 매핑을 통해 URL에 매핑된 핸들러(컨트롤러)를 조회
+3. 요청을 핸들러로 전달할 `핸들러 어댑터`를 찾아 요청을 위임
+   - 직접 요청을 전달하는 것이 아니라 어댑터를 통해 위임하는 이유
+     - 컨트롤러의 구현 방식(Controller 인터페이스, 어노테이션)이 다양하므로
+   - 어댑터 패턴
+     - 호환되지 않는 인터페이스를 가진 객체들이 협업할 수 있도록 하는 구조적 디자인 패턴
+4. 핸들러 어댑터가 컨트롤러에게 요청을 위임
+   - 컨트롤러로 요청을 위임한 전/후에 공통적인 작업이 필요
+   - 예시
+     - 인터셉터
+     - `ArgumentResolver` 👉 `@RequestBody`, `@RequestParam` 등을 처리
+     - `ReturnValueHandler` 👉 ResponseEntity의 Body를 직렬화
+5. 비즈니스 로직 처리
+6. 컨트롤러가 리턴값을 리턴
+7. 핸들러 어댑터가 리턴값을 처리
+   - `ReturnValueHandler` 👉 ResponseEntity의 Body를 직렬화
+8. 서버의 응답을 클라이언트로 반환함
+   - 필터를 거쳐 최종적으로 클라이언트로 반환
+
+--- 
+
+- [[Spring] Dispatcher-Servlet(디스패처 서블릿)이란? 디스패처 서블릿의 개념과 동작 과정](https://mangkyu.tistory.com/18)
+
+</details>
+
+<details>
+    <summary><b>✅ 프론트 컨트롤러(패턴)</b></summary>
+
+- 정의 
+  - 서블릿 컨테이너의 제일 앞에서, 서버로 들어오는 클라이언트의 모든 요청을 받아 처리해주는 컨트롤러. 
+  - MVC 구조에서 함께 사용되는 디자인 패턴
+
+- 서블릿 컨테이너
+  - WAS 내부에서 개발자 대신 서블릿을 관리
+
 </details>
 
 <br>
@@ -422,7 +602,6 @@ public void setMemberRepository(MemberRepository memberRepository) {
 - **HttpServletRequest, Response 객체 조작 여부** 
   - 필터는 가능
   - 인터셉터는 불가능
-
 </details>
 
 <details>
@@ -430,18 +609,16 @@ public void setMemberRepository(MemberRepository memberRepository) {
 </details>
 
 <details>
-    <summary><b>필터 Vs. 인터셉터 Vs. AOP?</b></summary>
+    <summary><b>필터 Vs. 인터셉터 Vs. Spring AOP?</b></summary>
 </details>
 
 <details>
     <summary><b>⭐️ 필터와 인터셉터 사용 시 예외가 발생하면 어떻게 되나요?</b></summary>
 </details>
 
-
 <br>
 
 ---
-
 
 ## 예외 처리
 
@@ -457,10 +634,19 @@ public void setMemberRepository(MemberRepository memberRepository) {
     <summary><b>@ExceptionHandler란? 동작원리?</b></summary>
 </details>
 
-
 <br>
 
 ---
+
+# 기타
+
+<details>
+    <summary><b>✅ 커넥션 풀</b></summary>
+
+- 데이터베이스와의 연결 비용을 줄이기 위해, 미리 연결을 맺어 놓고 이것을 관리하는 것
+- 요청이 있을 때 커넥션을 할당하고, 처리가 끝나면 커넥션 풀에게 반납
+
+</details>
 
 <br>
 
@@ -470,11 +656,34 @@ public void setMemberRepository(MemberRepository memberRepository) {
 
 ## JPA, ORM, Hibernate
 
+<details>
+    <summary><b>JPA란?</b></summary>
+</details>
+
+<details>
+    <summary><b>ORM이란?</b></summary>
+</details>
 <br>
 
 ---
 
 ## 영속성 컨텍스트
+
+<details>
+    <summary><b>영속성 컨텍스트란?</b></summary>
+</details>
+
+<details>
+    <summary><b>언제 flush가 일어나는지? ⭐️</b></summary>
+</details>
+
+<details>
+    <summary><b>@Transactional이란?</b></summary>
+</details>
+
+<details>
+    <summary><b>@Transactional(readOnly=true)를 사용할 때 속도가 향상되는 이유?</b></summary>
+</details>
 
 <br>
 
@@ -482,8 +691,36 @@ public void setMemberRepository(MemberRepository memberRepository) {
 
 ## N + 1
 
+<details>
+    <summary><b>N + 1 문제란? ⭐️</b></summary>
+</details>
+
+
+<details>
+    <summary><b>Eager Loading일 때는 N + 1 문제가 안 일어나는지? ⭐️</b></summary>
+</details>
+
+<details>
+    <summary><b>N + 1 문제 해결법? ⭐️</b></summary>
+</details>
+
+<details>
+    <summary><b>@BatchSize 에 대해서 설명해주세요.</b></summary>
+</details>
+
 <br>
 
 ---
 
 ## OSIV
+
+
+<br>
+
+---
+
+## JPA Proxy
+
+<br>
+
+---
