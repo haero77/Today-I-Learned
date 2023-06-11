@@ -899,6 +899,12 @@ public class HelloBean {}
 
 </details>
 
+<br>
+
+---
+
+# @Transactional
+
 <details>
     <summary><b>✅ @Transactional은 어떤 기능을 하나요?</b></summary>
 
@@ -925,10 +931,10 @@ public class HelloBean {}
     <summary><b>✅ @Transactional(readonly=true) 는 어떤 기능인가요? 이게 도움이 되나요?</b></summary>
 
 > 👉 readOnly=true 옵션을 사용하면 **`읽기 전용 트랜잭션`이 생성**된다.
-> - JPA
+> - `JPA`
 >   - 원래 트랜잭션 커밋 시점에 플러시가 발생하는데, **플러시가 발생하지 않는다.**
->   - 변경 감지를 위한 **스냅샷 객체를 생성하지 않아도 되므로**, 메모리를 아낄 수 있다.
-> - JDBC 드라이버
+>   - 👉 플러시할 때 일어나는 `스냅샷 비교` 등 무거운 로직을 수행하지 않으므로 성능 향상 
+> - `JDBC 드라이버`
 >   - 읽기 전용 트랜잭션에서 변경 쿼리가 발생하면 예외를 던진다.
 
 ---
@@ -942,7 +948,7 @@ public class HelloBean {}
       - 읽기 전용 트랜잭션 안에서 변경 기능을 실행하면 예외를 던진다.
     - JPA
       - 읽기 전용 트랜잭션의 경우 **커밋 시점에 `플러시`를 호출하지 않음.**
-      - 변경이 필요 없으니 변경 감지를 위한 스냅샷 객체도 생성하지 않는다.
+      - 플러시할 때 일어나는 `스냅샷 비교` 등 무거운 로직을 수행하지 않으므로 성능 향상
       
   2. JDBC 드라이버
     - 읽기 전용 트랜잭션에서 변경 쿼리가 발생하면 예외를 던진다.
@@ -963,6 +969,11 @@ public class HelloBean {}
 
 </details>
 
+<details>
+    <summary><b>트랜잭션 전파란?</b></summary>
+
+</details>
+
 <br>
 
 ---
@@ -970,38 +981,116 @@ public class HelloBean {}
 ## N + 1
 
 <details>
-    <summary><b>N + 1 문제란? ⭐️</b></summary>
+    <summary><b>✅ N + 1 문제란? ⭐️</b></summary>
+
+> 👉 **처음 실행한 SQL의 결과 수만큼 추가로 SQL을 실행하는 것**
+> - 대상 엔티티를 조회하고, 대상과 연관된 엔티티가 
+>   - 즉시 로딩이면 바로 N + 1 문제 발생
+>   - 지연 로딩이면 연관된 엔티티를 사용하는 시점에서 N + 1 문제 발생
+
+--- 
+
+- 연관된 엔티티를 `즉시 로딩` 하든, `지연 로딩` 하든 발생 가능.
+
+### 예시
+
+**즉시 로딩의 경우**
+
+```java
+// Member (1) : (N) Order
+// Member -> @OneToMany -> Order
+// Order -> @ManyToOne -> Member
+
+@Entity 
+public class Member {
+	
+    @Id @GeneratedValue
+    private Long id;
+	
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    private List<Order> orders = new ArrayList<Order>();
+}
+
+@Entity
+public class Order {
+
+    @Id @GeneratedValue
+    private Long id;
+
+    @ManyToOne
+    private Member member;
+}
+```
+
+👉 **JPQL**을 사용할 때 문제 발생
+
+```java
+List<Members> members = em.createQuery("select m from Member m", Member.class)
+        .getResultList();
+```
+
+- JPQL을 사용하면 JPA는 이것을 분석해서 SQL을 생성(이 때 즉시 로딩이나 지연 로딩에 대해 신경 쓰지 않음)
+
+```sql
+select * from members; # 1번 실행으로 5명 조회 
+select * from orders where member_id = 1; # 회원과 연관된 조회
+select * from orders where member_id = 2; # 회원과 연관된 조회
+select * from orders where member_id = 3; # 회원과 연관된 조회
+select * from orders where member_id = 4; # 회원과 연관된 조회
+select * from orders where member_id = 5; # 회원과 연관된 조회
+```
+
+`select * from members;` 가 수행되고, 즉시 로딩이므로 연관된 엔티티인 orders 도 조회된다.
+
+**지연 로딩일 경우**
+
+```java
+// 지연 로딩 
+@OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+
+// orders 컬렉션 초기화
+for (Member members : members) { // member 마다 getOrders -> select * from orders where member_id = memberId
+	sout(member.getOrders().size()); 
+}
+```
+
+</details>
+
+<details>
+    <summary><b>✅ N + 1 문제 해결법?️</b></summary>
+
+- 페치 조인
+  - SQL 조인을 사용해서 연관된 엔티티를 조회하므로 N + 1 문제가 발생하지 않음.
+  - 일대다 조인 시 결과 개수가 늘어나므로 `distinct`를 사용하여 중복을 제거하는 것에 유의
+
+- 하이버네이트의 `@BatchSize` 옵션
+  - 연관된 엔티티를 조회할 때, 지정한 size만큼 SQL의 IN 절을 사용하여 조회.
+
+</details>
+
+<details>
+    <summary><b>✅ 프록시를 사용해서 N+1이 생기는데 애초에 프록시를 사용안하면 되는 거 아닌가요?</b></summary>
+
+- 비즈니스 로직에서 연관된 엔티티가 항상 사용되는 것은 아님.
+- 사용하지 않는 엔티티를 위해 쿼리를 날리거나 메모리를 사용하는 것은 비효율적.
+- 👉 프록시 객체를 이용해서, 실제 엔티티가 사용되기 전까지 데이터베이스에서 조회를 지연하는 것이 `지연 로딩` 
+
 </details>
 
 
 <details>
-    <summary><b>Eager Loading일 때는 N + 1 문제가 안 일어나는지? ⭐️</b></summary>
-</details>
+    <summary><b>✅ 페치 조인의 한계?</b></summary>
 
-<details>
-    <summary><b>N + 1 문제 해결법? ⭐️</b></summary>
-</details>
+- **일대다 페치 조인 시 결과 데이터 수가 증가**
+  - 데이터베이스에서 일대다 관계를 갖는 테이블을 조회 시 `다`가 기준이 되어 결과 반환되기 때문. 
+  - 👉 컬렉션 페치조인 시 페이징이 불가능.
+    - 일을 기준으로 페이징을 해야하는데, 결과 데이터 개수는 `다`에 맞춰지므로 페이징을 할 수 가 없다. 
 
-<details>
-    <summary><b>어떤 경우든 Fetch Join을 이용하여 문제를 해결 할 수 있나요?</b></summary>
-</details>
+- **컬렉션 둘 이상에 페치조인 불가능**
+  - 컬렉션과 컬렉션의 **카티전 곱**으로 만들어진다.
+  - 하이버네이트 사용 시 예외가 발생함
 
-<details>
-    <summary><b>둘 이상의 컬렉션에 왜 Fetch Join 사용이 불가능한가요?</b></summary>
 </details>
-
-<details>
-    <summary><b>일대다 관계를 가지는 엔티티를 Fetch Join 할 때 발생할 수 있는 문제점?</b></summary>
-</details>
-
-<details>
-    <summary><b>@BatchSize 에 대해서 설명해주세요.</b></summary>
-</details>
-
-<details>
-    <summary><b>프록시를 사용해서 N+1이 생기는데 애초에 프록시를 사용안하면 되는 거 아닌가요?</b></summary>
-</details>
-
 
 <br>
 
@@ -1038,6 +1127,8 @@ osiv를 끄고 엔티티를 컨트롤러에 보내면 영속성 컨텍스트 밖
 스프링 osiv를 적용하면 flush는 어느지점에 일어나나요?
 
 트랜잭션이 커밋할 때 발생합니다.
+
+## 낙관적 락, 비관적 락
 
 <br>
 
