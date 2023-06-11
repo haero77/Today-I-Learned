@@ -604,7 +604,10 @@ public class HelloBean {}
     - 핸들러(컨트롤러) 하위 계층에서 예외 발생 시 실행 X
   - `afterCompletion()`
     - 핸들러 호출 후 `postHandle()`까지 실행되고 나서 실행
+    - 뷰가 렌더링 된 이후에 호출
     - 핸들러(컨트롤러) 하위 계층에서 예외 발생하더라도 반드시 실행 됨.
+  
+<img width="777" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/5c531635-fe07-4fb3-8fd1-a04235c87c7b">
 
 
 </details>
@@ -644,13 +647,14 @@ public class HelloBean {}
     <summary><b>✅ 필터 Vs. 인터셉터 Vs. AOP?</b></summary>
 
 - **사용 목적의 차이**
-  - 필터: 
+  - 웹과 관련된 공통 관심사를 처리할 때는 HTTP 헤더나 URL 정보 등도 필요한데, 필터와 인터셉터는 **`HttpServletRequest` 객체를 제공.** 
+  - `필터`: 
     - 스프링과 무관하게 처리해야하는 작업
     - 예) 문자열 인코딩
-  - 인터셉터: 
+  - `인터셉터`: 
     - Controller로 넘겨주는 정보(데이터)의 가공
     - 예) 특정 사용자는 특정 기능을 사용 못하게 막는 등의 세부적인 보안 작업
-  - AOP: 
+  - `AOP`: 
     - 비즈니스단의 메서드에서 조금 더 세밀하게 조정하고 싶을 때. 
     - 예) 특정 메서드의 트랜잭션 처리
 
@@ -669,7 +673,15 @@ public class HelloBean {}
 </details>
 
 <details>
-    <summary><b>⭐️ 필터와 인터셉터 사용 시 예외가 발생하면 어떻게 되나요?</b></summary>
+    <summary><b>🔼 필터와 인터셉터 사용 시 예외가 발생하면 어떻게 되나요?</b></summary>
+
+- 필터에서 예외처리가 되지 않으면 WAS에서 예외를 전달받고, 해당 예외를 처리할 예외 페이지가 있는지 찾는다.
+
+- 인터셉터의 겨우
+  - preHandle : 컨트롤러 호출 전에 호출된다.
+  - postHandle : 컨트롤러에서 예외가 발생하면 postHandle 은 호출되지 않는다.
+  - afterCompletion : afterCompletion 은 항상 호출된다. 이 경우 예외( ex )를 파라미터로 받아서 어떤 예외가 발생했는지 로그로 출력할 수 있다.
+
 </details>
 
 <br>
@@ -679,28 +691,65 @@ public class HelloBean {}
 ## 예외 처리
 
 <details>
-    <summary><b>스프링은 예외를 어떻게 처리하는지?</b></summary>
+    <summary><b>✅ 스프링은 예외를 어떻게 처리하는지?</b></summary>
 
-### WAS 
+### WAS
 
+```java
+1. WAS(/error-ex, dispatchType=REQUEST) -> 필터 -> 서블릿 -> 인터셉터 -> 컨트롤러
+2. WAS(여기까지 전파) <- 필터 <- 서블릿 <- 인터셉터 <- 컨트롤러(예외발생)
+3. WAS 오류 페이지 확인
+4. WAS(/error-page/500, dispatchType=ERROR) -> 필터(x) -> 서블릿 -> 인터셉터(x) -> 컨트롤러(/error-page/500) -> View
+```
 
+- 컨트롤러에서 발생한 예외가 처리가 되지 않으면 WAS까지 예외가 전파된다.
+- WAS에서는 오류 페이지가 있는지 확인해서, 다시 요청을 보내 에러 페이지 View를 렌더링하게 된다. 
+  - WAS는 오류 페이지 경로를 찾아서 내부에서 오류 페이지를 호출한다. 이때 오류 페이지 경로로 필터, 서블릿, 인터셉터, 컨트롤러가 모두 다시 호출된다.
+    - 실제로는 `DispatcherType` 옵션은 기본적으로 `REQUEST`로 되어 있어 예외 발생 시 필터 객체가 다시 초기화 되지는 않는다. (예외 발생시 `DispatcherType`은 `ERROR`)
+    - 인터셉터 역시 `excludePattern`을 사용하면 된다.
 
-### 필터 
+### Spring Boot의 예외처리 
 
-
-### 인터셉터
+- 스프링 부트는 기본적으로 에러 발생 시 `/error`를 오류 페이지로 요청
+  - `BasicErrorController`를 이 경로를 기본으로 받는다.
+- 클라이언트의 `Accept` 헤더값이 `text/html`인 경우 오류 화면을 제공
+- 아닌 경우, `ResponseEntity`로 HTTP Body에 JSON 데이터를 반
 
 </details>
 
 <details>
-    <summary><b>@ControllerAdvice란? 동작원리?</b></summary>
+    <summary><b>🔼 @ExceptionHandler란? 동작원리?</b></summary>
 
+- API 예외 문제를 해결하기 위해 스프링에서 제공하는 예외처리 방법
+- `@ExceptionHandler`를 사용하면 `ExceptionHandlerExceptionResolver`에서 예외처리
 
+### 동작 원리
+
+- 예외가 발생
+- 예외 처리기 ExceptionHandlerExceptionResolver가 동작
+  - 예외 발생 핸들러에 @ExceptionHandler가 있는지 검사
+  - @ExceptionHandler 있으면 처리, 없으면 @ContollerAdvice로 넘어감
+  - @ContollerAdvice에서 적합한 @ExceptionHandler가 있는지 검사하고 없으면 넘어감
+- ResponseStatusExceptionResolver가 동작함
+- DefaultHandlerExceptionResolver가 동작
+- 적합한 ExceptionResolver가 없으므로 예외가 서블릿까지 전달되고, 서블릿은 SpringBoot가 진행한 자동 설정에 맞게 BasicErrorController로 요청을 다시 전달함
+
+---
+
+- [[Spring] 스프링의 다양한 예외 처리 방법(ExceptionHandler, ControllerAdvice 등) 완벽하게 이해하기 - (1/2)](https://mangkyu.tistory.com/204)
 
 </details>
 
 <details>
-    <summary><b>@ExceptionHandler란? 동작원리?</b></summary>
+    <summary><b>🔼 @ControllerAdvice란? 동작원리?</b></summary>
+
+- @ExceptionHandler 를 전역적으로 적용 가능하다.
+  - 여러 컨트롤러에서 발생한 예외를 처리 가능.
+
+---
+
+- https://mangkyu.tistory.com/204
+
 </details>
 
 <br>
@@ -731,12 +780,17 @@ public class HelloBean {}
 ## JPA, ORM, Hibernate
 
 <details>
-    <summary><b>JPA란?</b></summary>
+    <summary><b>JPA와 같은 ORM을 사용하는 이유가 뭔가요?</b></summary>
 </details>
 
 <details>
-    <summary><b>ORM이란?</b></summary>
+    <summary><b>JPA와 같은 ORM을 사용하는 이유가 뭔가요?</b></summary>
 </details>
+
+<details>
+    <summary><b>Hibernate란?</b></summary>
+</details>
+
 <br>
 
 ---
@@ -752,11 +806,15 @@ public class HelloBean {}
 </details>
 
 <details>
-    <summary><b>@Transactional이란?</b></summary>
+    <summary><b>@Transactional은 어떤 기능을 하나요?</b></summary>
 </details>
 
 <details>
-    <summary><b>@Transactional(readOnly=true)를 사용할 때 속도가 향상되는 이유?</b></summary>
+    <summary><b>@Transactional(readonly=true) 는 어떤 기능인가요? 이게 도움이 되나요?</b></summary>
+</details>
+
+<details>
+    <summary><b>그런데, 읽기에 트랜잭션을 걸 필요가 있나요? @Transactional을 안 붙이면 되는거 아닐까요?</b></summary>
 </details>
 
 <br>
@@ -779,8 +837,25 @@ public class HelloBean {}
 </details>
 
 <details>
+    <summary><b>어떤 경우든 Fetch Join을 이용하여 문제를 해결 할 수 있나요?</b></summary>
+</details>
+
+<details>
+    <summary><b>둘 이상의 컬렉션에 왜 Fetch Join 사용이 불가능한가요?</b></summary>
+</details>
+
+<details>
+    <summary><b>일대다 관계를 가지는 엔티티를 Fetch Join 할 때 발생할 수 있는 문제점?</b></summary>
+</details>
+
+<details>
     <summary><b>@BatchSize 에 대해서 설명해주세요.</b></summary>
 </details>
+
+<details>
+    <summary><b>프록시를 사용해서 N+1이 생기는데 애초에 프록시를 사용안하면 되는 거 아닌가요?</b></summary>
+</details>
+
 
 <br>
 
@@ -792,11 +867,42 @@ public class HelloBean {}
     <summary><b>OSIV 옵션에 대해 설명해주세요.</b></summary>
 </details>
 
+osiv의 장단점 얘기해주세요!
+
+장점:
+LazyInitializationException 예외를 방지하여 지연로딩된 데이터에 쉽게 접근할 수 있습니다.
+트랜잭션 관리가 편리해지며, 일관된 세션 상태를 유지할 수 있습니다.
+
+단점:
+데이터베이스 커넥션 리소스를 오랫동안 유지해야 하므로, 커넥션 풀 리소스 사용에 주의해야 합니다.
+오용되면 성능 저하나 데이터 일관성 문제를 야기할 수 있습니다.
+OSIV에서 S는 무엇을 의미하나요?
+
+세션으로 영속성 컨텍스트를 의미합니다.
+그럼 컨트롤러에서 엔티티 수정 안되겠네요?
+
+만약 엔티티를 수정 후 트랜잭션을 시작하는 서비스의 메소드가 호출되어
+해당 트랜잭션이 커밋되면 엔티티가 수정될 수 있습니다.
+스프링에서 OSIV의 기본값은 뭐죠?
+
+true입니다.
+프로젝트에서 osiv 를 끄고 컨트롤러단에 엔티티를 안보내셨던데 왜 그러셨죠?
+
+osiv를 끄고 엔티티를 컨트롤러에 보내면 영속성 컨텍스트 밖에서 지연로딩 기능을 사용하려했을 경우 예외가 발생할 수 있기 때문입니다.
+스프링 osiv를 적용하면 flush는 어느지점에 일어나나요?
+
+트랜잭션이 커밋할 때 발생합니다.
+
 <br>
 
 ---
 
 ## JPA Proxy
+
+<details>
+    <summary><b>JPA Proxy에 대해 설명해주세요.</b></summary>
+</details>
+
 
 <br>
 
