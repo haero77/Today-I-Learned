@@ -382,6 +382,19 @@ TCP 통신은 3단계 과정을 거친다.
 </details>
 
 <details>
+    <summary><b>✅ 멱등성?</b></summary>
+
+- 동일한 요청을 한 번 보내는 것과 여러 번 연속으로 보내는 것이 같은 효과를 지니고, 서버의 상태도 동일하게 남을 때, 해당 HTTP 메서드가 멱등성을 가졌다고 말합니다.
+
+---
+
+Ref.
+
+- [멱등성 - Mozilla](https://developer.mozilla.org/ko/docs/Glossary/Idempotent) 
+
+</details>
+
+<details>
     <summary><b>인증 Vs. 인가?</b></summary>
 </details>
 
@@ -685,4 +698,4 @@ TCP 통신은 3단계 과정을 거친다.
 
 </details>
 
-<details><summary><b></b></summary></details>
+<details><summary><b>웹 소켓이란? 포트란? ⭐️</b></summary></details>

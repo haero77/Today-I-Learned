@@ -1,17 +1,41 @@
 # Spring Framework
 
-<details>
-    <summary><b>🔼 Spring 은 왜 쓰나요?</b></summary>
 
-- Java 기반의 프레임워크 👉  **Java가 갖는 객체 지향 언어의 특성을 잘 살릴 수 있는 프레임워크** 
-- 예) IoC, DI의 개념을 활용하여 다형성을 충분히 만족시킴   
+
+<details>
+    <summary><b>✅ 서블릿 대신 Spring 쓰는 이유? Spring 왜 쓰나요?</b></summary>
+
+- 기존 서블릿의 경우, 핸들러의 공통 로직이 매번 중복된다는 단점 
+  - `프론트 컨트롤러`의 등장함으로써 공통 로직을 처리 👉 Spring MVC는 디스패처 서블릿을 통해 프론트 컨트롤러 패턴 구현.
+  - 프론트 컨트롤러 이전에는 요청마다 서블릿을 정의하고 요청을 수행할 때마다 매번 스레드를 생성했다면, 이제는 하나의 서블릿만 정의하고 이 서블릿이 모든 요청을 수행
+- 스프링으로 웹 요청을 처리함으로써, 
+  - 스프링 MVC에서 제공하는 디스패치 서블릿 사용 👉 개발자는 핸들러에만 집중
+  - 스프링 컨테이너 사용 👉 `IoC`, `DI`
+
+
+> 💡 서블릿: 동적 페이지를 만드는데 사용되는 서버 프로그램
+
+---
+
+Ref.
+
+- https://backtony.github.io/interview/2021-11-28-interview-11/
+
+</details>
+
+<details>
+    <summary><b>✅ Spring 은 왜 쓰나요?</b></summary>
+
+- 초기에 기본적인 설정과 적용시킬 기술들만 잘 선택을 해준다면, **기술보다는 애플리케이션의 로직 비즈니스 로직에만 집중**할 수 있다.
+- Java 기반의 프레임워크 👉  **Java가 갖는 객체 지향 언어의 특성을 잘 살릴 수 있는 프레임워크**
+- 예) IoC, DI의 개념을 활용하여 다형성을 충분히 만족시킴
 
 </details>
 
 <details>
     <summary><b>✅ Spring Framework?</b></summary>
 
-- 자바 엔터프라이즈 개발을 편하게 해주는 **경량급 오픈소스 애플리케이션 프레임워크**
+- 엔터프라이즈용 Java 애플리케이션 개발을 편하게 할 수 있게 해주는 **오픈소스 경량급 애플리케이션 프레임워크**
 - 엔터프라이즈 애플리케이션을 개발하는데 필요한 인프라를 제공함으로써, 개발자는 비즈니스 로직에만 집중할 수 있다. 
 - 스프링의 프레임워크의 중요한 특징으로는 `의존성 주입`, `제어의 역전` 등이 있다.  
 
@@ -29,10 +53,16 @@
 >  - 웹 프로그래밍에 필요한 기능을 다수 포함
 >  - JSP, Servlet, JDBC 등
 
+---
+
+Ref.
+
+- https://www.codestates.com/blog/content/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8
+
 </details>
 
 <details>
-    <summary><b>🔼 Spring, Spring Boot, Spring MVC 차이?</b></summary>
+    <summary><b>✅ Spring, Spring Boot, Spring MVC 차이?</b></summary>
 
 ---
 
@@ -42,14 +72,15 @@
   - 문제: 스프링 기반으로 개발을 할 때 **필요한 라이브러리를 등록하기 위한 많은 설정을 필요로 한다.** 
     - 라이브러리간 종속성, 버전 호환성 등을 신경써야함
 
-- `Spring Boot` 
-  - 스프링 프레임워크의 모듈
+- `Spring Boot`
+  - 스프링 부트는 스프링으로 애플리케이션을 만들 때에 **필요한 설정을 간편하게 처리해주는 별도의 프레임워크**
   - 스프링에서 제공하는 **많은 라이브러리를 기본 설정 값으로 자동으로 설정**할 수 있게 해준다.
     - 👉 Spring MVC 역시 편하게 사용할 수 있도록 해준다.
   - **개발자는 종속성이나 버전 호환성에 대해 걱정할 필요가 없게 됨**
 
 - `Spring MVC`
-  - MVC 패턴을 구현할 수 있도록 지원해주는 스프링 '프레임워크'
+  - **웹 애플리케이션 개발을 위한 MVC 패턴 기반의 Spring 프레임워크**
+  - `디스패처 서블릿` 등을 활용하여 해당 애플리케이션으로 들어오는 **모든 요청을 핸들링 & 공통 작업을** 처리
 
 --- 
 
@@ -73,20 +104,15 @@
 
 ![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FXs3xz%2FbtqHByulBdl%2Fku7QE8veHKu4qzKeWkIPVk%2Fimg.png)
 
+> 💡프레임워크: 
+> - 프레임워크란 응용 프로그램이나 소프트웨어 솔루션 개발을 수월하기 위해 구조, 틀이 제공된 소프트웨어 환경
+
 ---
 
 - https://www.youtube.com/watch?v=t9ccIykXTCM
 - https://nhj12311.tistory.com/382
 
 </details>
-
-<details>
-    <summary><b>✅ Framework?</b></summary>
-
-- 프레임워크란 응용 프로그램이나 소프트웨어 솔루션 개발을 수월하기 위해 구조, 틀이 제공된 소프트웨어 환경
-
-</details>
-
 
 <details>
     <summary><b>✅ POJO 객체란?</b></summary>
@@ -108,12 +134,23 @@
 <details>
     <summary><b>✅ IoC?</b></summary>
 
+> - 👉 **'개발자가 아닌 스프링이 사용할 객체를 생성하여 의존관계를 맺어주는 것'**
+> - 객체 내부에서 필요한 객체에 대한 생성을 '직접' 하게 되면, 
+>   - 다른 객체를 사용해야하는 경우, 기존 코드를 지우고 반드시 프로덕션 코드를 수정할 수 밖에 없게된다.
+> - `제어의 역전`을 통해 어떤 객체를 주입할지 선택가능하므로, 유지보수성 증가.
+
+--- 
+
 - 객체의 생성에서부터 생명주기의 관리까지 모든 객체에 대한 제어권이 바뀐 것을 의미 
   - 또는 제어 권한을 자신이 아닌 다른 대상에게 위임하는 것
 
 - 개발자는 프레임워크에 필요한 부품을 개발하고 조립하는 방식으로 개발 &  최종 호출은 개발자가 아니라 프레임워크의 내부에서 결정된 대로 이뤄지게 되는데 이런 현상을 `제어의 역전`이라고 함
 
 - Spring에서는 `IoC 컨테이너`를 통해 객체의 생성주기를 관리함으로써 `IoC`를 구현
+
+---
+
+- [스프링과 스프링부트(Spring Boot)ㅣ정의, 특징, 사용 이유, 생성 방법](https://www.codestates.com/blog/content/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8)
 
 </details>
 
@@ -972,7 +1009,7 @@ public class HelloBean {}
 </details>
 
 <details>
-    <summary><b>트랜잭션 전파란?</b></summary>
+    <summary><b>트랜잭션 전파란? ⭐⭐️️</b></summary>
 
 </details>
 
