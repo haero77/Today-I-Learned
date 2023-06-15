@@ -44,13 +44,9 @@ public class Cafekiosk {
 
 	// REFACTOR: 구현부를 리팩토링 하고 테스트를 다시 수행해서 통과하는지 확인
 	public int calculateTotalPrice() {
-		int totalPrice = 0;
-
-		for (Beverage beverage : beverages) {
-			totalPrice += beverage.getPrice();
-		}
-
-		return totalPrice;
+		return beverages.stream()
+			.mapToInt(Beverage::getPrice)
+			.sum();
 	}
 
 	/**
