@@ -42,9 +42,9 @@ public class Cafekiosk {
 		beverages.clear();
 	}
 
-	// RED: 메서드 자동 생성
+	// GREEN: 최소한의 코드로 일단 테스트가 통과하게 만든다
 	public int calculateTotalPrice() {
-		return 0;
+		return 8500;
 	}
 
 	/**
