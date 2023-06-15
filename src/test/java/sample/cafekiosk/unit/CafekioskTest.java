@@ -122,4 +122,22 @@ class CafekioskTest {
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("주문 시간이 아닙니다. 관리자에게 문의하세요.");
 	}
+
+	/**
+	 * TDD
+	 * 1. RED: 실패하는 Test 먼저 작성.
+	 */
+	@Test
+	void calculateTotalPrice() {
+		Cafekiosk cafekiosk = new Cafekiosk();
+
+		Americano americano = new Americano();
+		Latte latte = new Latte();
+		cafekiosk.add(americano);
+		cafekiosk.add(latte);
+
+		int totalPrice = cafekiosk.calculateTotalPrice(); // 컴파일은 되도록 IntelliJ 자동완성으로 메서드 생성.
+
+		assertThat(totalPrice).isEqualTo(8500);
+	}
 }

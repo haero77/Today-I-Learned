@@ -17,8 +17,8 @@ public class CafekioskRunner {
 		cafekiosk.add(new Latte());
 		System.out.println(">>> 라떼 추가");
 
-		int totalPrice = cafekiosk.calculateTotalPrice();
-		System.out.println("총 주문 가격: " + totalPrice);
+		// int totalPrice = cafekiosk.calculateTotalPrice();
+		// System.out.println("총 주문 가격: " + totalPrice);
 
 		/**
 		 * 프로덕션 코드에서는 LocalDateTime.now()를 쓰지만,
