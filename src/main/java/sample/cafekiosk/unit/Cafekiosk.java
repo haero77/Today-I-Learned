@@ -42,9 +42,15 @@ public class Cafekiosk {
 		beverages.clear();
 	}
 
-	// GREEN: 최소한의 코드로 일단 테스트가 통과하게 만든다
+	// REFACTOR: 구현부를 리팩토링 하고 테스트를 다시 수행해서 통과하는지 확인
 	public int calculateTotalPrice() {
-		return 8500;
+		int totalPrice = 0;
+
+		for (Beverage beverage : beverages) {
+			totalPrice += beverage.getPrice();
+		}
+
+		return totalPrice;
 	}
 
 	/**
