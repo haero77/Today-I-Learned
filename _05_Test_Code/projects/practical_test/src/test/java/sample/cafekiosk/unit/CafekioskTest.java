@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import sample.cafekiosk.unit.beverage.Americano;
@@ -25,6 +26,8 @@ class CafekioskTest {
 	}
 
 	@Test
+	// @DisplayName("음료 1개 추가")
+	@DisplayName("음료 1개를 추가하면 주문 목록에 담긴다.")
 	void add() {
 		Cafekiosk cafekiosk = new Cafekiosk();
 		cafekiosk.add(new Americano());
