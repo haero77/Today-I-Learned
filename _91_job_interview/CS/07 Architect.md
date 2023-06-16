@@ -1,3 +1,41 @@
+# 아키텍쳐
+
+<details>
+    <summary><b>Layered Architecture?</b></summary>
+
+- Spring MVC에서 많이 사용되는 아키텍쳐
+- **왜 레이어를 분리하는가? 👉 관심사의 분리**
+- 장점
+  - 높은 유지보수성
+  - 쉬운 테스트 
+
+### Layers
+
+- Presentation Layer
+  - 사용자가 데이터를 전달하기 위해 화면에 정보를 표시하는 것을 주 관심사로 둔다.
+  - Presentation Layer 는 비즈니스 로직이 어떻게 수행되는지 알 필요가 없다. 
+  - ex) View, Controller 
+- Business Layer
+  - Persistence Layer에서 데이터를 가져와 비즈니스 로직을 수행 
+  - ex) Service, Domain
+- Persistence Layer
+  - 애플리케이션의 영속성을 구현하기 위해 데이터 소스로부터 데이터를 가져오는 역할 
+  - ex) Repository, DAO
+
+<img width="999" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/1e0bbd22-f74f-44e9-b204-17dfebe75b7d">
+
+
+
+
+</details>
+
+
+<br>
+
+---
+
+# 대용량 설계 
+
 <details>
     <summary><b>대용량 트래픽 처리를 어떻게 할까?</b></summary>
 </details>
@@ -17,3 +55,7 @@
 - https://mangkyu.tistory.com/88
 
 </details>
+
+<br>
+
+---
