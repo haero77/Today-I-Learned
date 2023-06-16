@@ -131,16 +131,20 @@ class CafekioskTest {
 	 * 1. RED: 실패하는 Test 먼저 작성.
 	 */
 	@Test
+	@DisplayName("주문 목록에 담긴 상품들의 총 금액을 계산할 수 있다.")
 	void calculateTotalPrice() {
+		// given
 		Cafekiosk cafekiosk = new Cafekiosk();
-
 		Americano americano = new Americano();
 		Latte latte = new Latte();
+
 		cafekiosk.add(americano);
 		cafekiosk.add(latte);
 
+		// when
 		int totalPrice = cafekiosk.calculateTotalPrice(); // 컴파일은 되도록 IntelliJ 자동완성으로 메서드 생성.
 
+		// then
 		assertThat(totalPrice).isEqualTo(8500);
 	}
 }
