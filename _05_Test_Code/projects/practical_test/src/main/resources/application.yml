@@ -12,6 +12,10 @@ spring:
     hibernate:
       ddl-auto: none # fix none
 
+  output:
+    ansi:
+      enabled: always
+
 ---
 spring:
   config:
