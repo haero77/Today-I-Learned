@@ -1,7 +1,6 @@
 package com.stock.service;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.stock.domain.Stock;
 import com.stock.repository.StockRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @SpringBootTest
 class StockServiceTest {
 
@@ -39,10 +41,10 @@ class StockServiceTest {
 
 	@Test
 	void stock_decrease() {
-	    // when
+		// when
 		stockService.decrease(1L, 1L);
 
-	    // then
+		// then
 		Stock findStock = stockRepository.findById(1L).orElseThrow();
 		assertThat(findStock.getQuantity()).isEqualTo(99L);
 	}
@@ -65,23 +67,30 @@ class StockServiceTest {
 	 */
 	@Test
 	@DisplayName("동시에 100개의 재고 감소 요청")
-	void stock_decrease_100() {
-
+	void stock_decrease_100() throws InterruptedException {
 		// given
 		int threadCount = 100;
+
+		// ExecutorService: 비동기로 실행하는 작업을 단순화하여 사용할 수 있게 도와주는 Java API
 		ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
-		CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+
+		// CountDownLatch: 다른 스레드에서 수행 중인 작업이 완료될 때까지 대기할 수 있도록 도와주는 클래스
+		CountDownLatch countDownLatch = new CountDownLatch(threadCount); // 100개의 요청이 끝날 때까지 기다리기 위한 CountDownLatch
 
 		// when
 		for (int i = 0; i < threadCount; i++) {
 			executorService.submit(() -> {
 				try {
 					stockService.decrease(1L, 1L);
+				} catch (Exception e) {
+					e.printStackTrace();
 				} finally {
 					countDownLatch.countDown();
 				}
 			});
 		}
+
+		countDownLatch.await(); // 100개의 스레드 요청이 종료될 때까지 대기
 
 		// then
 		Stock findStock = stockRepository.findById(1L).orElseThrow();
