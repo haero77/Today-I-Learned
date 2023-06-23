@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
@@ -43,7 +42,7 @@ class OrderServiceTest {
 			.build();
 
 		// when
-		OrderResponse orderResponse = orderService.createOrder(request);
+		OrderResponse orderResponse = orderService.createOrder(request, LocalDateTime.now());
 
 		// then
 		assertThat(orderResponse.getId()).isNotNull(); // id가 있기만 하면 되므로 isNotNull 사용

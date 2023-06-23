@@ -1,5 +1,6 @@
 package sample.cafekiosk.spring.api.service.order;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -17,14 +18,13 @@ public class OrderService {
 
 	private final ProductRepository productRepository;
 
-	public OrderResponse createOrder(OrderCreateRequest request) {
+	public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDateTime) {
 		List<String> productNumbers =  request.getProductNumbers();
 
-		// product
 		List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
 
-		// order
-		Order order = Order.create(products);
+		// LocalDateTime.now()가 서비스 레이어에 있으면 테스트 하기 어려우므로 파라미터로 추출
+		Order order = Order.create(products, registeredDateTime);
 
 		return null;
 	}
