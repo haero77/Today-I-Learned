@@ -16,4 +16,5 @@ public enum ProductSellingStatus {
 	public static List<ProductSellingStatus> forDisplay() {
 		return List.of(SELLING, HOLD);
 	}
+
 }
