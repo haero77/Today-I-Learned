@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 import sample.cafekiosk.spring.domain.order.Order;
+import sample.cafekiosk.spring.domain.order.OrderRepository;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
 
@@ -17,6 +18,7 @@ import sample.cafekiosk.spring.domain.product.ProductRepository;
 public class OrderService {
 
 	private final ProductRepository productRepository;
+	private final OrderRepository orderRepository;
 
 	public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDateTime) {
 		List<String> productNumbers =  request.getProductNumbers();
@@ -25,8 +27,9 @@ public class OrderService {
 
 		// LocalDateTime.now()가 서비스 레이어에 있으면 테스트 하기 어려우므로 파라미터로 추출
 		Order order = Order.create(products, registeredDateTime);
+		Order savedOrder = orderRepository.save(order);
 
-		return null;
+		return OrderResponse.of(savedOrder);
 	}
 
 }
