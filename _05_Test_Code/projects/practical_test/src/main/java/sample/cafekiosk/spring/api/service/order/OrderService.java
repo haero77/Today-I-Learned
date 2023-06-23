@@ -24,7 +24,16 @@ public class OrderService {
 
 	public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDateTime) {
 		List<String> productNumbers = request.getProductNumbers();
+		List<Product> products = findProductsBy(productNumbers);
 
+		// LocalDateTime.now()가 서비스 레이어에 있으면 테스트 하기 어려우므로 파라미터로 추출
+		Order order = Order.create(products, registeredDateTime);
+		Order savedOrder = orderRepository.save(order);
+
+		return OrderResponse.of(savedOrder);
+	}
+
+	private List<Product> findProductsBy(List<String> productNumbers) {
 		// 중복이 제거된 프로덕트가 조회된다.
 		List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
 
@@ -33,15 +42,9 @@ public class OrderService {
 			.collect(Collectors.toMap(Product::getProductNumber, product -> product));
 
 		// productNumber -> Product 변환
-		List<Product> duplicateProducts = productNumbers.stream()
+		return productNumbers.stream()
 			.map(productMap::get)
 			.collect(Collectors.toList());
-
-		// LocalDateTime.now()가 서비스 레이어에 있으면 테스트 하기 어려우므로 파라미터로 추출
-		Order order = Order.create(duplicateProducts, registeredDateTime);
-		Order savedOrder = orderRepository.save(order);
-
-		return OrderResponse.of(savedOrder);
 	}
 
 }
