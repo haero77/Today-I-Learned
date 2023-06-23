@@ -59,3 +59,30 @@
 
 - Spring 진영에서는 JPA를 한 번 더 추상화한 Spring Data JPA 제공
 - QueryDSL과 조합하여 많이 사용한다. (타입체크, 동적쿼리)
+
+
+# 레이어별 테스트
+
+# Persistence Layer
+
+- Data Access의 역할
+- 비즈니스 가공로직이 포함되어서는 안 된다.
+- Data에 대한 CRUD에만 집중한 레이어
+
+# Business Layer
+
+- 비즈니스 로직을 구현하는 역할
+- Persistence Layer와의 상호작용(Data를 읽고 쓰는 행위)을 통해 비즈니스 로직을 전개시킨다.
+- 트랜잭션을 보장해야한다.
+
+### 추가된 요구사항
+
+> ✅ 상품 번호 리스트를 받아 주문 생성하기 <br>
+> ✅ 주문은 주문 상태, 주문 등록 시간을 가진다. <br>
+> ✅ 주문의 총 금액을 계산할 수 있어야 한다.
+
+### @DataJpaTest의 @Transactional
+
+- 서비스 레이어는 클렌징 해주지 않아 테스트가 실패한다.
+- Repository 테스트는 `tearDown()`으로 클렌징 해주지 않아도 테스트가 통과함. 왜일까?
+  - Repository 레이어는 `@DataJpaTest`를 사용. -> `@Transactional 붙어있음` -> 테스트가 끝나고 롤백된다.
