@@ -17,8 +17,24 @@ class OrderTest {
 
 	@DisplayName("주문 생성 시 상품 리스트에서 상품의 총 주문금액을 계산한다.")
 	@Test
-	void create() {
+	void calculateTotalPrice() {
 	    // given
+		List<Product> products = List.of(
+			createProduct("001", 1000),
+			createProduct("002", 2000)
+		);
+
+		// when
+		Order order = Order.create(products);
+
+		// then
+		assertThat(order.getTotalPrice()).isEqualTo(3000);
+	}
+
+	@DisplayName("주문 생성 시 상품 리스트에서 상품의 총 주문금액을 계산한다.")
+	@Test
+	void create() {
+		// given
 		List<Product> products = List.of(
 			createProduct("001", 1000),
 			createProduct("002", 2000)
