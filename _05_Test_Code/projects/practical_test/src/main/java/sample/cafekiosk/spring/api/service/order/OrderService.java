@@ -29,42 +29,18 @@ public class OrderService {
 	private final OrderRepository orderRepository;
 	private final StockRepository stockRepository;
 
+	/**
+	 * 재고 감소 -> 동시성 고민
+	 */
 	public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDateTime) {
 		List<String> productNumbers = request.getProductNumbers();
 		List<Product> products = findProductsBy(productNumbers);
 
+		deductStockQuantities(products);
+
 		// LocalDateTime.now()가 서비스 레이어에 있으면 테스트 하기 어려우므로 파라미터로 추출
 		Order order = Order.create(products, registeredDateTime);
 		Order savedOrder = orderRepository.save(order);
-
-		// 재고 차감 체크가 필요한 상품들 filter
-		List<String> stockProductNumbers = products.stream()
-			.filter(product -> ProductType.containsStockType(product.getType()))
-			.map(Product::getProductNumber)
-			.collect(Collectors.toList());
-
-		// 재고 엔티티 조회
-		List<Stock> stocks = stockRepository.findAllByProductNumberIn(stockProductNumbers);
-		Map<String, Stock> stockMap = stocks.stream()
-			.collect(
-				Collectors.toMap(Stock::getProductNumber, stock -> stock)); // 리스트를 그냥 순회하면 성능이 안 나올 수도 있으므로, map을 만든다.
-
-		// 상품별 counting
-		Map<String, Long> productCountingMap = stockProductNumbers.stream()
-			.collect(Collectors.groupingBy(productNumber -> productNumber, Collectors.counting()));
-
-		// 재고 차감시도
-		for (String stockProductNumber : new HashSet<>(stockProductNumbers)) {
-			Stock stock = stockMap.get(stockProductNumber);
-			int quantity = productCountingMap.get(stockProductNumber).intValue();
-
-			// stock.deductQuantity 에서도 예외처리를 하는데 여기서도 예외처리를 한 이유?
-			// 👉 예외를 핸들링하는 방향이 다르다.
-			if (stock.isQuantityLessThan(quantity)) {
-				throw new IllegalArgumentException("재고가 부족한 상품이 있습니다.");
-			}
-			stock.deductQuantity(quantity);
-		}
 
 		return OrderResponse.of(savedOrder);
 	}
@@ -79,8 +55,50 @@ public class OrderService {
 
 		// productNumber -> Product 변환
 		return productNumbers.stream()
+
 			.map(productMap::get)
 			.collect(Collectors.toList());
+	}
+
+	private void deductStockQuantities(List<Product> products) {
+		List<String> stockProductNumbers = extractStockProductNumbers(products);
+
+		Map<String, Stock> stockMap = createStockMapBy(stockProductNumbers);
+		Map<String, Long> productCountingMap = createCountingMapBy(stockProductNumbers);
+
+		// 재고 차감시도
+		for (String stockProductNumber : new HashSet<>(stockProductNumbers)) {
+			Stock stock = stockMap.get(stockProductNumber);
+			int quantity = productCountingMap.get(stockProductNumber).intValue();
+
+			// stock.deductQuantity 에서도 예외처리를 하는데 여기서도 예외처리를 한 이유?
+			// 👉 예외를 핸들링하는 방향이 다르다.
+			if (stock.isQuantityLessThan(quantity)) {
+				throw new IllegalArgumentException("재고가 부족한 상품이 있습니다.");
+			}
+			stock.deductQuantity(quantity);
+		}
+	}
+
+	private List<String> extractStockProductNumbers(List<Product> products) {
+		return products.stream()
+			.filter(product -> ProductType.containsStockType(product.getType()))
+			.map(Product::getProductNumber)
+			.collect(Collectors.toList());
+		// 재고 차감 체크가 필요한 상품들 filter
+	}
+
+	private Map<String, Stock> createStockMapBy(List<String> stockProductNumbers) {
+		// 재고 엔티티 조회
+		List<Stock> stocks = stockRepository.findAllByProductNumberIn(stockProductNumbers);
+		return stocks.stream()
+			.collect(Collectors.toMap(Stock::getProductNumber, stock -> stock));
+	}
+
+	private Map<String, Long> createCountingMapBy(List<String> stockProductNumbers) {
+		// 상품별 counting
+		return stockProductNumbers.stream()
+			.collect(Collectors.groupingBy(productNumber -> productNumber, Collectors.counting()));
 	}
 
 }
