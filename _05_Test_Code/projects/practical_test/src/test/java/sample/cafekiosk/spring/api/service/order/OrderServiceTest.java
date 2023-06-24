@@ -7,12 +7,12 @@ import static sample.cafekiosk.spring.domain.product.ProductType.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
@@ -25,7 +25,7 @@ import sample.cafekiosk.spring.domain.stock.Stock;
 import sample.cafekiosk.spring.domain.stock.StockRepository;
 
 @ActiveProfiles("test")
-@Transactional
+// @Transactional // 쓰면 편리하지만 부작용(프로덕션 코드에 트랜잭션이 설정된 것처럼 보이는 문제)을 인지하고 쓰자!
 @SpringBootTest // 서비스 레이어 테스트에서, 다른 레이어도 포함하므로 통합테스트이다.
 	// @DataJpaTest
 class OrderServiceTest {
@@ -45,13 +45,14 @@ class OrderServiceTest {
 	@Autowired
 	private OrderService orderService;
 
-	// @AfterEach
-	// void tearDown() {
-	// 	// productRepository.deleteAll();
-	// 	orderProductRepository.deleteAllInBatch();
-	// 	productRepository.deleteAllInBatch(); // 우빈님은 deleteAll() 보다 deleteAllInBatch()를 선호한다.
-	// 	orderRepository.deleteAllInBatch();
-	// }
+	@AfterEach
+	void tearDown() {
+		// productRepository.deleteAll();
+		orderProductRepository.deleteAllInBatch();
+		productRepository.deleteAllInBatch(); // 우빈님은 deleteAll() 보다 deleteAllInBatch()를 선호한다.
+		orderRepository.deleteAllInBatch();
+		stockRepository.deleteAllInBatch();
+	}
 
 	@DisplayName("주문번호 리스트를 받아 주문을 생성한다.")
 	@Test
@@ -115,16 +116,6 @@ class OrderServiceTest {
 			);
 	}
 
-	private Product createProduct(ProductType type, String productNumber, int price) {
-		return Product.builder()
-			.type(type)
-			.productNumber(productNumber)
-			.price(price)
-			.sellingStatus(SELLING)
-			.name("menu name")
-			.build();
-	}
-
 	@DisplayName("재고와 관련된 상품이 포함되어 있는 주문번호 리스트를 받아 주문을 생성한다.")
 	@Test
 	void createOrderWithStock() {
@@ -168,6 +159,42 @@ class OrderServiceTest {
 				tuple("001", 0),
 				tuple("002", 1)
 			);
+	}
+
+	@DisplayName("재고가 부족한 상품으로 주문을 생성하려는 경우 예외가 발생한다.")
+	@Test
+	void createOrderWithNoStock() {
+		// given
+		LocalDateTime registeredDateTime = LocalDateTime.now();
+
+		Product product1 = createProduct(BOTTLE, "001", 1000);
+		Product product2 = createProduct(BAKERY, "002", 3000);
+		Product product3 = createProduct(HANDMADE, "003", 5000);
+		productRepository.saveAll(List.of(product1, product2, product3));
+
+		OrderCreateRequest request = OrderCreateRequest.builder()
+			.productNumbers(List.of("001", "001", "002", "003"))
+			.build();
+
+		Stock stock1 = Stock.create("001", 2);
+		Stock stock2 = Stock.create("002", 2);
+		stock1.deductQuantity(1); // todo: 이렇게 작성하면 안 된다.
+		stockRepository.saveAll(List.of(stock1, stock2));
+
+		// when // then
+		assertThatThrownBy(() -> orderService.createOrder(request, registeredDateTime))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("재고가 부족한 상품이 있습니다.");
+	}
+
+	private Product createProduct(ProductType type, String productNumber, int price) {
+		return Product.builder()
+			.type(type)
+			.productNumber(productNumber)
+			.price(price)
+			.sellingStatus(SELLING)
+			.name("menu name")
+			.build();
 	}
 
 }
