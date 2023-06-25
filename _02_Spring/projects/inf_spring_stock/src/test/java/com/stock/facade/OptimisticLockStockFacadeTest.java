@@ -1,4 +1,4 @@
-package com.stock.service;
+package com.stock.facade;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -17,10 +17,10 @@ import com.stock.domain.Stock;
 import com.stock.repository.StockRepository;
 
 @SpringBootTest
-class PessimisticLockStockServiceTest {
+class OptimisticLockStockFacadeTest {
 
 	@Autowired
-	private PessimisticLockStockService pessimisticLockStockService;
+	private OptimisticLockStockFacade optimisticLockStockFacade;
 
 	@Autowired
 	private StockRepository stockRepository;
@@ -48,9 +48,9 @@ class PessimisticLockStockServiceTest {
 		for (int i = 0; i < threadCount; i++) {
 			executorService.submit(() -> {
 				try {
-					pessimisticLockStockService.decrease(1L, 1L);
-				} catch (Exception e) {
-					e.printStackTrace();
+					optimisticLockStockFacade.decrease(1L, 1L);
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
 				} finally {
 					countDownLatch.countDown();
 				}
