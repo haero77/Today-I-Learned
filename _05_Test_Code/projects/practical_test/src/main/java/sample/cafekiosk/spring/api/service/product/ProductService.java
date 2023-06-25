@@ -18,12 +18,17 @@ public class ProductService {
 
 	private final ProductRepository productRepository;
 
-	public void createProduct(ProductCreateRequest request) {
+	/**
+	 * 💡 보통 Create(또는 Save) 행위를 했을 때는 어떤 것이 생성되었는지 응답으로 주는 경우가 많다.
+	 */
+	public ProductResponse createProduct(ProductCreateRequest request) {
 		String latestProductNumber = productRepository.findLatestProductNumber();
 		// productNumber
 		// 001 002 003 004
 		// DB에서 마지막 저장된 Product의 상품 번호를 읽어와서 + 1
 		// 009 -> 010
+
+		return null;
 	}
 
 	public List<ProductResponse> getSellingProducts() {
