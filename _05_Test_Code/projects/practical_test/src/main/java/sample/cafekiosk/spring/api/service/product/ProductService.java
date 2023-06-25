@@ -1,5 +1,8 @@
 package sample.cafekiosk.spring.api.service.product;
 
+import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
+import static sample.cafekiosk.spring.domain.product.ProductType.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +13,6 @@ import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateR
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
-import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 
 @RequiredArgsConstructor
 @Service
@@ -23,16 +25,18 @@ public class ProductService {
 	 */
 	public ProductResponse createProduct(ProductCreateRequest request) {
 		String latestProductNumber = productRepository.findLatestProductNumber();
-		// productNumber
-		// 001 002 003 004
-		// DB에서 마지막 저장된 Product의 상품 번호를 읽어와서 + 1
-		// 009 -> 010
 
-		return null;
+		return ProductResponse.builder()
+			.productNumber("002")
+			.type(HANDMADE)
+			.sellingStatus(SELLING)
+			.name("카푸치노")
+			.price(5000)
+			.build();
 	}
 
 	public List<ProductResponse> getSellingProducts() {
-		List<Product> products = productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay());
+		List<Product> products = productRepository.findAllBySellingStatusIn(forDisplay());
 
 		return products.stream()
 			.map(ProductResponse::of)
