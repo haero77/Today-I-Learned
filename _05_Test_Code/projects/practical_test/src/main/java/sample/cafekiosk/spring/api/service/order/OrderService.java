@@ -81,11 +81,11 @@ public class OrderService {
 	}
 
 	private List<String> extractStockProductNumbers(List<Product> products) {
+		// 재고 차감 체크가 필요한 상품들 filter
 		return products.stream()
 			.filter(product -> ProductType.containsStockType(product.getType()))
 			.map(Product::getProductNumber)
 			.collect(Collectors.toList());
-		// 재고 차감 체크가 필요한 상품들 filter
 	}
 
 	private Map<String, Stock> createStockMapBy(List<String> stockProductNumbers) {
