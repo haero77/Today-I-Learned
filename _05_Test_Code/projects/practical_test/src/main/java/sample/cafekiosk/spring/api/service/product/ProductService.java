@@ -1,7 +1,6 @@
 package sample.cafekiosk.spring.api.service.product;
 
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
-import static sample.cafekiosk.spring.domain.product.ProductType.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,19 +19,14 @@ public class ProductService {
 
 	private final ProductRepository productRepository;
 
-	/**
-	 * 💡 보통 Create(또는 Save) 행위를 했을 때는 어떤 것이 생성되었는지 응답으로 주는 경우가 많다.
-	 */
+	// 💡 동시성 이슈 발생 가능 - 상품을 여러명이서 동시에 등록하는 경우 -> UUID도 좋은 선택
 	public ProductResponse createProduct(ProductCreateRequest request) {
-		String latestProductNumber = productRepository.findLatestProductNumber();
+		String nextProductNumber = createNextProductNumber();
 
-		return ProductResponse.builder()
-			.productNumber("002")
-			.type(HANDMADE)
-			.sellingStatus(SELLING)
-			.name("카푸치노")
-			.price(5000)
-			.build();
+		Product product = request.toEntity(nextProductNumber);
+		Product savedProduct = productRepository.save(product);
+
+		return ProductResponse.of(savedProduct);
 	}
 
 	public List<ProductResponse> getSellingProducts() {
@@ -41,6 +35,18 @@ public class ProductService {
 		return products.stream()
 			.map(ProductResponse::of)
 			.collect(Collectors.toList());
+	}
+
+	private String createNextProductNumber() {
+		String latestProductNumber = productRepository.findLatestProductNumber();
+		if (latestProductNumber == null) {
+			return "001";
+		}
+
+		int latestProductNumberInt = Integer.parseInt(latestProductNumber);
+		int nextProductNumber = latestProductNumberInt + 1;
+
+		return String.format("%03d", nextProductNumber);
 	}
 
 }
