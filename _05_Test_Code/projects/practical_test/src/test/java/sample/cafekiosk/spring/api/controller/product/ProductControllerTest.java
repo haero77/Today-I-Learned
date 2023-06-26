@@ -1,8 +1,11 @@
 package sample.cafekiosk.spring.api.controller.product;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateRequest;
 import sample.cafekiosk.spring.api.service.product.ProductService;
+import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
@@ -152,6 +156,30 @@ class ProductControllerTest {
 			.andExpect(jsonPath("$.status").value("BAD_REQUEST"))
 			.andExpect(jsonPath("$.message").value("상품 가격은 양수여야 합니다."))
 			.andExpect(jsonPath("$.data").isEmpty());
+	}
+
+	/**
+	 * 실제 데이터를 넣고, 그 값이 리턴되는지에 대한 검증은 하위 레이어에서 마쳤다.
+	 * 👉 여기서는 리턴타입이 Array인지만 검증한다.
+	 */
+	@DisplayName("판매 상품을 조회한다.")
+	@Test
+	void getSellingProducts() throws Exception {
+		// given
+		List<ProductResponse> result = List.of();
+
+		when(productService.getSellingProducts()).thenReturn(result);
+
+		// when // then
+		mockMvc.perform(
+				get("/api/v1/products/selling")
+			)
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.code").value("200"))
+			.andExpect(jsonPath("$.status").value("OK"))
+			.andExpect(jsonPath("$.message").value("OK"))
+			.andExpect(jsonPath("$.data").isArray());
 	}
 
 }
