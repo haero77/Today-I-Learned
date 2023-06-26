@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateRequest;
+import sample.cafekiosk.spring.api.service.product.request.ProductCreateServiceRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
@@ -32,7 +32,7 @@ public class ProductService {
 
 	// 💡 동시성 이슈 발생 가능 - 상품을 여러명이서 동시에 등록하는 경우 -> UUID도 좋은 선택
 	@Transactional
-	public ProductResponse createProduct(ProductCreateRequest request) {
+	public ProductResponse createProduct(ProductCreateServiceRequest request) {
 		String nextProductNumber = createNextProductNumber();
 
 		Product product = request.toEntity(nextProductNumber);

@@ -20,5 +20,11 @@ public class OrderCreateRequest {
 		this.productNumbers = productNumbers;
 	}
 
+	public OrderCreateRequest toServiceRequest() {
+		return OrderCreateRequest.builder()
+			.productNumbers(productNumbers)
+			.build();
+	}
+
 }
 
