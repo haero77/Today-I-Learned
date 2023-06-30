@@ -22,11 +22,21 @@ repositories {
 }
 
 dependencies {
+	// spring boot
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// p6spy
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1' // 1.7.1 버전을 써야 정상 작동
+
+	// lombok
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// h2
+	runtimeOnly 'com.h2database:h2'
+
+	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
