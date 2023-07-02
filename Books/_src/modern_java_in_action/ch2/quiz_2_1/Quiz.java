@@ -1,8 +1,8 @@
-package _01_Java._src.modern_java_in_action.ch2.quiz_2_1;
+package Books._src.modern_java_in_action.ch2.quiz_2_1;
 
 import java.util.List;
 
-import _01_Java._src.modern_java_in_action.ch2.Apple;
+import Books._src.modern_java_in_action.ch2.Apple;
 
 public class Quiz {
 

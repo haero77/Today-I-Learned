@@ -1,10 +1,10 @@
-package _01_Java._src.modern_java_in_action.ch2._01_;
+package Books._src.modern_java_in_action.ch2._01_;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import _01_Java._src.modern_java_in_action.ch2.Apple;
-import _01_Java._src.modern_java_in_action.ch2.Color;
+import Books._src.modern_java_in_action.ch2.Apple;
+import Books._src.modern_java_in_action.ch2.Color;
 
 public class FruitFilter {
 

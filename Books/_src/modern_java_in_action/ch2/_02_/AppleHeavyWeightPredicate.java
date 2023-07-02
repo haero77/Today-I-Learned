@@ -1,6 +1,6 @@
-package _01_Java._src.modern_java_in_action.ch2._02_;
+package Books._src.modern_java_in_action.ch2._02_;
 
-import _01_Java._src.modern_java_in_action.ch2.Apple;
+import Books._src.modern_java_in_action.ch2.Apple;
 
 public class AppleHeavyWeightPredicate implements ApplePredicate{
 

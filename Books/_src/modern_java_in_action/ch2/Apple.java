@@ -1,4 +1,4 @@
-package _01_Java._src.modern_java_in_action.ch2;
+package Books._src.modern_java_in_action.ch2;
 
 import lombok.Getter;
 
