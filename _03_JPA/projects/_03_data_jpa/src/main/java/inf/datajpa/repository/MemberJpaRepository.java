@@ -1,4 +1,4 @@
-package inf.datajpa.repository.member;
+package inf.datajpa.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
-import inf.datajpa.entity.member.Member;
+import inf.datajpa.entity.Member;
 
 @Repository
 public class MemberJpaRepository {
