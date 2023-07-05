@@ -7,13 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.labs.domain.member.Member;
 import com.labs.domain.member.MemberRepository;
 
 @SpringBootTest
-@Transactional
 class MemberServiceTest {
 
 	@Autowired
@@ -30,17 +28,17 @@ class MemberServiceTest {
 	@DisplayName("회원의 username을 변경할 수 있다.")
 	@Test
 	void changeUsername() {
-	    // given
+		// given
 		Member member = new Member("oldUsername");
 		Member savedMember = memberRepository.save(member);
 
 		Long savedMemberId = savedMember.getId();
 		String newUsername = "newUsername";
 
-	    // when
+		// when
 		memberService.changeUsername(savedMemberId, newUsername);
 
-	    // then
+		// then
 		Member findMember = memberRepository.findById(savedMemberId).get();
 		assertThat(findMember.getUsername()).isEqualTo(newUsername);
 	}
@@ -48,10 +46,10 @@ class MemberServiceTest {
 	@DisplayName("username으로 회원을 생성할 수 있다.")
 	@Test
 	void createMember() {
-	    // given
+		// given
 		String username = "username";
 
-	    // when
+		// when
 		Long createdMemberId = memberService.createMember(username);
 
 		// then

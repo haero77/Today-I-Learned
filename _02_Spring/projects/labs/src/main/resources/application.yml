@@ -2,6 +2,14 @@ spring:
   profiles:
     default: test
 
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+#          jpa: DEBUG
+          transaction: DEBUG
+
 ---
 
 spring:

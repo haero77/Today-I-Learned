@@ -1,6 +1,7 @@
 package com.labs.api.service.member;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.labs.domain.member.Member;
 import com.labs.domain.member.MemberRepository;
@@ -19,6 +20,7 @@ public class MemberService {
 		return savedMember.getId();
 	}
 
+	@Transactional
 	public void changeUsername(Long id, String newUsername) {
 		Member findMember = memberRepository.findById(id).orElseThrow();
 		findMember.changeUsername(newUsername);
