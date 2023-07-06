@@ -7,15 +7,18 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import inf.datajpa.dto.MemberDto;
 import inf.datajpa.entity.Member;
+import inf.datajpa.entity.Team;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
 class MemberRepositoryTest {
+
+	@Autowired
+	private TeamRepository teamRepository;
 
 	@Autowired
 	private MemberRepository memberRepository;
@@ -97,6 +100,45 @@ class MemberRepositoryTest {
 		// then
 		assertThat(findMember.getUsername()).isEqualTo("BBB");
 		assertThat(findMember.getAge()).isEqualTo(20);
+	}
+
+	@Test
+	void findUsernameList() {
+		// given
+		Member member1 = new Member("AAA", 10);
+		Member member2 = new Member("BBB", 20);
+		memberRepository.saveAll(List.of(member1, member2));
+
+		// when
+		List<String> usernameList = memberRepository.findUsernameList();
+
+		// then
+		assertThat(usernameList).hasSize(2)
+			.containsExactlyInAnyOrder(
+				"AAA",
+				"BBB"
+			);
+	}
+
+	@Test
+	void findMemberDto() {
+		// given
+		Team team = new Team("teamA");
+		teamRepository.save(team);
+
+		Member member = new Member("AAA", 10);
+		member.changeTeam(team);
+		memberRepository.save(member);
+
+		// when
+		List<MemberDto> memberDtos = memberRepository.findMemberDto();
+
+		// then
+		assertThat(memberDtos).hasSize(1)
+			.extracting("username", "teamName")
+			.containsExactly(
+				tuple("AAA", "teamA")
+			);
 	}
 
 }
