@@ -1,4 +1,4 @@
-package inf.datajpa.entity.member;
+package inf.datajpa.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import inf.datajpa.entity.team.Team;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
