@@ -61,4 +61,27 @@ class MemberRepositoryTest {
 		assertThat(deletedCount).isEqualTo(0);
 	}
 
+	@Test
+	void findByUsernameAndAgeGreaterThan() {
+		// given
+		Member member1 = new Member("username", 10);
+		Member member2 = new Member("username", 20);
+		memberRepository.saveAll(List.of(member1, member2));
+
+		// when
+		List<Member> members = memberRepository.findByUsernameAndAgeGreaterThan("username", 15);
+
+		// then
+		assertThat(members).hasSize(1)
+			.extracting("username", "age")
+			.containsExactlyInAnyOrder(
+				tuple("username", 20)
+			);
+	}
+
+	@Test
+	void findTop3HelloBy() {
+		List<Member> top3HelloBy = memberRepository.findTop3HelloBy();
+	}
+
 }
