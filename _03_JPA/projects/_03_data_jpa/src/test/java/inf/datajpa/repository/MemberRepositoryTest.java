@@ -84,4 +84,19 @@ class MemberRepositoryTest {
 		List<Member> top3HelloBy = memberRepository.findTop3HelloBy();
 	}
 
+	@Test
+	void findUser() {
+		// given
+		Member member1 = new Member("AAA", 10);
+		Member member2 = new Member("BBB", 20);
+		memberRepository.saveAll(List.of(member1, member2));
+
+		// when
+		Member findMember = memberRepository.findUser("BBB", 20).get();
+
+		// then
+		assertThat(findMember.getUsername()).isEqualTo("BBB");
+		assertThat(findMember.getAge()).isEqualTo(20);
+	}
+
 }
