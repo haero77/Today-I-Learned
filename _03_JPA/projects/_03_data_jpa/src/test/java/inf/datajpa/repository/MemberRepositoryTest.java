@@ -2,7 +2,9 @@ package inf.datajpa.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,6 +140,30 @@ class MemberRepositoryTest {
 			.extracting("username", "teamName")
 			.containsExactly(
 				tuple("AAA", "teamA")
+			);
+	}
+
+	@Test
+	void findByNames() {
+		// given
+		Member member1 = new Member("AAA", 10);
+		Member member2 = new Member("BBB", 20);
+		memberRepository.saveAll(List.of(member1, member2));
+
+		Set<String> names = new HashSet<>();
+		names.add("AAA");
+		names.add("BBB");
+
+		// when
+		// List<Member> members = memberRepository.findByNames(Arrays.asList("AAA", "BBB"));
+		List<Member> members = memberRepository.findByNames(names);
+
+		// then
+		assertThat(members).hasSize(2)
+			.extracting("username", "age")
+			.containsExactlyInAnyOrder(
+				tuple("AAA", 10),
+				tuple("BBB", 20)
 			);
 	}
 
