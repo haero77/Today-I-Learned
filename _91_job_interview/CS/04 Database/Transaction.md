@@ -1,4 +1,3 @@
-
 # ACID 
 
 트랜잭션은 ACID(Atomicity, Consistency, Isolation, Durability)를 보장해야한다.

@@ -1,14 +1,13 @@
 # 🎯 트랜잭션
 
-
-<details>
-    <summary><b>갱신 손실 문제?</b></summary>
-</details>
+- 트랜잭션
+- ACID
+- 트랜잭션 격리 수준
+- 갱신 손실 문제
 
 <br>
 
 ---
-
 
 # 🎯 데드락 
 
@@ -41,12 +40,10 @@
 
 # 🎯 인덱스
 
-<details>
-    <summary><b>인덱스란?</b></summary>
-
-
-
-</details>
+- Index
+- Clustered Index Vs. Secondary Index
+- 모든 컬럼에 Index를 거는 것이 좋을까?
+- 왜 해시 구조를 안 쓰고 B+Tree를 쓸까?
 
 <details>
     <summary><b>Clustering Index Vs. Secondary Index</b></summary>
