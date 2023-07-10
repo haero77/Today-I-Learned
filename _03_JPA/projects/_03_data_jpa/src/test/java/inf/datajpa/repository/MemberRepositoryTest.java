@@ -6,15 +6,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import inf.datajpa.dto.MemberDto;
 import inf.datajpa.entity.Member;
 import inf.datajpa.entity.Team;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @SpringBootTest
 @Transactional
 class MemberRepositoryTest {
@@ -165,6 +172,143 @@ class MemberRepositoryTest {
 				tuple("AAA", 10),
 				tuple("BBB", 20)
 			);
+	}
+
+	@Test
+	void page() {
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 10));
+		memberRepository.save(new Member("member3", 10));
+		memberRepository.save(new Member("member4", 10));
+		memberRepository.save(new Member("member5", 10));
+
+		int age = 10;
+		// Pageable 구현체
+		PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+		//when
+		Page<Member> page = memberRepository.findAsPageByAge(age, pageRequest);
+
+		// then
+		List<Member> content = page.getContent();
+		long totalCount = page.getTotalElements();
+
+		assertThat(content.size()).isEqualTo(3);
+		assertThat(totalCount).isEqualTo(5);
+		assertThat(page.getNumber()).isEqualTo(0);
+		assertThat(page.getTotalPages()).isEqualTo(2); // 5 = 3 * '1' + '2'
+		assertThat(page.isFirst()).isTrue();
+		assertThat(page.hasNext()).isTrue();
+	}
+
+	@Test
+	void slice() {
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 10));
+		memberRepository.save(new Member("member3", 10));
+		memberRepository.save(new Member("member4", 10));
+		memberRepository.save(new Member("member5", 10));
+
+		int age = 10;
+		// Pageable 구현체
+		PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+		//when
+		Slice<Member> slice = memberRepository.findAsSliceByAge(age, pageRequest);
+
+		// then
+		List<Member> content = slice.getContent();
+
+		assertThat(content.size()).isEqualTo(3);
+		assertThat(slice.getNumber()).isEqualTo(0);
+		assertThat(slice.isFirst()).isTrue();
+		assertThat(slice.hasNext()).isTrue();
+	}
+
+	@Test
+	void list() {
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 10));
+		memberRepository.save(new Member("member3", 10));
+		memberRepository.save(new Member("member4", 10));
+		memberRepository.save(new Member("member5", 10));
+
+		int age = 10;
+		// Pageable 구현체
+		PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+		// when
+		List<Member> members = memberRepository.findAsListByAge(age, pageRequest);
+
+		// then
+		assertThat(members.size()).isEqualTo(3);
+	}
+
+/*
+	@DisplayName("COUNT 쿼리없이 페치조인 불가능")
+	@Test
+	void count_query_separation() {
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 10));
+		memberRepository.save(new Member("member3", 10));
+		memberRepository.save(new Member("member4", 10));
+		memberRepository.save(new Member("member5", 10));
+
+		int age = 10;
+		PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+		// when
+		Page<Member> page = memberRepository.findWithFetchJoinWithoutCountQueryByAge(age, pageRequest);
+
+		// then
+		assertThat(page.getContent().size()).isEqualTo(3);
+	}
+*/
+
+
+	@DisplayName("직접 지정한 COUNT 쿼리없이 그냥 Paging 시 COUNT 쿼리에 JOIN 포함된다.")
+	@Test
+	void without_count_query() {
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 10));
+		memberRepository.save(new Member("member3", 10));
+		memberRepository.save(new Member("member4", 10));
+		memberRepository.save(new Member("member5", 10));
+
+		int age = 10;
+		PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+		// when
+		Page<Member> page = memberRepository.findWithoutCountQueryByAge(age, pageRequest);
+		Page<MemberDto> toMap = page.map(member -> new MemberDto(member.getId(), member.getUsername(), null));
+
+		// then
+		assertThat(page.getContent().size()).isEqualTo(3);
+	}
+
+	@DisplayName("COUNT 쿼리를 분리하기")
+	@Test
+	void with_count_query() {
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 10));
+		memberRepository.save(new Member("member3", 10));
+		memberRepository.save(new Member("member4", 10));
+		memberRepository.save(new Member("member5", 10));
+
+		int age = 10;
+		PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+		// when
+		Page<Member> page = memberRepository.findWithCountQueryByAge(age, pageRequest);
+
+		// then
+		assertThat(page.getContent().size()).isEqualTo(3);
 	}
 
 }
