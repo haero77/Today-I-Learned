@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Transactional
 class MemberRepositoryTest {
+
+	@PersistenceContext
+	private EntityManager em;
 
 	@Autowired
 	private TeamRepository teamRepository;
@@ -311,4 +317,27 @@ class MemberRepositoryTest {
 		assertThat(page.getContent().size()).isEqualTo(3);
 	}
 
+	@Test
+	void bulkUpdate() {
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 19));
+		memberRepository.save(new Member("member3", 20));
+		memberRepository.save(new Member("member4", 21));
+		memberRepository.save(new Member("member5", 40));
+
+		// when
+		int resultCount = memberRepository.bulkAgePlus(20);
+		// em.clear();
+
+		/**
+		 * JPA 벌크성 쿼리 주의점 : DB와 영속성 컨텍스트가 다르다.
+		 */
+		Member member5 = memberRepository.findByUsername("member5").get(0);
+		System.out.println("member5 = " + member5);
+
+		// then
+		assertThat(resultCount).isEqualTo(3);
+	}
+	
 }
