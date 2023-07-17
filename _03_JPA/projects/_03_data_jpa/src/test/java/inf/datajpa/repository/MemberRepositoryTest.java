@@ -333,7 +333,7 @@ class MemberRepositoryTest {
 		/**
 		 * JPA 벌크성 쿼리 주의점 : DB와 영속성 컨텍스트가 다르다.
 		 */
-		Member member5 = memberRepository.findByUsername("member5").get(0);
+		Member member5 = memberRepository.findByUsername("member5").get();
 		System.out.println("member5 = " + member5);
 
 		// then
@@ -404,6 +404,45 @@ class MemberRepositoryTest {
 			// 프록시 초기화, N + 1 문제 발생.
 			System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
 		}
+	}
+
+	@Test
+	public void withoutQueryHint() throws Exception {
+		//given
+		memberRepository.save(new Member("member1", 10));
+		em.flush();
+		em.clear();
+
+		//when
+		Member findMember = memberRepository.findByUsername("member1").get();
+		findMember.setUsername("member2");
+
+		em.flush();// UPDATE 쿼리 실행
+	}
+
+	@Test
+	public void queryHint() throws Exception {
+		//given
+		memberRepository.save(new Member("member1", 10));
+		em.flush();
+		em.clear();
+
+		//when
+		Member findMember = memberRepository.findReadOnlyByUsername("member1").get();
+		findMember.setUsername("member2");
+
+		em.flush();// UPDATE 쿼리 실행 X (더티 체킹 동작 X)
+	}
+
+	@Test
+	public void lock() throws Exception {
+		//given
+		memberRepository.save(new Member("member1", 10));
+		em.flush();
+		em.clear();
+
+		//when
+		Member findMember = memberRepository.findLockByUsername("member1").get();
 	}
 
 }
