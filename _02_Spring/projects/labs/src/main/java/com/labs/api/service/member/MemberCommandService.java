@@ -35,7 +35,6 @@ public class MemberCommandService {
 
 	public MemberTeamChangeResponse changeTeam(MemberTeamChangeRequest request) {
 		Member findMember = findMemberById(request.getMemberId());
-		// Team findTeam = teamQueryService.findTeamById(request.getMemberId()); // readOnly=true 로 인해 더티 체킹 발생 안 함
 		Team findTeam = teamRepository.findById(request.getTeamId()).get();
 
 		findMember.changeTeam(findTeam);
