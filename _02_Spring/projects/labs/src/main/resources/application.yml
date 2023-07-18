@@ -1,14 +1,16 @@
 spring:
   profiles:
-    default: test
+    active: test
 
 logging:
   level:
     org:
+      hibernate:
+        SQL: DEBUG
       springframework:
+#        transaction: DEBUG
         orm:
-#          jpa: DEBUG
-          transaction: DEBUG
+          jpa: DEBUG
 
 ---
 
@@ -26,7 +28,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -38,3 +40,9 @@ spring:
   output:
     ansi:
       enabled: always
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
