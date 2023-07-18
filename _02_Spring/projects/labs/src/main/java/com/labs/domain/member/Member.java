@@ -35,6 +35,10 @@ public class Member {
 		this(username, null);
 	}
 
+	public Member(Team team) {
+		this.team = team;
+	}
+
 	public Member(String username, Team team) {
 		this.username = username;
 		this.team = team;

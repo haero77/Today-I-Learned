@@ -16,6 +16,8 @@ import com.labs.domain.team.Team;
 import com.labs.domain.team.TeamRepository;
 
 @SpringBootTest
+// @Transactional
+// @Rollback(value = false)
 class MemberCommandServiceTest {
 
 	@Autowired
@@ -29,8 +31,8 @@ class MemberCommandServiceTest {
 
 	@AfterEach
 	void tearDown() {
-		memberRepository.deleteAll();
-		teamRepository.deleteAll();
+		memberRepository.deleteAllInBatch();
+		teamRepository.deleteAllInBatch();
 	}
 
 	@DisplayName("회원의 username을 변경할 수 있다.")
