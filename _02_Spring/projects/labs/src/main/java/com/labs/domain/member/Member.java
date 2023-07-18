@@ -32,7 +32,12 @@ public class Member {
 	private Team team;
 
 	public Member(String username) {
+		this(username, null);
+	}
+
+	public Member(String username, Team team) {
 		this.username = username;
+		this.team = team;
 	}
 
 	public void changeUsername(String username) {
