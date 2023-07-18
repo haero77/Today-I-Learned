@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Transactional
 class MemberRepositoryTest {
+
+	@PersistenceContext
+	private EntityManager em;
 
 	@Autowired
 	private TeamRepository teamRepository;
@@ -309,6 +315,134 @@ class MemberRepositoryTest {
 
 		// then
 		assertThat(page.getContent().size()).isEqualTo(3);
+	}
+
+	@Test
+	void bulkUpdate() {
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 19));
+		memberRepository.save(new Member("member3", 20));
+		memberRepository.save(new Member("member4", 21));
+		memberRepository.save(new Member("member5", 40));
+
+		// when
+		int resultCount = memberRepository.bulkAgePlus(20);
+		// em.clear();
+
+		/**
+		 * JPA 벌크성 쿼리 주의점 : DB와 영속성 컨텍스트가 다르다.
+		 */
+		Member member5 = memberRepository.findByUsername("member5").get();
+		System.out.println("member5 = " + member5);
+
+		// then
+		assertThat(resultCount).isEqualTo(3);
+	}
+
+	@DisplayName("N + 1 문제")
+	@Test
+	void findTeamLazy() {
+	    // given
+		// Member (N) : (1) Team. Lazy Loading
+		// member1 -> teamA
+		// member2 -> teamB
+		Team teamA = new Team("teamA");
+		Team teamB = new Team("teamB");
+		teamRepository.save(teamA);
+		teamRepository.save(teamB);
+
+		Member member1 = new Member("member1", 10, teamA);
+		Member member2 = new Member("member2", 10, teamB);
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		em.flush();
+		em.clear();
+
+		// when
+		List<Member> members = memberRepository.findAll();
+
+		// then
+		for (Member member : members) {
+			System.out.println("member = " + member);
+			System.out.println("member.getTeam().getClass() = " + member.getTeam().getClass());
+
+			// 프록시 초기화, N + 1 문제 발생.
+			System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
+		}
+	}
+
+	@DisplayName("N + 1 문제 페치조인으로 해결")
+	@Test
+	void findTeamLazyWithFetch() {
+		// given
+		// Member (N) : (1) Team. Lazy Loading
+		// member1 -> teamA
+		// member2 -> teamB
+		Team teamA = new Team("teamA");
+		Team teamB = new Team("teamB");
+		teamRepository.save(teamA);
+		teamRepository.save(teamB);
+
+		Member member1 = new Member("member1", 10, teamA);
+		Member member2 = new Member("member2", 10, teamB);
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		em.flush();
+		em.clear();
+
+		// when
+		List<Member> members = memberRepository.findMemberFetchJoin();
+
+		// then
+		for (Member member : members) {
+			System.out.println("member = " + member);
+			System.out.println("member.getTeam().getClass() = " + member.getTeam().getClass());
+
+			// 프록시 초기화, N + 1 문제 발생.
+			System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
+		}
+	}
+
+	@Test
+	public void withoutQueryHint() throws Exception {
+		//given
+		memberRepository.save(new Member("member1", 10));
+		em.flush();
+		em.clear();
+
+		//when
+		Member findMember = memberRepository.findByUsername("member1").get();
+		findMember.setUsername("member2");
+
+		em.flush();// UPDATE 쿼리 실행
+	}
+
+	@Test
+	public void queryHint() throws Exception {
+		//given
+		memberRepository.save(new Member("member1", 10));
+		em.flush();
+		em.clear();
+
+		//when
+		Member findMember = memberRepository.findReadOnlyByUsername("member1").get();
+		findMember.setUsername("member2");
+
+		em.flush();// UPDATE 쿼리 실행 X (더티 체킹 동작 X)
+	}
+
+	@Test
+	public void lock() throws Exception {
+		//given
+		memberRepository.save(new Member("member1", 10));
+		em.flush();
+		em.clear();
+
+		//when
+		Member findMember = memberRepository.findLockByUsername("member1").get();
 	}
 
 }
