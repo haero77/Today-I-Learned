@@ -35,11 +35,11 @@ public class MemberCommandService {
 
 	public MemberTeamChangeResponse changeTeam(MemberTeamChangeRequest request) {
 		Member findMember = findMemberById(request.getMemberId());
-		Team findTeam = teamRepository.findById(request.getTeamId()).get();
+		Team teamById = teamQueryService.findTeamById(request.getTeamId());
 
-		findMember.changeTeam(findTeam);
+		findMember.changeTeam(teamById);
 
-		return new MemberTeamChangeResponse(findMember.getId(), findTeam.getId());
+		return new MemberTeamChangeResponse(findMember.getId(), teamById.getId());
 	}
 
 	private Member findMemberById(Long id) {
