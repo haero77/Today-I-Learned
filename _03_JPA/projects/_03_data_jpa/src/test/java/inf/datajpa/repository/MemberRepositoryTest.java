@@ -38,6 +38,9 @@ class MemberRepositoryTest {
 	@Autowired
 	private MemberRepository memberRepository;
 
+	@Autowired
+	private MemberQueryRepository memberQueryRepository;
+
 	@Test
 	void save() {
 		Member member = new Member("memberB");
