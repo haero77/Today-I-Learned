@@ -38,6 +38,9 @@ class MemberRepositoryTest {
 	@Autowired
 	private MemberRepository memberRepository;
 
+	@Autowired
+	private MemberQueryRepository memberQueryRepository;
+
 	@Test
 	void save() {
 		Member member = new Member("memberB");
@@ -443,6 +446,11 @@ class MemberRepositoryTest {
 
 		//when
 		Member findMember = memberRepository.findLockByUsername("member1").get();
+	}
+
+	@Test
+	void callCustomRepository() {
+		List<Member> result = memberRepository.findMemberCustom();
 	}
 
 }
