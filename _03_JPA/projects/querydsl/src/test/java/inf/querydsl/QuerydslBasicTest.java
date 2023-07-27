@@ -1,5 +1,6 @@
 package inf.querydsl;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import inf.querydsl.entity.Member;
 import inf.querydsl.entity.QMember;
@@ -11,7 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.List;
 
+import static inf.querydsl.entity.QMember.member;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -58,15 +61,65 @@ public class QuerydslBasicTest {
 
     @Test
     void startQuerydsl() {
-        QMember m = QMember.member;
-
         Member findMember = queryFactory
-                .select(m)
-                .from(m)
-                .where(m.username.eq("member1")) // 파라미터 바인딩 처리
+                .select(member)
+                .from(member)
+                .where(member.username.eq("member1")) // 파라미터 바인딩 처리
                 .fetchOne();
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    void search() {
+        Member findMember = queryFactory
+                .select(member)
+                .from(member)
+                .where(member.username.eq("member1")
+                        .and(member.age.eq(10)))
+                .fetchOne();
+
+        assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    void searchAndParam() {
+        List<Member> findMembers = queryFactory
+                .select(QMember.member)
+                .from(QMember.member)
+                .where(
+                        QMember.member.username.eq("member1"),
+                        QMember.member.age.between(10, 20)
+                )
+                .fetch();
+
+        assertThat(findMembers.size()).isEqualTo(1);
+    }
+
+    @Test
+    void resultFetch() {
+        List<Member> fetch = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        Member fetchOne = queryFactory
+                .selectFrom(member)
+                .fetchOne();
+
+        Member fetchFirst = queryFactory
+                .selectFrom(member)
+                .fetchFirst();
+
+        QueryResults<Member> results = queryFactory
+                .selectFrom(member)
+                .fetchResults();
+
+        results.getTotal();
+
+        // count 쿼리로 변경
+        long total = queryFactory
+                .selectFrom(member)
+                .fetchCount();
     }
 
 }
