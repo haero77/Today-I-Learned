@@ -1,5 +1,6 @@
 package inf.querydsl;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import inf.querydsl.entity.Member;
 import inf.querydsl.entity.QMember;
@@ -93,6 +94,32 @@ public class QuerydslBasicTest {
                 .fetch();
 
         assertThat(findMembers.size()).isEqualTo(1);
+    }
+
+    @Test
+    void resultFetch() {
+        List<Member> fetch = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        Member fetchOne = queryFactory
+                .selectFrom(member)
+                .fetchOne();
+
+        Member fetchFirst = queryFactory
+                .selectFrom(member)
+                .fetchFirst();
+
+        QueryResults<Member> results = queryFactory
+                .selectFrom(member)
+                .fetchResults();
+
+        results.getTotal();
+
+        // count 쿼리로 변경
+        long total = queryFactory
+                .selectFrom(member)
+                .fetchCount();
     }
 
 }
