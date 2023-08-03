@@ -2,6 +2,7 @@ package inf.querydsl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import inf.querydsl.entity.Member;
 import inf.querydsl.entity.QMember;
@@ -429,7 +430,7 @@ public class QuerydslBasicTest {
         List<Tuple> result = queryFactory
                 .select(member.username,
                         select(memberSub.age.avg())
-                                 .from(memberSub)
+                                .from(memberSub)
                 )
                 .from(member)
                 .fetch();
@@ -437,6 +438,42 @@ public class QuerydslBasicTest {
         for (Tuple tuple : result) {
             System.out.println("tuple = " + tuple);
         }
+    }
+
+    /**
+     * Case 문
+     */
+    @Test
+    @DisplayName("Simple Case")
+    void simpleCase() {
+        List<String> result = queryFactory
+                .select(member.age
+                        .when(10).then("열살")
+                        .when(20).then("스무살")
+                        .otherwise("기타"))
+                .from(member)
+                .fetch();
+
+        System.out.println("result = " + result); // result = [열살, 스무살, 기타, 기타]
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    @DisplayName("Complex Case")
+    void complexCase() {
+        List<String> result = queryFactory
+                .select(new CaseBuilder()
+                        .when(member.age.between(0, 20)).then("0~20살")
+                        .when(member.age.between(21, 40)).then("21~40살")
+                        .otherwise("기타")
+                )
+                .from(member)
+                .fetch();
+
+        System.out.println("result = " + result); // result = [0~20살, 0~20살, 21~40살, 21~40살]
     }
 
 }
