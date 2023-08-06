@@ -1,13 +1,13 @@
 package inf.querydsl.dto;
 
-import lombok.NoArgsConstructor;
+import com.querydsl.core.annotations.QueryProjection;
 
-@NoArgsConstructor
 public class MemberDto {
 
 	private String username;
 	private int age;
 
+	@QueryProjection
 	public MemberDto(String username, int age) {
 		this.username = username;
 		this.age = age;
