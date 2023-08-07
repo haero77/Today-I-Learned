@@ -1,9 +1,11 @@
 package inf.querydsl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -29,6 +32,7 @@ import java.util.List;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static inf.querydsl.entity.QMember.member;
 import static inf.querydsl.entity.QTeam.team;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -627,6 +631,136 @@ public class QuerydslBasicTest {
 		for (MemberDto memberDto : result) {
 			System.out.println("memberDto = " + memberDto);
 		}
+	}
+
+	@Test
+	@DisplayName("동적 쿼리 - BooleanBuilder")
+	void dynamicQuery_BooleanBuilder() {
+		// given
+		String usernameParam = "member1";
+		Integer ageParam = null;
+
+		// when
+		List<Member> result = searchMember1(usernameParam, ageParam);
+
+		// then
+		assertThat(result.size()).isEqualTo(1);
+	}
+
+	/**
+	 * 조건 Cond가 null 이면 검색 조건 포함 X
+	 */
+	private List<Member> searchMember1(String usernameCond, Integer ageCond) { // usernameCondition
+
+		BooleanBuilder builder = new BooleanBuilder();
+
+		if (usernameCond != null) {
+			builder.and(member.username.eq(usernameCond));
+		}
+
+		if (ageCond != null) {
+			builder.and(member.age.eq(ageCond));
+		}
+
+		return queryFactory
+				.selectFrom(member)
+				.where(builder)
+				.fetch();
+	}
+
+	@Test
+	@DisplayName("동적 쿼리 - Where 다중 파라미터")
+	void dynamicQuery_WhereParam() {
+		// given
+		String usernameParam = "member1";
+		Integer ageParam = 10;
+
+		// when
+		List<Member> result = searchMember2(usernameParam, ageParam);
+
+		// then
+		assertThat(result.size()).isEqualTo(1);
+	}
+
+	private List<Member> searchMember2(String usernameCond, Integer ageCond) {
+		return queryFactory
+				.selectFrom(member)
+//				.where(usernameEq(usernameCond), ageEq(ageCond)) // where 절에 null 이 들어오면 조건이 무시된다.
+				.where(allEq(usernameCond, ageCond))
+				.fetch();
+	}
+
+	private BooleanExpression usernameEq(String usernameCond) {
+		// 간단한 경우에는 삼항 연산자 선호
+		return usernameCond == null ? null : member.username.eq(usernameCond);
+	}
+
+	private BooleanExpression ageEq(Integer ageCond) {
+		return ageCond == null ? null : member.age.eq(ageCond);
+	}
+
+	private BooleanExpression allEq(String usernameCond, Integer ageCond) {
+		return usernameEq(usernameCond).and(ageEq(ageCond));
+	}
+
+	/**
+	 * WHERE 다중 파라미터를 이용하여 컴포지션이 가능하다.
+	 * - 광고 상태가 isVaild, 날짜가 IN -> isServiceable 이라는 메서드 작성
+	 */
+
+	@Test
+	@DisplayName("수정 벌크 연산")
+	@Commit
+	void bulkUpdate() {
+
+		// member1 = 10 -> DB member1
+		// member2 = 20 -> DB member2
+		// member3 = 30 -> DB member3
+		// member4 = 40 -> DB member4
+		long count = queryFactory
+				.update(member)
+				.set(member.username, "비회원")
+				.where(member.age.lt(28))
+				.execute();
+
+		em.flush();
+		em.clear();
+
+		// 1 member1 = 10 -> 1 DB 비회원
+		// 2 member2 = 20 -> 2 DB 비회원
+		// 3 member3 = 30 -> 3 DB member3
+		// 4 member4 = 40 -> 4 DB member4
+
+		// 영속성 컨텍스트에 같은 엔티티가 있으면, DB에서 가져온 결과를 버린다.
+		List<Member> result = queryFactory
+				.selectFrom(member)
+				.fetch();
+
+		for (Member memberElem : result) {
+			System.out.println("memberElem = " + memberElem);
+		}
+	}
+
+	@Test
+	@DisplayName("기존 숫자에 -1 더하기")
+	void bulkAdd() {
+		long count = queryFactory
+				.update(member)
+				.set(member.age, member.age.add(-1))
+				.execute();
+
+		System.out.println("count = " + count);
+	}
+
+	@Test
+	@DisplayName("벌크 삭제")
+	void bulkDelete() {
+		long executedCount = queryFactory
+				.delete(member)
+				.where(member.age.gt(18))
+				.execute();
+
+		System.out.println("executedCount = " + executedCount);
 	}
 
 }
