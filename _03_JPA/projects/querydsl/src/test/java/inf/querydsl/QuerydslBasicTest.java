@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -31,6 +32,7 @@ import java.util.List;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static inf.querydsl.entity.QMember.member;
 import static inf.querydsl.entity.QTeam.team;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -705,5 +707,60 @@ public class QuerydslBasicTest {
 	 * WHERE 다중 파라미터를 이용하여 컴포지션이 가능하다.
 	 * - 광고 상태가 isVaild, 날짜가 IN -> isServiceable 이라는 메서드 작성
 	 */
+
+	@Test
+	@DisplayName("수정 벌크 연산")
+	@Commit
+	void bulkUpdate() {
+
+		// member1 = 10 -> DB member1
+		// member2 = 20 -> DB member2
+		// member3 = 30 -> DB member3
+		// member4 = 40 -> DB member4
+		long count = queryFactory
+				.update(member)
+				.set(member.username, "비회원")
+				.where(member.age.lt(28))
+				.execute();
+
+		em.flush();
+		em.clear();
+
+		// 1 member1 = 10 -> 1 DB 비회원
+		// 2 member2 = 20 -> 2 DB 비회원
+		// 3 member3 = 30 -> 3 DB member3
+		// 4 member4 = 40 -> 4 DB member4
+
+		// 영속성 컨텍스트에 같은 엔티티가 있으면, DB에서 가져온 결과를 버린다.
+		List<Member> result = queryFactory
+				.selectFrom(member)
+				.fetch();
+
+		for (Member memberElem : result) {
+			System.out.println("memberElem = " + memberElem);
+		}
+	}
+
+	@Test
+	@DisplayName("기존 숫자에 -1 더하기")
+	void bulkAdd() {
+		long count = queryFactory
+				.update(member)
+				.set(member.age, member.age.add(-1))
+				.execute();
+
+		System.out.println("count = " + count);
+	}
+
+	@Test
+	@DisplayName("벌크 삭제")
+	void bulkDelete() {
+		long executedCount = queryFactory
+				.delete(member)
+				.where(member.age.gt(18))
+				.execute();
+
+		System.out.println("executedCount = " + executedCount);
+	}
 
 }
