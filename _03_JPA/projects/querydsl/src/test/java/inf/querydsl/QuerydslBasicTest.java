@@ -32,7 +32,6 @@ import java.util.List;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static inf.querydsl.entity.QMember.member;
 import static inf.querydsl.entity.QTeam.team;
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -761,6 +760,38 @@ public class QuerydslBasicTest {
 				.execute();
 
 		System.out.println("executedCount = " + executedCount);
+	}
+
+	@Test
+	@DisplayName("SQL function 사용")
+	void sqlFunction() {
+		List<String> result = queryFactory
+				.select(
+						Expressions.stringTemplate(
+								"function('replace', {0}, {1}, {2})",
+								member.username, "member", "M"
+						)
+				)
+				.from(member)
+				.fetch();
+
+		for (String s : result) {
+			System.out.println("s = " + s);
+		}
+	}
+
+	@Test
+	@DisplayName("SQL function - lower")
+	void lower() {
+		List<String> result = queryFactory
+				.select(member.username)
+				.from(member)
+				.where(member.username.eq(member.username.lower()))
+				.fetch();
+
+		for (String s : result) {
+			System.out.println("s = " + s);
+		}
 	}
 
 }
