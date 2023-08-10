@@ -1,8 +1,11 @@
 package inf.querydsl.repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import inf.querydsl.dto.MemberSearchCondition;
+import inf.querydsl.dto.MemberTeamDto;
+import inf.querydsl.dto.QMemberTeamDto;
 import inf.querydsl.entity.Member;
-import inf.querydsl.entity.QMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +13,9 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
-import static inf.querydsl.entity.QMember.*;
+import static inf.querydsl.entity.QMember.member;
+import static inf.querydsl.entity.QTeam.team;
+import static org.springframework.util.StringUtils.hasText;
 
 @Repository
 @RequiredArgsConstructor
@@ -49,6 +54,41 @@ public class MemberJpaRepository {
 		return queryFactory
 				.selectFrom(member)
 				.where(member.username.eq(username))
+				.fetch();
+	}
+
+	public List<MemberTeamDto> searchByBuilder(MemberSearchCondition condition) {
+
+		BooleanBuilder builder = new BooleanBuilder();
+
+		// null & Blank("") 방지
+		if (hasText(condition.getUsername())) {
+			builder.and(member.username.eq(condition.getUsername()));
+		}
+
+		if (hasText(condition.getTeamName())) {
+			builder.and(team.name.eq(condition.getTeamName()));
+		}
+
+		if (condition.getAgeGoe() != null) {
+			builder.and(member.age.goe(condition.getAgeGoe()));
+		}
+
+		if (condition.getAgeLoe() != null) {
+			builder.and(member.age.loe(condition.getAgeLoe()));
+		}
+
+		// 성능 최적화: DTO로 한 번에 조회
+		return queryFactory
+				.select(new QMemberTeamDto(
+						member.id.as("memberId"),
+						member.username,
+						member.age,
+						team.id.as("teamId"),
+						team.name.as("teamName")))
+				.from(member)
+				.leftJoin(member.team, team)
+				.where(builder)
 				.fetch();
 	}
 
