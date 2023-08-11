@@ -1,6 +1,7 @@
 package inf.querydsl.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import inf.querydsl.dto.MemberSearchCondition;
 import inf.querydsl.dto.MemberTeamDto;
@@ -90,6 +91,70 @@ public class MemberJpaRepository {
 				.leftJoin(member.team, team)
 				.where(builder)
 				.fetch();
+	}
+
+	public List<MemberTeamDto> search(MemberSearchCondition condition) {
+		return queryFactory
+				.select(new QMemberTeamDto(
+						member.id.as("memberId"),
+						member.username,
+						member.age,
+						team.id.as("teamId"),
+						team.name.as("teamName")))
+				.from(member)
+				.leftJoin(member.team, team)
+				.where(
+						usernameEq(condition.getUsername()),
+						teamNameEq(condition.getTeamName()),
+						ageGoe(condition.getAgeGoe()),
+						ageLoe(condition.getAgeLoe())
+				)
+				.fetch();
+	}
+
+	/**
+	 * 엔티티 조회
+	 */
+	public List<Member> searchMember(MemberSearchCondition condition) {
+		return queryFactory
+				.selectFrom(member)
+				.leftJoin(member.team, team)
+				.where(isValid(condition))
+				.fetch();
+	}
+
+	/**
+	 * TODO: NPE 발생 원인 분석
+	 */
+	public BooleanExpression isValid(MemberSearchCondition condition) {
+		return usernameEq(condition.getUsername())
+				.and(teamNameEq(condition.getTeamName()))
+				.and(ageGoe(condition.getAgeGoe()))
+				.and(ageLoe(condition.getAgeLoe()));
+	}
+
+	public BooleanExpression ageBetween(int ageGoe, int ageLoe) {
+		return ageGoe(ageGoe).and(ageLoe(ageLoe));
+	}
+
+	/**
+	 * Predicate 보다 BooleanExpression 이 낫다.
+	 * 👉다른 Expression 들과 조합(Composition)이 가능하기 때문
+	 */
+	private BooleanExpression usernameEq(String username) {
+		return hasText(username) ? member.username.eq(username) : null;
+	}
+
+	private BooleanExpression teamNameEq(String teamName) {
+		return hasText(teamName) ? team.name.eq(teamName) : null;
+	}
+
+	private BooleanExpression ageGoe(Integer ageGoe) {
+		return ageGoe != null ? member.age.goe(ageGoe) : null;
+	}
+
+	private BooleanExpression ageLoe(Integer ageLoe) {
+		return ageLoe != null ? member.age.loe(ageLoe) : null;
 	}
 
 }

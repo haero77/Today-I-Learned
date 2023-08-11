@@ -4,8 +4,8 @@ import com.querydsl.core.annotations.QueryProjection;
 
 public class MemberDto {
 
-	private String username;
-	private int age;
+	private final String username;
+	private final int age;
 
 	@QueryProjection
 	public MemberDto(String username, int age) {
