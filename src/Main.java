@@ -1,18 +1,17 @@
 package src;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class Main {
 
-	private long add;
-
 	public static void main(String[] args) {
-		HashSet<Object> objects = new HashSet<>();
 
-		Map<Object, Object> objectObjectMap = Collections.synchronizedMap(new HashMap<>());
+		String now = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(LocalDateTime.now());
+
+		System.out.println(now);
+
 
 	}
 }
