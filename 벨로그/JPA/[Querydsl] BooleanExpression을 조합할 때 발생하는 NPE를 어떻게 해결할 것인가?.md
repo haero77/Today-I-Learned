@@ -257,21 +257,52 @@ public BooleanExpression teamNameEquals(String teamName) {
 
 `searchConditionEquals()` 라는 메서드에서 호출하도록 리팩토링 했습니다. 이제 조건이 더 추가되어도 해당 메서드만 조금씩 수정하면 되겠죠.
 
-**그런데 이게 능사는 아닙니다. 바로 NPE 위험성이 있기 때문입니다.**  
+**그런데 문제는, null 체크를 해주는 메서드들을 위처럼 조합할 때 생깁니다. 바로 조합된 메서드(`searchConditionEquals()`)에서 NPE가 발생할 위험이 있기 때문입니다.**  
 
 <br>
 
-### NPE 가 발생한다
+### NPE가 발생한다
 
-위처럼 `searchConditionEquals()`로 `BooleanExpression`을 조합한 다음 기존의 테스트를 
+먼저 NPE가 어느 상황에서 발생하는지 알아보겠습니다. 기존에 사용하던 테스트를 실행시켜봅시다.
 
-웬 걸, NPE가 발생합니다. 
+```java
+@Test
+@DisplayName("회원 이름 또는 팀 이름과 일치하는 회원-팀 정보를 조회할 수 있다.")
+void searchByCondition() {
+    // given
+    Team teamA = new Team("teamA");
+    Team teamB = new Team("teamB");
+    teamRepository.saveAll(List.of(teamA, teamB));
 
-NPE가 발생한다. 원인을 찾기 위해 디버깅을 한다.  
+    Member member1 = new Member("member1", teamA);
+    Member member2 = new Member("member2", teamA);
+    Member member3 = new Member("member3", teamB);
+    Member member4 = new Member("member4", teamB);
+    memberRepository.saveAll(List.of(member1, member2, member3, member4));
 
-![image](https://github.com/haero77/Today-I-Learned/assets/65555299/015795ea-fa40-45c3-b306-47ee4457702d)
+    MemberSearchCondition condition = new MemberSearchCondition(null, "teamA");
 
-근본적으로 불가능할 것 같습니다.
+    // when
+    List<MemberTeamDto> memberTeamDtos = memberRepository.searchBy(condition);
+
+    // then
+    assertThat(memberTeamDtos).hasSize(2);
+}
+```
+
+![image](https://github.com/haero77/Today-I-Learned/assets/65555299/e0cba88c-ffb3-4ad9-9b20-5782895dd425)
+
+
+그럼 이렇게 NPE가 발생합니다. 이상합니다. 분명 where 절에서는 null 을 인자로 넘겨도 무시된다고 했는데 말이죠. 원인을 찾기 위해 디버깅 합니다.
+
+<br>
+
+<img width="841" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/b947266f-9387-4119-97ed-241ab7d5eedd">
+
+`MemberSearchCondition`의 필드 username 이 null 이므로 
+
+
+
 
 ## null-safe BooleanBuilder
 
