@@ -2,7 +2,7 @@
 
 # 들어가며 
 
-Querydsl을 사용하여 동적쿼리를 구현하며, 조건식 조합의 편리함 등을 근거로 `BooleanBuilder` 보다 `BooleanExpression` 을 사용해왔습니다. 그러나 정작 `BooleanExpression`을 이용하여 여러 조건들을 조합할 때 `and` 등을 이용 시 `NullPointerException`을 마주치게 되어 **_과연 `BooleanExpression`을 이용한 조건식 조합이 편리한 것인가?_** 라는 것에까지 생각이 미치게 되었습니다. 본 포스팅에서는 NPE를 마주친 경위와 해결 방법, 그리고 같은 문제를 마주쳤을 때 `BooleanBuilder`와 `BooleanExpression` 중 어떤 것을 선택할지에 대해서도 간단히 의견을 남겨보겠습니다.
+동적 쿼리를 구현하기 위해 Querydsl을 사용할 때, 조건식 조합의 편리함 등을 근거로 `BooleanBuilder` 보다 `BooleanExpression` 을 주로 사용해왔습니다. 그러나 정작 `BooleanExpression`을 이용하여 여러 조건들을 조합할 때 `and` 등을 이용 시 `NullPointerException`을 마주치게 되어 **_과연 `BooleanExpression`을 이용한 조건식 조합이 편리한 것인가?_** 라는 것에까지 생각이 미치게 되었습니다. 본 포스팅에서는 NPE를 마주친 경위와 해결 방법, 그리고 같은 문제를 마주쳤을 때 `BooleanBuilder`와 `BooleanExpression` 중 어떤 것을 선택할지에 대해서도 간단히 의견을 남겨보겠습니다.
 
 <br>
 
@@ -261,7 +261,7 @@ public BooleanExpression teamNameEquals(String teamName) {
 
 <br>
 
-### NPE가 발생한다
+### BooleanExpression 조합 시 발생하는 NPE
 
 먼저 NPE가 어느 상황에서 발생하는지 알아보겠습니다. 기존에 사용하던 테스트를 실행시켜봅시다.
 
@@ -297,19 +297,88 @@ void searchByCondition() {
 
 <br>
 
-<img width="841" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/b947266f-9387-4119-97ed-241ab7d5eedd">
+<img width="828" alt="image" src="https://github.com/haero77/Today-I-Learned/assets/65555299/07da6f39-f562-48e1-ad46-dca516f214f8">
 
-`MemberSearchCondition`의 필드 username 이 null 이므로 
+`MemberSearchCondition`의 필드 `username`이 `null`이므로, `userNameEquals()`의 결과로 `null`이 리턴 됩니다. 결국 `searchConditionEquals()` 에서  `null.and(teamNameEquals())`가 호출되고, `and()`를 호출하는 시점에서 NPE가 발생한 거죠. 
+
+**_그럼 NPE를 방지하면서, 조건식 조합 역시 편리하게 이용하려면 어떻게 해야할까요?_**
+
+일단 지금 방식인 `BooleanExpression`을 사용해서는 어려울 것 같습니다. `and()` 등을 이용해 조건을 조합할 때 NPE가 발생하니까요. 그렇습니다. 다시 `BooleanBuilder`를 살펴볼 때가 된거죠.
+
+<br>
+
+## NPE를 해결하는 null-safe BooleanBuilder
+
+[영한님의 답변](https://www.inflearn.com/questions/94056/%EA%B0%95%EC%82%AC%EB%8B%98-where-%EB%8B%A4%EC%A4%91-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%8F%99%EC%A0%81-%EC%BF%BC%EB%A6%AC-%EC%82%AC%EC%9A%A9%EC%97%90-%EB%8C%80%ED%95%9C-%EC%A7%88%EB%AC%B8%EC%9E%85%EB%8B%88%EB%8B%A4)에서 위 문제에대한 해결법을 찾을 수 있었습니다. 바로 코드로 살펴보겠습니다. 
+
+```java
+@Override
+public List<MemberTeamDto> searchBy(MemberSearchCondition condition) {
+    return queryFactory
+            .select(new QMemberTeamDto(
+                    member.id.as("memberId"),
+                    member.username,
+                    team.id.as("teamId"),
+                    team.name.as("teamName")))
+            .from(member)
+            .leftJoin(member.team, team)
+            .where(
+                    searchConditionEquals(condition)
+            )
+            .fetch();
+}
+
+public BooleanBuilder searchConditionEquals(MemberSearchCondition condition) {
+    return usernameEquals(condition.getUsername())
+            .and(teamNameEquals(condition.getTeamName()));
+}
+
+public BooleanBuilder usernameEquals(String username) {
+    return nullSafeBooleanBuilder(() -> member.username.eq(username));
+}
+
+public BooleanBuilder teamNameEquals(String teamName) {
+    return nullSafeBooleanBuilder(() -> team.name.eq(teamName));
+}
+
+private BooleanBuilder nullSafeBooleanBuilder(Supplier<BooleanExpression> supplier) {
+    try {
+        return new BooleanBuilder(supplier.get());
+    } catch (IllegalArgumentException e) {
+        return new BooleanBuilder();
+    }
+}
+```
+
+중요한 내용부터 하나씩 살펴보겠습니다. 
+
+<br>
+
+```java
+private BooleanBuilder nullSafeBooleanBuilder(Supplier<BooleanExpression> supplier) {
+    try {
+        return new BooleanBuilder(supplier.get());
+    } catch (IllegalArgumentException e) {
+        return new BooleanBuilder();
+    }
+}
+```
+
+BooleanExpression의 Supplier를 파라미터로 받아서, 정의된 람다식을 실행하고, `IllegalArgumentException`이 발생하면 빈 BooleanBuilder 객체를 만들어 리턴합니다. 
+
+파라미터로 `() -> member.username.eq(username)` 같은 람다식이 주어지는 경우를 예로 들어보죠.
+
+![image](https://github.com/haero77/Today-I-Learned/assets/65555299/e714133c-9be5-413c-83f8-3b5c024b662e)
 
 
-
-
-## null-safe BooleanBuilder
+<br>
 
 
 # 마치며
 
 결과적으로 BooleanExpression 처럼 조합하기도 쉽고 null 
+
+자유롭지 못하니, 
 
 
 _마침._
