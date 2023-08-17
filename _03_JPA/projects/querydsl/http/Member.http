@@ -1,5 +1,5 @@
 ###
 GET http://localhost:8080/v1/members
 
-###
+### 조건별로 회원을 조회한다.
 GET http://localhost:8080/v1/members?teamName=teamB&ageGoe=31&ageLoe=40
