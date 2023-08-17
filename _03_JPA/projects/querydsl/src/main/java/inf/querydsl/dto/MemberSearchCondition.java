@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-//@Setter
+@Setter
 public class MemberSearchCondition {
 
 	// 회원명, 팀명, 나이(ageGoe, ageLoe)
