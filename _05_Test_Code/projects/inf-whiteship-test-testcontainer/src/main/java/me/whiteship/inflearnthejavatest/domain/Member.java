@@ -1,7 +1,7 @@
 package me.whiteship.inflearnthejavatest.domain;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.NoArgsConstructor;q
 import lombok.Setter;
 
 import javax.persistence.Entity;
