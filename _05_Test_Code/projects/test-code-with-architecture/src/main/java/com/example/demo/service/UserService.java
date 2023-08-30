@@ -81,6 +81,9 @@ public class UserService {
         userEntity.setStatus(UserStatus.ACTIVE);
     }
 
+    /**
+     * private 메서드를 테스트 하고 싶다는 신호를 무시했다.
+     */
     private void sendCertificationEmail(String email, String certificationUrl) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
