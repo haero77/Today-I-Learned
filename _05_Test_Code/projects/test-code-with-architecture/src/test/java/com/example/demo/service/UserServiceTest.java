@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.UserStatus;
+import com.example.demo.model.dto.UserCreateDto;
 import com.example.demo.repository.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,24 @@ class UserServiceTest {
         assertThatThrownBy(() -> {
             UserEntity result = userService.getById(2);
         }).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @Test
+    void UserCreateDto_를_이용하여_유저를_생성할_수_있다() {
+        // given
+        UserCreateDto userCreateDto = UserCreateDto.builder()
+                .email("kok202@kakao.com")
+                .address("Gyeonggi")
+                .nickname("kok202-k")
+                .build();
+
+        // when
+        UserEntity result = userService.create(userCreateDto);
+
+        // then
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getStatus()).isEqualTo(UserStatus.PENDING);
+        // assertThat(result.getCertificationCode()).isEqualTo("T.T"); // certifactionCode를 현재로써는 테스트할 방법이 없다.
     }
 
 }
