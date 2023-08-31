@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 @SpringBootTest
 @TestPropertySource("classpath:test-application.properties")
 @SqlGroup({
-        @Sql(value = "/sql/user-repository-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        @Sql(value = "/sql/user-service-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 })
 class UserServiceTest {
@@ -134,7 +134,7 @@ class UserServiceTest {
     void verifyEmail() {
         // given
         // when
-        userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
 
         // then
         UserEntity userEntity = userService.getById(2);
