@@ -6,7 +6,6 @@ import com.example.demo.repository.PostEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -14,7 +13,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-@TestPropertySource("classpath:test-application.properties")
+//@TestPropertySource("classpath:test-application.properties")
 @SqlGroup({
         @Sql(value = "/sql/post-service-test-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/delete-all-data.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
@@ -64,7 +63,7 @@ public class PostServiceTest {
         postService.update(1, postUpdateDto);
 
         // then
-        PostEntity postEntity= postService.getById(1);
+        PostEntity postEntity = postService.getById(1);
         assertThat(postEntity.getContent()).isEqualTo("hello world :)");
         assertThat(postEntity.getModifiedAt()).isGreaterThan(0);
     }
