@@ -3,12 +3,16 @@ package com.example.demo.post.service;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
 import com.example.demo.post.infrastructure.PostEntity;
+import com.example.demo.user.infrastructure.UserEntity;
+import com.example.demo.user.infrastructure.UserJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.jdbc.SqlGroup;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -23,11 +27,14 @@ public class PostServiceTest {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private UserJpaRepository userJpaRepository;
+
     @Test
     void getById는_존재하는_게시물을_내려준다() {
         // given
         // when
-        PostEntity result = postService.getById(1);
+        PostEntity result = postService.getById(10);
 
         // then
         assertThat(result.getContent()).isEqualTo("helloworld");
@@ -42,6 +49,12 @@ public class PostServiceTest {
                 .writerId(1)
                 .content("foobar")
                 .build();
+
+        List<UserEntity> all =
+                userJpaRepository.findAll();
+
+        System.out.println(all);
+
 
         // when
         PostEntity result = postService.create(postCreate);
@@ -60,10 +73,10 @@ public class PostServiceTest {
                 .build();
 
         // when
-        postService.update(1, postUpdate);
+        postService.update(10, postUpdate);
 
         // then
-        PostEntity postEntity = postService.getById(1);
+        PostEntity postEntity = postService.getById(10);
         assertThat(postEntity.getContent()).isEqualTo("hello world :)");
         assertThat(postEntity.getModifiedAt()).isGreaterThan(0);
     }
