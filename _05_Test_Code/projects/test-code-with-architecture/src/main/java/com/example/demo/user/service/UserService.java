@@ -41,29 +41,36 @@ public class UserService {
     public User create(UserCreate userCreate) {
         User user = User.from(userCreate);
         user = userRepository.save(user);
+
         certificationService.send(user.getEmail(), user.getId(), user.getCertificationCode());
+
         return user;
     }
 
     @Transactional
     public User update(long id, UserUpdate userUpdate) {
         User user = getById(id);
+
         user = user.update(userUpdate);
-        user = userRepository.save(user);
-        return user;
+
+        return userRepository.save(user);
     }
 
     @Transactional
     public void login(long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+        User user = getById(id);
+
         user = user.login();
+
         userRepository.save(user); // 변경한 객체가 영속성 객체가 아니라 도메인 객체이기 때문에 save 까지 진행 (JPA 의존성이 사라지면서 더티 체킹이 안 된다.)
     }
 
     @Transactional
     public void verifyEmail(long id, String certificationCode) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+        User user = getById(id);
+
         user = user.certificate(certificationCode);
+
         userRepository.save(user);
     }
 

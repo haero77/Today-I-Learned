@@ -1,4 +1,4 @@
-package com.example.demo.user.infrastructure;
+package com.example.demo.user.infrastructure.persistence.entity;
 
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;

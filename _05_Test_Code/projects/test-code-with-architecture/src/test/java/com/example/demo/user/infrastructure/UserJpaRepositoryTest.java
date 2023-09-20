@@ -1,6 +1,8 @@
 package com.example.demo.user.infrastructure;
 
 import com.example.demo.user.domain.UserStatus;
+import com.example.demo.user.infrastructure.persistence.entity.UserEntity;
+import com.example.demo.user.infrastructure.persistence.repository.UserJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

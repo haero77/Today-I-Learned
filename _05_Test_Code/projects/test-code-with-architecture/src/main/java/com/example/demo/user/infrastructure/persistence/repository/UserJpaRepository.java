@@ -1,6 +1,7 @@
-package com.example.demo.user.infrastructure;
+package com.example.demo.user.infrastructure.persistence.repository;
 
 import com.example.demo.user.domain.UserStatus;
+import com.example.demo.user.infrastructure.persistence.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

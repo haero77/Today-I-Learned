@@ -1,7 +1,8 @@
-package com.example.demo.user.infrastructure;
+package com.example.demo.user.infrastructure.persistence.repository;
 
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
+import com.example.demo.user.infrastructure.persistence.entity.UserEntity;
 import com.example.demo.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
