@@ -1,6 +1,5 @@
 package com.example.demo.user.domain;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,38 +26,38 @@ class UserTest {
         // then
 //        Assertions.assertThat()
     }
-    
+
     @DisplayName("User 는 로그인 할 수 있고, 로그인 시 마지막 로그인 시간이 변경된다.")
     @Test
-    void userLogin() {
+    void login() {
         // given
-            
+
         // when
-        
+
         // then
-        Assertions.assertThat()
+//        assertThat()
     }
-    
+
     @DisplayName("유효한인증 코드로 계정을 활성화 할 수 있다.")
     @Test
-    void () {
+    void certificate() {
         // given
-            
+
         // when
-        
+
         // then
-        Assertions.assertThat()
+//        assertThat()
     }
-    
+
     @DisplayName("잘못된 인증 코드로 계정을 활성화 하려하면 에러를 던진다.")
     @Test
-    void () {
+    void certificate_with_wrong_certifcationCode() {
         // given
-            
+
         // when
-        
+
         // then
-        Assertions.assertThat()
+//        assertThat()
     }
 
 }

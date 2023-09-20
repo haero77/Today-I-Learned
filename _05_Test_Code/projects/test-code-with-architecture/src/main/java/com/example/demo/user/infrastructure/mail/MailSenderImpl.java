@@ -1,4 +1,4 @@
-package com.example.demo.user.infrastructure;
+package com.example.demo.user.infrastructure.mail;
 
 import com.example.demo.user.service.port.MailSender;
 import lombok.RequiredArgsConstructor;

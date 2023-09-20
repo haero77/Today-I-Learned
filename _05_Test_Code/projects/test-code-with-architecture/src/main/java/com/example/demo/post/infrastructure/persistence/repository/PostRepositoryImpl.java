@@ -1,6 +1,7 @@
-package com.example.demo.post.infrastructure;
+package com.example.demo.post.infrastructure.persistence.repository;
 
 import com.example.demo.post.domain.Post;
+import com.example.demo.post.infrastructure.persistence.entity.PostEntity;
 import com.example.demo.post.service.port.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
