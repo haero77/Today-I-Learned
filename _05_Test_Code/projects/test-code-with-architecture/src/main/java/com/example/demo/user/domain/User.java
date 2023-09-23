@@ -1,11 +1,10 @@
 package com.example.demo.user.domain;
 
 import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
+import com.example.demo.common.service.port.ClockHolder;
+import com.example.demo.common.service.port.UuidHolder;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.Clock;
-import java.util.UUID;
 
 @Getter
 public class User {
@@ -32,13 +31,13 @@ public class User {
     /**
      * User 를 생성하는 코드는 UserService 가 아니라 User 가 갖고 있는게 맞는 것 같다.
      */
-    public static User from(UserCreate userCreate) {
+    public static User from(UserCreate userCreate, UuidHolder uuidHolder) {
         return User.builder()
                 .email(userCreate.getEmail())
                 .nickname(userCreate.getNickname())
                 .address(userCreate.getAddress())
                 .status(UserStatus.PENDING)
-                .certificationCode(UUID.randomUUID().toString())
+                .certificationCode(uuidHolder.random())
                 .build();
     }
 
@@ -54,7 +53,7 @@ public class User {
                 .build();
     }
 
-    public User login() {
+    public User login(ClockHolder clockHolder) {
         return User.builder()
                 .id(id)
                 .email(email)
@@ -62,7 +61,7 @@ public class User {
                 .address(address)
                 .certificationCode(certificationCode)
                 .status(status)
-                .lastLoginAt(Clock.systemUTC().millis())
+                .lastLoginAt(clockHolder.millis())
                 .build();
     }
 
@@ -77,7 +76,7 @@ public class User {
                 .nickname(nickname)
                 .address(address)
                 .certificationCode(certificationCode)
-                .status(UserStatus.ACTIVE)
+                .status(UserStatus.ACTIVE) // PENDING -> ACTIVE
                 .lastLoginAt(lastLoginAt)
                 .build();
     }

@@ -134,11 +134,11 @@ class UserServiceTest {
     void verifyEmail() {
         // given
         // when
-        userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
+        userService.verifyEmail(2L, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
 
         // then
-        User User = userService.getById(2);
-        assertThat(User.getStatus()).isEqualTo(UserStatus.ACTIVE);
+        User user = userService.getById(2L);
+        assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
     @DisplayName("PENDING 상태의 사용자는 잘못된 인증코드를 받으면 에러를 던진다.")

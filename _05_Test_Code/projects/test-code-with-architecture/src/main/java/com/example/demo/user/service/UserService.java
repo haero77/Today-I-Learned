@@ -1,6 +1,8 @@
 package com.example.demo.user.service;
 
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import com.example.demo.common.service.port.ClockHolder;
+import com.example.demo.common.service.port.UuidHolder;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserStatus;
@@ -16,6 +18,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CertificationService certificationService;
+    private final UuidHolder uuidHolder;
+    private final ClockHolder clockHolder;
 
     public User getByEmail(String email) {
         return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
@@ -39,7 +43,7 @@ public class UserService {
      */
     @Transactional
     public User create(UserCreate userCreate) {
-        User user = User.from(userCreate);
+        User user = User.from(userCreate, uuidHolder);
         user = userRepository.save(user);
 
         certificationService.send(user.getEmail(), user.getId(), user.getCertificationCode());
@@ -60,7 +64,7 @@ public class UserService {
     public void login(long id) {
         User user = getById(id);
 
-        user = user.login();
+        user = user.login(clockHolder);
 
         userRepository.save(user); // 변경한 객체가 영속성 객체가 아니라 도메인 객체이기 때문에 save 까지 진행 (JPA 의존성이 사라지면서 더티 체킹이 안 된다.)
     }
