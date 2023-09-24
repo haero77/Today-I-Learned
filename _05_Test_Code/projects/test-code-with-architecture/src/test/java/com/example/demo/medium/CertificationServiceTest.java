@@ -1,6 +1,7 @@
-package com.example.demo.user.service;
+package com.example.demo.medium;
 
 import com.example.demo.mock.FakeMailSender;
+import com.example.demo.user.service.CertificationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
