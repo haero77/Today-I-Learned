@@ -1,5 +1,6 @@
 package com.example.demo.user.infrastructure.persistence.repository;
 
+import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.infrastructure.persistence.entity.UserEntity;
@@ -14,6 +15,11 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
 
     private final UserJpaRepository userJpaRepository;
+
+    @Override
+    public User getById(long id) {
+        return findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+    }
 
     @Override
     public User save(User user) {
