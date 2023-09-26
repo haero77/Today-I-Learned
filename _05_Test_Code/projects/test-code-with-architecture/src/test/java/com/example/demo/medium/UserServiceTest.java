@@ -1,58 +1,41 @@
-package com.example.demo.user.service;
+package com.example.demo.medium;
 
 import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
-import com.example.demo.mock.FakeMailSender;
-import com.example.demo.mock.FakeUserRepository;
-import com.example.demo.mock.TestClockHolder;
-import com.example.demo.mock.TestUuidHolder;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserUpdate;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.demo.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 
+@SpringBootTest
+@TestPropertySource("classpath:test-application.properties")
+@SqlGroup({
+        @Sql(value = "/sql/user-service-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+})
 class UserServiceTest {
 
+    @Autowired
     private UserService userService;
 
-    // @SpringBootTest 를 버리고 userService 를 미리 만들어서 테스트에서는 이것을 사용한다. (= 테스트 픽스처)
-    @BeforeEach
-    void init() {
-        FakeMailSender fakeMailSender = new FakeMailSender();
-        FakeUserRepository userRepository = new FakeUserRepository();
-
-        this.userService = UserService.builder()
-                .userRepository(userRepository)
-                .clockHolder(new TestClockHolder(1678530673958L))
-                .uuidHolder(new TestUuidHolder("12345678-1234-1234-1234-123456789012"))
-                .certificationService(new CertificationService(fakeMailSender))
-                .build();
-
-        userRepository.save(User.builder()
-                .id(1L)
-                .email("kok202@naver.com")
-                .nickname("kok202")
-                .address("Seoul")
-                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
-                .status(UserStatus.ACTIVE)
-                .lastLoginAt(0L)
-                .build());
-        userRepository.save(User.builder()
-                .id(2L)
-                .email("kok303@naver.com")
-                .nickname("kok303")
-                .address("Seoul")
-                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
-                .status(UserStatus.PENDING)
-                .lastLoginAt(0L)
-                .build());
-    }
+    @MockBean
+    private JavaMailSender mailSender;
 
     @Test
     void getByEmail은_ACTIVE_상태인_유저를_찾아올_수_있다() {
@@ -106,8 +89,7 @@ class UserServiceTest {
                 .address("Gyeonggi")
                 .nickname("kok202-k")
                 .build();
-
-        // BDDMockito.doNothing().when(mailSender).send(any(SimpleMailMessage.class)); 불필요한 Stub 코드 삭제
+        BDDMockito.doNothing().when(mailSender).send(any(SimpleMailMessage.class));
 
         // when
         User result = userService.create(userCreate);
@@ -115,7 +97,7 @@ class UserServiceTest {
         // then
         assertThat(result.getId()).isNotNull();
         assertThat(result.getStatus()).isEqualTo(UserStatus.PENDING);
-        assertThat(result.getCertificationCode()).isEqualTo("12345678-1234-1234-1234-123456789012");
+        // assertThat(result.getCertificationCode()).isEqualTo("T.T"); // certifactionCode를 현재로써는 테스트할 방법이 없다.
     }
 
     @Test
@@ -143,8 +125,9 @@ class UserServiceTest {
         userService.login(1);
 
         // then
-        User user = userService.getById(1);
-        assertThat(user.getLastLoginAt()).isEqualTo(1678530673958L);
+        User User = userService.getById(1);
+        assertThat(User.getLastLoginAt()).isGreaterThan(0L);
+        // assertThat(result.getLastLoginAt()).isEqualTo("T.T"); // FIXME
     }
 
     @DisplayName("PENDING 상태의 사용자는 인증코드로 ACTIVE 시킬 수 있다.")

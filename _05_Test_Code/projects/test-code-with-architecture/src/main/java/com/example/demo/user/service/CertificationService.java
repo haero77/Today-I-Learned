@@ -22,5 +22,4 @@ public class CertificationService {
         return "http://localhost:8080/api/users/" + userId + "/verify?certificationCode=" + certificationCode;
     }
 
-
 }
