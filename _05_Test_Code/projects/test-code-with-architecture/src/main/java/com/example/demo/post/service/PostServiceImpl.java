@@ -2,6 +2,7 @@ package com.example.demo.post.service;
 
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.common.service.port.ClockHolder;
+import com.example.demo.post.controller.port.PostService;
 import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
@@ -15,17 +16,19 @@ import org.springframework.stereotype.Service;
 @Service
 @Builder
 @RequiredArgsConstructor
-public class PostService {
+public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final ClockHolder clockHolder;
 
+    @Override
     public Post getById(long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Posts", id));
     }
 
+    @Override
     public Post create(PostCreate postCreate) {
         // UserService 를 의존하자니, 필요없는 의존성 때문에 테스트 객체만들기가 귀찮아진다.
         // -> UserRepository 직접 의존한다. MailSender 나 Uuid 같은 것은 쓰지도 않는데, 너무 번거롭기 때문.
@@ -35,6 +38,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    @Override
     public Post update(long id, PostUpdate postUpdate) {
         Post post = getById(id);
         post = post.update(postUpdate, clockHolder);
