@@ -3,7 +3,7 @@ package com.example.demo.user.service;
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.common.service.port.ClockHolder;
 import com.example.demo.common.service.port.UuidHolder;
-import com.example.demo.user.controller.port.UserService;
+import com.example.demo.user.controller.port.*;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserStatus;
@@ -17,27 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Builder
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserCreateService, UserReadService, UserUpdateService, UserDeleteService, AuthenticationService {
 
     private final UserRepository userRepository;
     private final CertificationServiceImpl certificationService;
     private final UuidHolder uuidHolder;
     private final ClockHolder clockHolder;
-
-    @Override
-    public User getByEmail(String email) {
-        return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
-                .orElseThrow(() -> new ResourceNotFoundException("Users", email));
-    }
-
-    /**
-     * get 은 애초에 데이터가 없으면 에러를 던진다는 뜻을 내포한다.
-     */
-    @Override
-    public User getById(long id) {
-        return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
-                .orElseThrow(() -> new ResourceNotFoundException("Users", id));
-    }
 
     /**
      * createUser() -> create()
@@ -55,6 +40,21 @@ public class UserServiceImpl implements UserService {
         certificationService.send(user.getEmail(), user.getId(), user.getCertificationCode());
 
         return user;
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
+                .orElseThrow(() -> new ResourceNotFoundException("Users", email));
+    }
+
+    /**
+     * get 은 애초에 데이터가 없으면 에러를 던진다는 뜻을 내포한다.
+     */
+    @Override
+    public User getById(long id) {
+        return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+                .orElseThrow(() -> new ResourceNotFoundException("Users", id));
     }
 
     @Override
