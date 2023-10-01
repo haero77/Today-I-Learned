@@ -1,4 +1,4 @@
-package com.example.demo.medium;
+package com.example.demo.medium.repository;
 
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.infrastructure.persistence.entity.UserEntity;

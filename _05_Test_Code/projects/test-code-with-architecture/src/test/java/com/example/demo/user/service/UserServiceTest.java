@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserServiceTest {
 
-    private UserService userService;
+    private UserServiceImpl userService;
 
     // @SpringBootTest 를 버리고 userService 를 미리 만들어서 테스트에서는 이것을 사용한다. (= 테스트 픽스처)
     @BeforeEach
@@ -27,7 +27,7 @@ class UserServiceTest {
         FakeMailSender fakeMailSender = new FakeMailSender();
         FakeUserRepository userRepository = new FakeUserRepository();
 
-        this.userService = UserService.builder()
+        this.userService = UserServiceImpl.builder()
                 .userRepository(userRepository)
                 .clockHolder(new TestClockHolder(1678530673958L))
                 .uuidHolder(new TestUuidHolder("12345678-1234-1234-1234-123456789012"))

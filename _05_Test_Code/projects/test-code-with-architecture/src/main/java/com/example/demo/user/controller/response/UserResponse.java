@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 public class UserResponse {
 
-    private Long id;
-    private String email;
-    private String nickname;
-    private UserStatus status;
-    private Long lastLoginAt;
+    private final Long id;
+    private final String email;
+    private final String nickname;
+    private final UserStatus status;
+    private final Long lastLoginAt;
 
     @Builder
     public UserResponse(Long id, String email, String nickname, UserStatus status, Long lastLoginAt) {

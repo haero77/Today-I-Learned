@@ -1,53 +1,71 @@
 package com.example.demo.post.domain;
 
+import com.example.demo.mock.TestClockHolder;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PostTest {
 
-    @DisplayName("PostCreate 으로 게시글을 만들 수 있다.")
     @Test
-    void createPostByPostCreate() {
+    public void PostCreate으로_게시물을_만들_수_있다() {
         // given
         PostCreate postCreate = PostCreate.builder()
                 .writerId(1)
-                .content("content")
+                .content("helloworld")
                 .build();
-
         User writer = User.builder()
                 .id(1L)
-                .email("example@email.com")
-                .nickname("nickname")
-                .address("address")
-                .certificationCode("certificationCode")
+                .email("kok202@naver.com")
+                .nickname("kok202")
+                .address("Seoul")
                 .status(UserStatus.ACTIVE)
+                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
                 .build();
 
         // when
-        Post post = Post.of(writer, postCreate);
+        Post post = Post.of(writer, postCreate, new TestClockHolder(1679530673958L));
 
         // then
-        assertThat(post.getContent()).isEqualTo("content");
-        assertThat(post.getWriter().getEmail()).isEqualTo("example@email.com");
-        assertThat(post.getWriter().getNickname()).isEqualTo("nickname");
-        assertThat(post.getWriter().getAddress()).isEqualTo("address");
-        assertThat(post.getWriter().getCertificationCode()).isEqualTo("certificationCode");
+        assertThat(post.getContent()).isEqualTo("helloworld");
+        assertThat(post.getCreatedAt()).isEqualTo(1679530673958L);
+        assertThat(post.getWriter().getEmail()).isEqualTo("kok202@naver.com");
+        assertThat(post.getWriter().getNickname()).isEqualTo("kok202");
+        assertThat(post.getWriter().getAddress()).isEqualTo("Seoul");
         assertThat(post.getWriter().getStatus()).isEqualTo(UserStatus.ACTIVE);
+        assertThat(post.getWriter().getCertificationCode()).isEqualTo("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
     }
 
-    @DisplayName("PostUpdate 로 게시글을 업데이트할 수 있다.")
     @Test
-    void updatePostByPostUpdate() {
+    public void PostUpdate로_게시물을_수정할_수_있다() {
         // given
+        PostUpdate postUpdate = PostUpdate.builder()
+                .content("foobar")
+                .build();
+        User writer = User.builder()
+                .id(1L)
+                .email("kok202@naver.com")
+                .nickname("kok202")
+                .address("Seoul")
+                .status(UserStatus.ACTIVE)
+                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
+                .build();
+        Post post = Post.builder()
+                .id(1L)
+                .content("helloworld")
+                .createdAt(1678530673958L)
+                .modifiedAt(0L)
+                .writer(writer)
+                .build();
 
         // when
+        post = post.update(postUpdate, new TestClockHolder(1679530673958L));
 
         // then
-//        assertThat()
+        assertThat(post.getContent()).isEqualTo("foobar");
+        assertThat(post.getModifiedAt()).isEqualTo(1679530673958L);
     }
 
 }

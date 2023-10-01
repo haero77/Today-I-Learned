@@ -29,7 +29,7 @@ public class PostEntity {
     @JoinColumn(name = "user_id")
     private UserEntity writer;
 
-    public static PostEntity fromModel(Post post) {
+    public static PostEntity from(Post post) {
         PostEntity postEntity = new PostEntity();
 
         postEntity.id = post.getId();

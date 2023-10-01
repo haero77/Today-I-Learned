@@ -1,4 +1,4 @@
-package com.example.demo.medium;
+package com.example.demo.medium.service;
 
 import com.example.demo.mock.FakeMailSender;
 import com.example.demo.user.service.CertificationService;
