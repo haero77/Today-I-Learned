@@ -1,7 +1,7 @@
 package com.example.demo.medium.service;
 
 import com.example.demo.mock.FakeMailSender;
-import com.example.demo.user.service.CertificationServiceImpl;
+import com.example.demo.user.service.CertificationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class CertificationServiceTest {
     void send() {
         // given
         FakeMailSender fakeMailSender = new FakeMailSender();
-        CertificationServiceImpl certificationService = new CertificationServiceImpl(fakeMailSender);
+        CertificationService certificationService = new CertificationService(fakeMailSender);
 
         // when
         certificationService.send("kok202@naver.com", 1, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");

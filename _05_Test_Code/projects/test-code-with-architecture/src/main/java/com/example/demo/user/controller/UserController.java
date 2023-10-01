@@ -1,6 +1,9 @@
 package com.example.demo.user.controller;
 
-import com.example.demo.user.controller.port.*;
+import com.example.demo.user.controller.port.AuthenticationService;
+import com.example.demo.user.controller.port.UserCreateService;
+import com.example.demo.user.controller.port.UserReadService;
+import com.example.demo.user.controller.port.UserUpdateService;
 import com.example.demo.user.controller.response.MyProfileResponse;
 import com.example.demo.user.controller.response.UserResponse;
 import com.example.demo.user.domain.User;
@@ -26,7 +29,6 @@ public class UserController {
     private final UserCreateService userCreateService;
     private final UserReadService userReadService;
     private final UserUpdateService userUpdateService;
-    private final UserDeleteService userDeleteService;
     private final AuthenticationService authenticationService;
 
     @ResponseStatus
@@ -55,6 +57,8 @@ public class UserController {
         User user = userReadService.getByEmail(email);
 
         authenticationService.login(user.getId());
+
+        user = userReadService.getByEmail(email);
 
         return ResponseEntity
                 .ok()

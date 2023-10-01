@@ -8,5 +8,4 @@ public interface UserReadService {
 
     User getById(long id);
 
-
 }
