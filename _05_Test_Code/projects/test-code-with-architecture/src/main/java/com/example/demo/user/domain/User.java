@@ -17,6 +17,11 @@ public class User {
     private final UserStatus status;
     private final Long lastLoginAt;
 
+    // DTO -> 엔티티
+    // 엔티티 (도메인
+
+    // Response (엔티티)
+
     @Builder
     public User(Long id, String email, String nickname, String address, String certificationCode, UserStatus status, Long lastLoginAt) {
         this.id = id;
