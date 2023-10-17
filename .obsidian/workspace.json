@@ -1,0 +1,198 @@
+{
+  "main": {
+    "id": "a23ec4abba786c15",
+    "type": "split",
+    "children": [
+      {
+        "id": "dbde4d7ebe86cb3b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d58020d01ae8d382",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_05_Test_Code/02 테스트를 추가하고 싶은 개발자들의 오답노트/ch3. 방향성 탐색/3.2 어떻게 변경할 것인가?.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b01fbf4305c6a7f5",
+    "type": "split",
+    "children": [
+      {
+        "id": "1dbc7273143e9195",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c22b7bcde80a9955",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "2a9d36666c06cbd1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "1c9954c39d85d71f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 299.51103591918945
+  },
+  "right": {
+    "id": "30291508a6475a0c",
+    "type": "split",
+    "children": [
+      {
+        "id": "0795ff6d0a8c15a6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c1e86a8fd1ea695b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "_05_Test_Code/02 테스트를 추가하고 싶은 개발자들의 오답노트/ch3. 방향성 탐색/3.2 어떻게 변경할 것인가?.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "5c43b2de721d224b",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "_05_Test_Code/02 테스트를 추가하고 싶은 개발자들의 오답노트/ch3. 방향성 탐색/3.2 어떻게 변경할 것인가?.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "360f7e925e53b1ba",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "1046c53951e9972f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "_05_Test_Code/02 테스트를 추가하고 싶은 개발자들의 오답노트/ch3. 방향성 탐색/3.2 어떻게 변경할 것인가?.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:퀵 스위처 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 데일리 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false
+    }
+  },
+  "active": "d58020d01ae8d382",
+  "lastOpenFiles": [
+    "source/src/main/java/books/modern_java_in_action/ch04_streams/Main.java",
+    "source/src/main/java/books/modern_java_in_action/ch04_streams",
+    "source/src/main/java/books/modern_java_in_action",
+    "source/src/main/java/books",
+    "out/production/Today-I-Learned/modern_java_in_action/ch3_lambda/_03_around_pattern/data.txt",
+    "out/production/Today-I-Learned/modern_java_in_action/ch3_lambda/_03_around_pattern",
+    "out/production/Today-I-Learned/modern_java_in_action/ch3_lambda",
+    "out/production/Today-I-Learned/modern_java_in_action",
+    "Books/_src/modern_java_in_action/ch4_streams_introduce/Main.java",
+    "Books/_src/modern_java_in_action/ch4_streams_introduce/Main",
+    "Books/_src/modern_java_in_action/ch4_streams_introduce/Dish.java",
+    "_05_Test_Code/02 테스트를 추가하고 싶은 개발자들의 오답노트/ch3. 방향성 탐색/3.1 레이어드 아키텍처의 문제점과 해결책.md",
+    "_03_JPA/04 QueryDSL/ch0 소개/소개.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.10 조인 - 페치조인.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.9 조인 - on 절.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.8 조인 - 기본 조인.md",
+    "벨로그/JPA/[Querydsl] BooleanExpression을 조합할 때 발생하는 NPE를 어떻게 해결할 것인가?.md",
+    "벨로그/Tip/[Intellij] 프로젝트별로 Code Author 다르게 설정하기.md",
+    "벨로그/회고/[후기] 프로그래머스 백엔드 데브코스 합격후기.md",
+    "_03_JPA/04 QueryDSL/ch4 중급 문법/4.4 동적 쿼리 - BooleanBuilder 사용.md",
+    "_03_JPA/04 QueryDSL/ch4 중급 문법/4.2 프로젝션과 결과 반환 - DTO 조회.md",
+    "_03_JPA/04 QueryDSL/ch4 중급 문법/4.3 프로젝션과 결과 반환 - @QueryProjection.md",
+    "_03_JPA/04 QueryDSL/ch4 중급 문법/4.1 프로젝션과 결과 반환 - 기본.md",
+    "_03_JPA/04 QueryDSL/ch6 실무 활용 - 스프링 데이터 JPA와 Querydsl/6.3 스프링 데이터 페이징 활용 1 - Querydsl 페이징 연동.md",
+    "_03_JPA/04 QueryDSL/ch6 실무 활용 - 스프링 데이터 JPA와 Querydsl/6.2 사용자 정의 리포지토리.md",
+    "벨로그/Projects/Shortify/img.png",
+    "벨로그/Spring/img/img_2.png",
+    "벨로그/Spring/img/img_1.png",
+    "벨로그/Spring/img/img.png",
+    "벨로그/Projects/dangdang-market/JpaRepository 말고 Repository를 사용해야 하는 이유.md",
+    "벨로그/Projects/Shortify/img_1.png",
+    "벨로그/Projects/Shortify/[회고] 1차 회고.md",
+    "벨로그/Projects/Shortify/[피드백] 넘블 피드백 질문.md",
+    "벨로그/Projects/Shortify/URL 단축 알고리즘을 Base62로 선정한 이유.md",
+    "벨로그/Projects/Shortify/LocalDateTime 을 사용하는 메서드를 어떻게 테스트할 것인가?.md",
+    "벨로그/Projects/Shortify/GPT.md",
+    "벨로그/Projects/Shortify/@Transactional이 동작하지 않을 때는 프록시 객체를 통해 메서드를 호출했는지 확인하자 (프록시 내부 호출 문제) .md",
+    "벨로그/Projects/ODEEGO/페이징과 컬렉션 엔티티를 함께 사용하기(feat. @BatchSize).md",
+    "벨로그/Projects/ODEEGO/성능 테스트.md",
+    "벨로그/DB/img/img_1.png",
+    "벨로그/DB/img/img.png",
+    "벨로그/DB/h2/[H2] 비밀번호 없는 DB 생성하기.md",
+    "벨로그/삽질 기록/[JPA] CQRS 패턴에서 퍼사드를 쓸 때 더티체킹이 안 되는 문제.md",
+    "벨로그/img/img_1.png",
+    "벨로그/img/img3.png",
+    "벨로그/img/img.png"
+  ]
+}
