@@ -3,7 +3,6 @@ package testdemo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +41,12 @@ public class PasswordMeterTest {
     @Test
     void digitAndUppercase() {
         assertPasswordStrength("abcC123", PasswordStrength.NORMAL);
+        assertPasswordStrength("123abcC", PasswordStrength.NORMAL);
+    }
+
+    @DisplayName("대문자 없음, 다른 조건 충족")
+    @Test
+    void digitAndLength() {
         assertPasswordStrength("123abcC", PasswordStrength.NORMAL);
     }
 
