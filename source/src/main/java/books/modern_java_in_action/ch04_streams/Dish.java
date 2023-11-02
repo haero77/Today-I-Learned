@@ -1,5 +1,6 @@
 package books.modern_java_in_action.ch04_streams;
 
+import java.util.Objects;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -10,7 +11,7 @@ import static books.modern_java_in_action.ch04_streams.Dish.Type.*;
 import static books.modern_java_in_action.ch04_streams.Dish.Type.FISH;
 
 @Getter
-@ToString
+@ToString(of = {"name"})
 public class Dish {
 
     private final String name;
@@ -27,6 +28,24 @@ public class Dish {
 
     public enum Type {
         MEAT, FISH, OTHER
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Dish dish = (Dish) o;
+        return vegetarian == dish.vegetarian && calories == dish.calories && Objects.equals(name, dish.name)
+                && type == dish.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, vegetarian, calories, type);
     }
 
     public static class Menu {
