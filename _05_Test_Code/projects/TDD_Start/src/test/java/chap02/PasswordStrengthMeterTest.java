@@ -18,4 +18,12 @@ public class PasswordStrengthMeterTest {
         assertThat(result2).isEqualTo(PasswordStrength.STRONG);
     }
 
+    @DisplayName("길이가 8글자 미만이고 나머지 조건은 충족하는 경우 암호강도는 보통이다.")
+    @Test
+    void meetOtherCriteria_except_for_Length_Then_Normal() {
+        PasswordStrengthMeter meter = new PasswordStrengthMeter();
+        PasswordStrength result = meter.meter("ab12!@A");
+        assertThat(result).isEqualTo(PasswordStrength.NORMAL);
+    }
+
 }
