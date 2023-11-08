@@ -32,4 +32,16 @@ public class PasswordStrengthMeterTest {
         assertStrength("ab!@ABqwer", PasswordStrength.NORMAL);
     }
 
+    @DisplayName("null의 암호 강도는 INVALID이다.")
+    @Test
+    void nullInput_then_invalid() {
+        assertStrength(null, PasswordStrength.INVALID);
+    }
+
+    @DisplayName("빈 문자열의 암호 강도는 INVALID이다.")
+    @Test
+    void emptyInput_then_invalid() {
+        assertStrength("", PasswordStrength.INVALID);
+    }
+
 }
