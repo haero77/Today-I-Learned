@@ -1,0 +1,198 @@
+{
+  "main": {
+    "id": "a23ec4abba786c15",
+    "type": "split",
+    "children": [
+      {
+        "id": "a0d16fe74aad09ad",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e26dc39bd393df97",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Posting/Spring/[TIL] MANIFEST.MF를 이용한 빌드 시간 확인하기.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b01fbf4305c6a7f5",
+    "type": "split",
+    "children": [
+      {
+        "id": "1dbc7273143e9195",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c22b7bcde80a9955",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "2a9d36666c06cbd1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "1c9954c39d85d71f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 331.51103591918945
+  },
+  "right": {
+    "id": "30291508a6475a0c",
+    "type": "split",
+    "children": [
+      {
+        "id": "0795ff6d0a8c15a6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c1e86a8fd1ea695b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Posting/Spring/[TIL] MANIFEST.MF를 이용한 빌드 시간 확인하기.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "5c43b2de721d224b",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Posting/Spring/[TIL] MANIFEST.MF를 이용한 빌드 시간 확인하기.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "360f7e925e53b1ba",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "1046c53951e9972f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Posting/Spring/[TIL] MANIFEST.MF를 이용한 빌드 시간 확인하기.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:퀵 스위처 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 데일리 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false
+    }
+  },
+  "active": "e26dc39bd393df97",
+  "lastOpenFiles": [
+    "_05_Test_Code/tdd_practice/calculator/src/main/java/calculator/Application.java",
+    "_05_Test_Code/tdd_practice/calculator/src/main/java/calculator",
+    "_05_Test_Code/tdd_practice/calculator/src/main/java",
+    "_05_Test_Code/tdd_practice/calculator/settings.gradle",
+    "_05_Test_Code/tdd_practice/calculator/gradlew.bat",
+    "_05_Test_Code/tdd_practice/calculator/gradlew",
+    "_05_Test_Code/tdd_practice/calculator/gradle/wrapper/gradle-wrapper.properties",
+    "_05_Test_Code/tdd_practice/calculator/gradle/wrapper/gradle-wrapper.jar",
+    "_05_Test_Code/tdd_practice/calculator/gradle/wrapper",
+    "_05_Test_Code/tdd_practice/calculator/gradle",
+    "_05_Test_Code/tdd_practice/calculator/build.gradle",
+    "_05_Test_Code/tdd_practice/README.md",
+    "_03_JPA/04 QueryDSL/ch4 중급 문법/4.3 프로젝션과 결과 반환 - @QueryProjection.md",
+    "_03_JPA/04 QueryDSL/ch6 실무 활용 - 스프링 데이터 JPA와 Querydsl/6.3 스프링 데이터 페이징 활용 1 - Querydsl 페이징 연동.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.6 페이징.md",
+    "_03_JPA/04 QueryDSL/ch6 실무 활용 - 스프링 데이터 JPA와 Querydsl/6.4 스프링 데이터 페이징 활용 2 - CountQuery 최적화.md",
+    "_03_JPA/04 QueryDSL/ch7 스프링 데이터 JPA가 제공하는 Querydsl 기능/7.4 Querydsl 지원 클래스 직접 만들기.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.5 정렬.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.4 결과 조회.md",
+    "_03_JPA/04 QueryDSL/ch4 중급 문법/4.1 프로젝션과 결과 반환 - 기본.md",
+    "_03_JPA/04 QueryDSL/ch6 실무 활용 - 스프링 데이터 JPA와 Querydsl/6.5 스프링 데이터 페이징 활용 3 - 컨트롤러 개발, Sort.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.8 조인 - 기본 조인.md",
+    "_05_Test_Code/projects/TDD_Start/REAME.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.12 Case 문.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.13 상수, 문자 더하기.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.11 서브쿼리.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.10 조인 - 페치조인.md",
+    "_03_JPA/04 QueryDSL/ch3 기본 문법/3.9 조인 - on 절.md",
+    "_05_Test_Code/02 테스트를 추가하고 싶은 개발자들의 오답노트/ch3. 방향성 탐색/3.2 어떻게 변경할 것인가?.md",
+    "_05_Test_Code/02 테스트를 추가하고 싶은 개발자들의 오답노트/ch3. 방향성 탐색/3.1 레이어드 아키텍처의 문제점과 해결책.md",
+    "_03_JPA/04 QueryDSL/ch0 소개/소개.md",
+    "벨로그/JPA/[Querydsl] BooleanExpression을 조합할 때 발생하는 NPE를 어떻게 해결할 것인가?.md",
+    "벨로그/Tip/[Intellij] 프로젝트별로 Code Author 다르게 설정하기.md",
+    "벨로그/회고/[후기] 프로그래머스 백엔드 데브코스 합격후기.md",
+    "_03_JPA/04 QueryDSL/ch4 중급 문법/4.4 동적 쿼리 - BooleanBuilder 사용.md",
+    "_03_JPA/04 QueryDSL/ch4 중급 문법/4.2 프로젝션과 결과 반환 - DTO 조회.md",
+    "벨로그/Projects/Shortify/img.png",
+    "벨로그/Spring/img/img_2.png",
+    "벨로그/Spring/img/img_1.png",
+    "벨로그/Spring/img/img.png",
+    "벨로그/Projects/Shortify/img_1.png",
+    "벨로그/DB/img/img_1.png",
+    "벨로그/DB/img/img.png",
+    "벨로그/img/img_1.png",
+    "벨로그/img/img3.png",
+    "벨로그/img/img.png"
+  ]
+}
