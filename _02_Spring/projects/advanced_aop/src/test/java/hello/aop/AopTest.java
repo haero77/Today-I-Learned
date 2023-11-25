@@ -1,5 +1,7 @@
 package hello.aop;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import hello.aop.order.OrderRepository;
 import hello.aop.order.OrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,17 @@ public class AopTest {
         // orderService 가 aop proxy 가 적용되었는지 확인
         log.info("isAopProxy, orderService={}", AopUtils.isAopProxy(orderService));
         log.info("isAopProxy, orderRepository={}", AopUtils.isAopProxy(orderRepository));
+    }
+
+    @Test
+    void success() {
+        orderService.orderItem("itemA");
+    }
+
+    @Test
+    void exception() {
+        assertThatThrownBy(() -> orderService.orderItem("ex"))
+                .isInstanceOf(IllegalStateException.class);
     }
 
 }
