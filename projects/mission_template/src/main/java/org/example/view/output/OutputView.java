@@ -1,6 +1,7 @@
 package org.example.view.output;
 
 import org.example.view.print.Printer;
+import org.example.view.utils.ReInputMessageFormatter;
 
 public class OutputView {
 
