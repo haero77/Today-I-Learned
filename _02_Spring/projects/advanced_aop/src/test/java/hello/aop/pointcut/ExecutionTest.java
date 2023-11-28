@@ -37,7 +37,8 @@ public class ExecutionTest {
         /**
          * 접근제어자?: public
          * 반환타입: String
-         * 선언타입?: hello.aop.member.MemberServiceImpl 메서드이름: hello
+         * 선언타입?: hello.aop.member.MemberServiceImpl
+         * 메서드이름: hello
          * 파라미터: (String)
          * 예외?: 생략
          *
@@ -64,6 +65,34 @@ public class ExecutionTest {
          */
         pointcut.setExpression("execution(* *(..))");
         assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    /**
+     * 메서드 이름 매칭 관련 포인트컷
+     * 메서드 이름 앞 뒤에 *을 사용해서 매칭할 수 있다.
+     */
+    @Test
+    void nameMatch() {
+        pointcut.setExpression("execution(* hello(..))");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    void nameMatchStar1() {
+        pointcut.setExpression("execution(* hel*(..))");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    void nameMatchStar2() {
+        pointcut.setExpression("execution(* *el*(..))");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    void nameMatchFalse() {
+        pointcut.setExpression("execution(* nono(..))");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isFalse();
     }
 
 }
