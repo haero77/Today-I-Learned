@@ -3,6 +3,7 @@ package hello.aop.order.aop;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
@@ -63,6 +64,16 @@ public class AspectV6Advice {
     @AfterThrowing(value = "hello.aop.order.aop.Pointcuts.orderAndService()", throwing = "ex")
     public void doThrowing(JoinPoint joinPoint, Exception ex) {
         log.info("[ex] {} message={}", joinPoint.getSignature(), ex.getMessage());
+    }
+
+    /**
+     * 메서드 실행이 종료되면 실행(finally 와 비슷.)
+     * 정상 및 예외 반환 조건을 모두 처리한다.
+     * 일반적으로 리소스를 해제하는 데 사용함.
+     */
+    @After(value = "hello.aop.order.aop.Pointcuts.orderAndService()")
+    public void doAfter(JoinPoint joinPoint) {
+        log.info("[after] {}", joinPoint.getSignature());
     }
 
 }
