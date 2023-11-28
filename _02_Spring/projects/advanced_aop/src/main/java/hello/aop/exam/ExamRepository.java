@@ -1,5 +1,6 @@
 package hello.aop.exam;
 
+import hello.aop.exam.annotation.Trace;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -11,6 +12,7 @@ public class ExamRepository {
      * 5번에 1번 실패하는 요청
      * 이렇게 간헐적으로 실패할 경우 재시도하는 AOP가 있으면 편리하다.
      */
+    @Trace
     public String save(String itemId) {
         seq++;
 
