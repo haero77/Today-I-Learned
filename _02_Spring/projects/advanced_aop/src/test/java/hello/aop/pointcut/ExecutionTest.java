@@ -2,7 +2,7 @@ package hello.aop.pointcut;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import hello.aop.order.aop.member.MemberServiceImpl;
+import hello.aop.member.MemberServiceImpl;
 import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ public class ExecutionTest {
          *
          * -> MemberServiceImpl.hello(String) 메서드와 포인트컷 표현식의 내용이 전부 일치 -> true 리턴
          */
-        pointcut.setExpression("execution(public String hello.aop.order.aop.member.MemberServiceImpl.hello(String))");
+        pointcut.setExpression("execution(public String hello.aop.member.MemberServiceImpl.hello(String))");
         assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
     }
 
