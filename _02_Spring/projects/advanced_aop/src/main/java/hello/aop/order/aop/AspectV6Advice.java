@@ -3,6 +3,7 @@ package hello.aop.order.aop;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -32,13 +33,23 @@ public class AspectV6Advice {
     }
 
     /**
-     * 조인 포인트 실행 전.
-     * Around는 ProceedingJoinPoint.proceed() 를 호출해야 다음 대상을 호출하지만,
-     * 나머지 어드바이스(ex. @Before) 같은 경우는 메서드 종료 시 자동으로 다음 타겟 호출
+     * 조인 포인트 실행 전. Around는 ProceedingJoinPoint.proceed() 를 호출해야 다음 대상을 호출하지만, 나머지 어드바이스(ex. @Before) 같은 경우는 메서드 종료 시
+     * 자동으로 다음 타겟 호출
      */
     @Before("hello.aop.order.aop.Pointcuts.orderAndService()")
     public void doBefore(JoinPoint joinPoint) {
         log.info("[Before] {}", joinPoint.getSignature());
+    }
+
+    /**
+     * 메서드 실행이 정상적으로 반환될 때 실행
+     * returning 속성에 사용된 이름은 어드바이스 메서드의 매개변수 이름과 일치해야함.
+     * returning 절에 '지정된 타입의 값을 반환하는 메서드만' 대상으로 실행. (부모 타입 지정 시 모든 자식 타입 인정)
+     * Around와 다르게 반환되는 객체 변경은 불가. 반환 객체를 조작은 가능.
+     */
+    @AfterReturning(value = "hello.aop.order.aop.Pointcuts.orderAndService()", returning = "result")
+    public void doReturn(JoinPoint joinPoint, Object result) {
+        log.info("[return] {} return={}", joinPoint.getSignature(), result);
     }
 
 }

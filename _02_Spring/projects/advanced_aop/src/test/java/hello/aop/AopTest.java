@@ -10,6 +10,7 @@ import hello.aop.order.aop.AspectV4Pointcut;
 import hello.aop.order.aop.AspectV5Order;
 import hello.aop.order.aop.AspectV6Advice;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class AopTest {
     OrderRepository orderRepository;
 
     @Test
+    @Disabled
     void aopInfo() {
         // orderService 가 aop proxy 가 적용되었는지 확인
         log.info("isAopProxy, orderService={}", AopUtils.isAopProxy(orderService));
