@@ -31,7 +31,7 @@ public class AspectV5Order {
     public static class TxAspect {
 
         // hello.aop.order 패키지와 그 하위 패키지 이면서, 타입 이름 패턴이 *Service
-        @Around("hello.aop.order.aop.Pointcuts.allOrderAndService()")
+        @Around("hello.aop.order.aop.Pointcuts.orderAndService()")
         public Object doTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
             try {
                 log.info("[트랜잭션 시작] {}", joinPoint.getSignature());
