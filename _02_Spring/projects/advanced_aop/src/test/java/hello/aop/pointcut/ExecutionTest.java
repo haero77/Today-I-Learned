@@ -47,4 +47,23 @@ public class ExecutionTest {
         assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
     }
 
+    @Test
+    void allMatch() {
+        /**
+         * 매칭 조건
+         * 접근제어자?: 생략
+         * 반환타입: *
+         * 선언타입?: 생략
+         * 메서드이름: *
+         * 파라미터: (..)
+         * 예외?: 없음
+         */
+        /**
+         * '*' 은 아무 값이 들어와도 된다는 뜻
+         * 파라미터에서 '..'은 파라미터의 타입과 개수가 상관없다는 뜻.
+         */
+        pointcut.setExpression("execution(* *(..))");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
 }
