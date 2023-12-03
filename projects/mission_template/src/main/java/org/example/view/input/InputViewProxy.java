@@ -10,6 +10,11 @@ public class InputViewProxy implements InputView {
         this.inputView = inputView;
     }
 
+    @Override
+    public int inputBridgeSize() {
+        return 0;
+    }
+
     //    @Override
 //    public int inputVisitDate() {
 //        return exceptionHandler.reInput(

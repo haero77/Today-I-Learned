@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.controller.MainController;
+import org.example.controller.con_non_restrict.NonRestrictedController;
 import org.example.view.input.InputExceptionHandler;
 import org.example.view.input.InputView;
 import org.example.view.input.InputViewImpl;
@@ -19,18 +20,19 @@ public class Application {
         Printer printer = new ConsolePrinter();
 
         InputView inputView = setUpInputView(printer, reader);
-        OutputView outputView = setUpOutputView(printer);
+        OutputView outputView = new OutputView(printer);
 
-        MainController mainController = new MainController(inputView, outputView);
-        mainController.run();
+//        MainController mainController = new MainController(inputView, outputView);
+//        mainController.run();
+
+        NonRestrictedController controller =
+                new NonRestrictedController(new InputViewImpl(reader, printer), new OutputView(printer));
+
+        controller.run();
     }
 
     private static InputView setUpInputView(Printer printer, Reader reader) {
         return new InputViewProxy(new InputExceptionHandler(printer), new InputViewImpl(reader, printer));
-    }
-
-    private static OutputView setUpOutputView(Printer printer) {
-        return new OutputView(printer, new OutputFormatter());
     }
 
 }
