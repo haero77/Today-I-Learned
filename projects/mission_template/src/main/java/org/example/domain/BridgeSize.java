@@ -14,7 +14,7 @@ public class BridgeSize {
     }
 
     private static void validateSize(int size) {
-        if (meetsSizeCriterion(size)) {
+        if (!meetsSizeCriterion(size)) {
             throw new IllegalArgumentException("size not acceptable.");
         }
     }

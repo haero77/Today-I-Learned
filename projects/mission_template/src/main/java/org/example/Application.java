@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.controller.MainController;
 import org.example.controller.con_non_restrict.NonRestrictedController;
+import org.example.controller.con_restict_error_message.RestrictedController;
 import org.example.view.input.InputExceptionHandler;
 import org.example.view.input.InputView;
 import org.example.view.input.InputViewImpl;
@@ -25,8 +26,10 @@ public class Application {
 //        MainController mainController = new MainController(inputView, outputView);
 //        mainController.run();
 
-        NonRestrictedController controller =
-                new NonRestrictedController(new InputViewImpl(reader, printer), new OutputView(printer));
+//        NonRestrictedController controller =
+//                new NonRestrictedController(new InputViewImpl(reader, printer), new OutputView(printer));
+
+        RestrictedController controller = new RestrictedController(new InputViewImpl(reader, printer), outputView);
 
         controller.run();
     }

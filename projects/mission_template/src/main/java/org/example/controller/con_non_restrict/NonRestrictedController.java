@@ -17,12 +17,12 @@ public class NonRestrictedController {
 
     public void run() {
         welcomePlayer();
+
+        BridgeSize bridgeSize = inputBridgeSize();
     }
 
     private void welcomePlayer() {
         outputView.welcomePlayer();
-
-        BridgeSize bridgeSize = inputBridgeSize();
     }
 
     private BridgeSize inputBridgeSize() {
