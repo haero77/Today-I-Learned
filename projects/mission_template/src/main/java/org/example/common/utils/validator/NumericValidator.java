@@ -9,9 +9,9 @@ public class NumericValidator {
     private NumericValidator() {
     }
 
-    public static void validateNumeric(String input) {
-        if (!onlyContainsNumeric(input)) {
-            throw new IllegalArgumentException(String.format("input %s contains non-numeric.", input));
+    public static void validateNumeric(String source) {
+        if (!onlyContainsNumeric(source)) {
+            throw new IllegalArgumentException(String.format("String %s contains non-numeric.", source));
         }
     }
 
