@@ -40,4 +40,14 @@ public class RestrictedController {
         }
     }
 
+    // 도메인 로직에서 에러나는 경우 처리i
+    private <T> T process(Supplier<T> supplier, ErrorConsumer consumer) {
+        try {
+            return supplier.get();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            consumer.accept();
+            return process(supplier, consumer);
+        }
+    }
+
 }
