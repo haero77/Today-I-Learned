@@ -1,4 +1,4 @@
-package org.example.view.input;
+package org.example.view.complicated.input;
 
 public interface InputView {
 

@@ -1,8 +1,8 @@
-package org.example.common.utils;
+package org.example.utils;
 
 import java.util.Arrays;
 import java.util.List;
-import org.example.common.constant.CharacterSymbol;
+import org.example.view.constant.CharacterSymbol;
 
 public class StringUtils {
 

@@ -1,18 +1,15 @@
 package org.example;
 
-import org.example.controller.MainController;
-import org.example.controller.con_non_restrict.NonRestrictedController;
 import org.example.controller.con_restict_error_message.RestrictedController;
-import org.example.view.input.InputExceptionHandler;
-import org.example.view.input.InputView;
-import org.example.view.input.InputViewImpl;
-import org.example.view.input.InputViewProxy;
-import org.example.view.output.OutputFormatter;
-import org.example.view.output.OutputView;
-import org.example.view.print.ConsolePrinter;
-import org.example.view.print.Printer;
-import org.example.view.read.ConsoleReader;
-import org.example.view.read.Reader;
+import org.example.view.complicated.input.InputExceptionHandler;
+import org.example.view.complicated.input.InputView;
+import org.example.view.complicated.input.InputViewImpl;
+import org.example.view.complicated.input.InputViewProxy;
+import org.example.view.complicated.output.OutputView;
+import org.example.view.complicated.print.ConsolePrinter;
+import org.example.view.complicated.print.Printer;
+import org.example.view.complicated.read.ConsoleReader;
+import org.example.view.complicated.read.Reader;
 
 public class Application {
 

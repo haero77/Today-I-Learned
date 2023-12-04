@@ -1,10 +1,10 @@
-package org.example.view.input;
+package org.example.view.complicated.input;
 
 
-import org.example.common.utils.StringConvertor;
-import org.example.common.utils.validator.StringValidator;
-import org.example.view.print.Printer;
-import org.example.view.read.Reader;
+import org.example.utils.StringConvertor;
+import org.example.utils.StringValidator;
+import org.example.view.complicated.print.Printer;
+import org.example.view.complicated.read.Reader;
 
 public class InputViewImpl implements InputView {
 

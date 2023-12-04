@@ -1,4 +1,4 @@
-package org.example.common.constant;
+package org.example.view.constant;
 
 public enum CharacterSymbol {
 

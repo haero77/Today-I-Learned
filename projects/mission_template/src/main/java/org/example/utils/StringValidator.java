@@ -1,4 +1,4 @@
-package org.example.common.utils.validator;
+package org.example.utils;
 
 import java.util.Objects;
 

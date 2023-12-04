@@ -1,4 +1,4 @@
-package org.example.view.output;
+package org.example.view.complicated.output;
 
 public class OutputFormatter {
 

@@ -1,7 +1,7 @@
-package org.example.view.input;
+package org.example.view.complicated.input;
 
 import java.util.function.Supplier;
-import org.example.view.print.Printer;
+import org.example.view.complicated.print.Printer;
 
 public class InputExceptionHandler {
 

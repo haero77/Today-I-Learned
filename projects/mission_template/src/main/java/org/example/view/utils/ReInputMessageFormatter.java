@@ -1,7 +1,6 @@
 package org.example.view.utils;
 
-import org.example.common.constant.CharacterSymbol;
-import org.example.common.utils.formatter.ErrorMessageFormatter;
+import org.example.view.constant.CharacterSymbol;
 
 public class ReInputMessageFormatter {
 

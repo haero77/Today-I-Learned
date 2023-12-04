@@ -2,6 +2,7 @@ package org.example.common.utils.validator;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import org.example.utils.NumericValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

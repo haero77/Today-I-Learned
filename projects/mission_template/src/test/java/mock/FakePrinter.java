@@ -1,7 +1,7 @@
 package mock;
 
 
-import org.example.view.print.Printer;
+import org.example.view.complicated.print.Printer;
 
 public class FakePrinter implements Printer {
 

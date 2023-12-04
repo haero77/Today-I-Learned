@@ -2,8 +2,8 @@ package org.example.controller;
 
 import java.util.function.Supplier;
 import org.example.controller.con_restict_error_message.ErrorConsumer;
-import org.example.view.input.InputView;
-import org.example.view.output.OutputView;
+import org.example.view.complicated.input.InputView;
+import org.example.view.complicated.output.OutputView;
 
 public class MainController {
 

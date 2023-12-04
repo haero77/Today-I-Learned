@@ -1,7 +1,7 @@
-package org.example.view.output;
+package org.example.view.complicated.output;
 
-import org.example.common.utils.formatter.ErrorMessageFormatter;
-import org.example.view.print.Printer;
+import org.example.view.utils.ErrorMessageFormatter;
+import org.example.view.complicated.print.Printer;
 import org.example.view.utils.ReInputMessageFormatter;
 
 public class OutputView {

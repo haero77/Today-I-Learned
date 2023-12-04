@@ -1,4 +1,4 @@
-package org.example.view.print;
+package org.example.view.complicated.print;
 
 public class ConsolePrinter implements Printer {
 

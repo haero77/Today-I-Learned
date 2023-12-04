@@ -1,4 +1,4 @@
-package org.example.view.read;
+package org.example.view.complicated.read;
 
 public interface Reader {
 

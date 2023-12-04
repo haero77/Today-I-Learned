@@ -1,6 +1,4 @@
-package org.example.common.utils;
-
-import org.example.common.utils.validator.NumericValidator;
+package org.example.utils;
 
 public class StringConvertor {
 

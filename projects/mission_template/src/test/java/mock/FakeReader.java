@@ -1,7 +1,7 @@
 package mock;
 
 
-import org.example.view.read.Reader;
+import org.example.view.complicated.read.Reader;
 
 public class FakeReader implements Reader {
 
