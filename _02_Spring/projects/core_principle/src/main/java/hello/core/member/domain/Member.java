@@ -1,4 +1,4 @@
-package hello.core.member;
+package hello.core.member.domain;
 
 import lombok.Getter;
 import lombok.Setter;
