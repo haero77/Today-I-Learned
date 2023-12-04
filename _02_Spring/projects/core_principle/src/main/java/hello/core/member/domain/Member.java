@@ -17,4 +17,8 @@ public class Member {
         this.grade = grade;
     }
 
+    public boolean isGradeVip() {
+        return this.grade.isVip();
+    }
+
 }
