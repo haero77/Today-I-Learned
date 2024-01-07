@@ -1,8 +1,14 @@
 ### gateway -> first
 GET http://localhost:8000/first-service/welcome
 
+### gateway -> first-service
+GET http://localhost:8000/first-service/message
+
 ### gateway -> second
 GET http://localhost:8000/second-service/welcome
+
+### gateway -> second-service
+GET http://localhost:8000/second-service/message
 
 ### first-service
 GET http://localhost:8081/first-service/welcome
