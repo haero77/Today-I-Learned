@@ -5,7 +5,7 @@ GET http://localhost:8000/first-service/welcome
 GET http://localhost:8000/second-service/welcome
 
 ### first-service
-GET http://localhost:8081/welcome
+GET http://localhost:8081/first-service/welcome
 
 ### second-service
-GET http://localhost:8082/welcome
+GET http://localhost:8082/second-service/welcome
