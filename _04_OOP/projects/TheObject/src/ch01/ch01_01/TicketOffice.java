@@ -1,4 +1,4 @@
-package ch01;
+package ch01.ch01_01;
 
 import java.util.ArrayList;
 import java.util.List;

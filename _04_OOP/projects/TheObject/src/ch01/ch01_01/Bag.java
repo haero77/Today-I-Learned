@@ -1,4 +1,6 @@
-package ch01;
+package ch01.ch01_01;
+
+import ch01.ch01_01.Ticket;
 
 /**
  * 관람객이 소지품을 보관할 용도로 들고오는 가방

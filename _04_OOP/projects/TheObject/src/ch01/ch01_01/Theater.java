@@ -1,4 +1,4 @@
-package ch01;
+package ch01.ch01_01;
 
 /**
  * 소극장
