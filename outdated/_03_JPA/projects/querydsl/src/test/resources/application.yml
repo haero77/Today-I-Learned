@@ -1,0 +1,30 @@
+spring:
+
+  profiles:
+    active: test
+
+#  ->  in memory DB 사용
+#  datasource:
+#    url: jdbc:h2:tcp://localhost/~/work/h2_db/querydsl
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug

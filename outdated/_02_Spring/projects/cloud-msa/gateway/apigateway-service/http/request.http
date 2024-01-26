@@ -1,0 +1,25 @@
+### first-service
+GET http://localhost:8081/first-service/welcome
+
+### gateway -> first-service/welcome
+GET http://localhost:8000/first-service/welcome
+
+### gateway -> first-service/message
+GET http://localhost:8000/first-service/message
+
+### gateway -> first-service/check
+GET http://localhost:8000/first-service/check
+
+
+
+### second-service
+GET http://localhost:8082/second-service/welcome
+
+### gateway -> second-service/welcome
+GET http://localhost:8000/second-service/welcome
+
+### gateway -> second-service/message
+GET http://localhost:8000/second-service/message
+
+### gateway -> second-service/check
+GET http://localhost:8000/second-service/check
