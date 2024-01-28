@@ -23,11 +23,20 @@ public class GroupingTest {
 
 	@DisplayName("grouping by field - type")
 	@Test
-	void asd() {
+	void grouping_by_field() {
 		Map<DishType, List<Dish>> dishesByType = this.menu.stream()
 				.collect(groupingBy(dish -> dish.getType()));
 
 		System.out.println("something");
+	}
+
+	@DisplayName("grouping by field - counting")
+	@Test
+	void count() {
+		Map<DishType, Long> dishCountByType = menu.stream()
+				.collect(groupingBy(Dish::getType, counting()));
+
+		System.out.println(dishCountByType);
 	}
 
 	@DisplayName("그룹화 2")
