@@ -36,6 +36,7 @@
 - [ ]  Provider 구조?
 - [ ] 메서드에서 빌더를 파라미터로 사용하면 안 되는 이유? 
   - 클래스 레벨에 @Builder를 사용해야하는 이유와 관련 있을 것 같음
+- lombok does not copy the annotation 'org.springframework.beans.factory.annotation.Qualifier' into the constructor
 
 ## Filter, Interceptor
 
