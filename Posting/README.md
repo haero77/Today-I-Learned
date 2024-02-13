@@ -56,6 +56,17 @@
     - [ ]  https://www.baeldung.com/spring-mock-rest-template
 - [ ]  Testcontainers
 
+---
+
+# Git
+
+- Git Merge
+  - 참고
+    - [Git] Merge 이해하기 (Merge / Squash and Merge / Rebase and Merge)
+      - https://im-developer.tistory.com/182
+
+---
+
 # IntelliJ
 
 - [ ]  여러 개발자들이 같은 local profile 을 이용하는방법
