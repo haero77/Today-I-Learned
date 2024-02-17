@@ -1,0 +1,3 @@
+- https://youtu.be/rYj8PLIE6-k?si=8IYVYUjY1FOvqTSp
+- https://velog.io/@yarogono/JPA-could-not-initialize-proxy-no-Session-에러
+- [Spring Data JPA - LazyInitialization 에러](https://github.com/HomoEfficio/dev-tips/blob/master/Spring%20Data%20JPA%20-%20LazyInitialization%20%EC%97%90%EB%9F%AC%20-%20getOne().md)
