@@ -9,35 +9,29 @@ public class PasswordStrengthMeter {
 			return INVALID;
 		}
 
-		boolean lengthEnough = password.length() >= 8;
-		boolean meetsContainingNumberCriteria = meetsContainingNumberCriteria(password);
-		boolean meetsContainingUpperCaseCriteria = meetsContainingUpperCaseCriteria(password);
+		int metCounts = 0;
 
-		if (lengthEnough && !meetsContainingNumberCriteria && !meetsContainingUpperCaseCriteria) {
+		if (meetsLengthCriteria(password)) {
+			metCounts++;
+		}
+		if (meetsContainingNumberCriteria(password)) {
+			metCounts++;
+		}
+		if (meetsContainingUpperCaseCriteria(password)) {
+			metCounts++;
+		}
+
+		if (metCounts == 1) {
 			return WEAK;
 		}
-
-		if (meetsContainingNumberCriteria && !lengthEnough && !meetsContainingUpperCaseCriteria) {
-			return WEAK;
-		}
-
-		if (!lengthEnough && !meetsContainingNumberCriteria && meetsContainingUpperCaseCriteria) {
-			return WEAK;
-		}
-
-		if (!lengthEnough) {
+		if (metCounts == 2) {
 			return NORMAL;
 		}
-
-		if (!meetsContainingNumberCriteria) {
-			return NORMAL;
-		}
-
-		if (!meetsContainingUpperCaseCriteria) {
-			return NORMAL;
-		}
-
 		return STRONG;
+	}
+
+	private boolean meetsLengthCriteria(String password) {
+		return password.length() >= 8;
 	}
 
 	private boolean meetsContainingUpperCaseCriteria(String password) {
