@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static com.example.tddstartmadvirus.chap02.password.PasswordStrength.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("암호 강도를 측정 시,")
 public class PasswordStrengthMeterTest {
 
 	private final PasswordStrengthMeter meter = new PasswordStrengthMeter();
@@ -17,6 +18,7 @@ public class PasswordStrengthMeterTest {
 		assertStrength(null, PasswordStrength.INVALID);
 	}
 
+	@DisplayName("모든 조건을 만족할 경우 강도는 강함.")
 	@Test
 	void meetsAllCriteria_then_strong() {
 		assertStrength("0934AB!@", STRONG);
@@ -57,6 +59,12 @@ public class PasswordStrengthMeterTest {
 	@Test
 	void meets_only_uppercase_then_weak() {
 		assertStrength("A!", WEAK);
+	}
+
+	@DisplayName("아무 조건도 충족하지 않은 경우 강도는 약함")
+	@Test
+	void meets_no_criteria_then_weak() {
+		assertStrength("abcdefg", WEAK);
 	}
 
 	private void assertStrength(String password, PasswordStrength strength) {
