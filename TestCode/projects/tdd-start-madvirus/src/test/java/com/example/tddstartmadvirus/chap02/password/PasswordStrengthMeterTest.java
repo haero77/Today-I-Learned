@@ -53,6 +53,12 @@ public class PasswordStrengthMeterTest {
 		assertStrength("12!@", WEAK);
 	}
 
+	@DisplayName("대문자 포함 조건만 만족하는 경우 강도는 약함")
+	@Test
+	void meets_only_uppercase_then_weak() {
+		assertStrength("A!", WEAK);
+	}
+
 	private void assertStrength(String password, PasswordStrength strength) {
 		PasswordStrength result = meter.meter(password);
 		assertThat(result).isEqualTo(strength);
