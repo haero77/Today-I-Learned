@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PasswordStrengthMeterTest {
 
-	private PasswordStrengthMeter meter = new PasswordStrengthMeter();
+	private final PasswordStrengthMeter meter = new PasswordStrengthMeter();
 
 	@DisplayName("값이 없는 경우 강도는 INVALID")
 	@Test
@@ -34,6 +34,12 @@ public class PasswordStrengthMeterTest {
 	@Test
 	void meetsOtherCriteria_except_for_number_then_normal() {
 		assertStrength("ab!@ABqwer", NORMAL);
+	}
+
+	@DisplayName("대문자를 포함하지 않고 나머지 조건을 충족하는 경우 강도는 보통")
+	@Test
+	void meetsOtherCriteria_except_for_uppercase_then_normal() {
+		assertStrength("ab!@5678", NORMAL);
 	}
 
 	private void assertStrength(String password, PasswordStrength strength) {
