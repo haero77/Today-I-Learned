@@ -4,11 +4,25 @@ import static com.example.tddstartmadvirus.chap02.password.PasswordStrength.*;
 
 public class PasswordStrengthMeter {
 
+	/**
+	 * 리팩토링 이후: 전반적인 로직이 눈에 들어온다.
+	 */
 	public PasswordStrength meter(String password) {
-		if (password == null || password.isEmpty()) {
+		if (isEmptyString(password)) {
 			return INVALID;
 		}
 
+		// 암호 규칙이 궁금하면 getMetCriteriaCounts() 메서드를 보면된다.
+		int metCounts = getMetCriteriaCounts(password);
+
+		return meterStrength(metCounts);
+	}
+
+	private boolean isEmptyString(String password) {
+		return password == null || password.isEmpty();
+	}
+
+	private int getMetCriteriaCounts(String password) {
 		int metCounts = 0;
 
 		if (meetsLengthCriteria(password)) {
@@ -21,6 +35,10 @@ public class PasswordStrengthMeter {
 			metCounts++;
 		}
 
+		return metCounts;
+	}
+
+	private PasswordStrength meterStrength(int metCounts) {
 		if (metCounts <= 1) {
 			return WEAK;
 		}
