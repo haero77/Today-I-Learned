@@ -26,4 +26,12 @@ public class PasswordStrengthMeterTest {
 		assertThat(result).isEqualTo(PasswordStrength.NORMAL);
 	}
 
+	@DisplayName("숫자를 포함하지 않고 나머지 조건을 충족하는 경우 강도는 보통")
+	@Test
+	void meetsOtherCriteria_except_for_number_then_normal() {
+		PasswordStrengthMeter meter = new PasswordStrengthMeter();
+		PasswordStrength result = meter.meter("ab!@ABqwer");
+		assertThat(result).isEqualTo(PasswordStrength.NORMAL);
+	}
+
 }
