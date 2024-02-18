@@ -3,8 +3,7 @@ package com.example.tddstartmadvirus.chap02.password;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.example.tddstartmadvirus.chap02.password.PasswordStrength.NORMAL;
-import static com.example.tddstartmadvirus.chap02.password.PasswordStrength.STRONG;
+import static com.example.tddstartmadvirus.chap02.password.PasswordStrength.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PasswordStrengthMeterTest {
@@ -45,7 +44,13 @@ public class PasswordStrengthMeterTest {
 	@DisplayName("길이가 8글자 이상인 조건만 충족하는 경우 강도는 약함")
 	@Test
 	void meets_only_length_criteria_then_weak() {
-		assertStrength("abcd!@#$", PasswordStrength.WEAK);
+		assertStrength("abcd!@#$", WEAK);
+	}
+	
+	@DisplayName("숫자 포함 조건만 충족하는 경우 강도는 약함")
+	@Test
+	void meets_only_num_criteria_then_weak() {
+		assertStrength("12!@", WEAK);
 	}
 
 	private void assertStrength(String password, PasswordStrength strength) {

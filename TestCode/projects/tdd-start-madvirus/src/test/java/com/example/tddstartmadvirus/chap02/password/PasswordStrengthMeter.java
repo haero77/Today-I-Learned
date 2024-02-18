@@ -17,6 +17,10 @@ public class PasswordStrengthMeter {
 			return WEAK;
 		}
 
+		if (meetsContainingNumberCriteria && !lengthEnough && !meetsContainingUpperCaseCriteria) {
+			return WEAK;
+		}
+
 		if (!lengthEnough) {
 			return NORMAL;
 		}
