@@ -42,6 +42,12 @@ public class PasswordStrengthMeterTest {
 		assertStrength("ab!@5678", NORMAL);
 	}
 
+	@DisplayName("길이가 8글자 이상인 조건만 충족하는 경우 강도는 약함")
+	@Test
+	void meets_only_length_criteria_then_weak() {
+		assertStrength("abcd!@#$", PasswordStrength.WEAK);
+	}
+
 	private void assertStrength(String password, PasswordStrength strength) {
 		PasswordStrength result = meter.meter(password);
 		assertThat(result).isEqualTo(strength);

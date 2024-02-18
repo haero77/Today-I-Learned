@@ -9,15 +9,23 @@ public class PasswordStrengthMeter {
 			return INVALID;
 		}
 
-		if (password.length() < 8) {
+		boolean lengthEnough = password.length() >= 8;
+		boolean meetsContainingNumberCriteria = meetsContainingNumberCriteria(password);
+		boolean meetsContainingUpperCaseCriteria = meetsContainingUpperCaseCriteria(password);
+
+		if (lengthEnough && !meetsContainingNumberCriteria && !meetsContainingUpperCaseCriteria) {
+			return WEAK;
+		}
+
+		if (!lengthEnough) {
 			return NORMAL;
 		}
 
-		if (!meetsContainingNumberCriteria(password)) {
+		if (!meetsContainingNumberCriteria) {
 			return NORMAL;
 		}
 
-		if (!meetsContainingUpperCaseCriteria(password)) {
+		if (!meetsContainingUpperCaseCriteria) {
 			return NORMAL;
 		}
 

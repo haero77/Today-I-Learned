@@ -2,7 +2,9 @@ package com.example.tddstartmadvirus.chap02.password;
 
 public enum PasswordStrength {
 
-	STRONG,
-	INVALID, NORMAL
+	INVALID,
+	WEAK,
+	NORMAL,
+	STRONG
 
 }
