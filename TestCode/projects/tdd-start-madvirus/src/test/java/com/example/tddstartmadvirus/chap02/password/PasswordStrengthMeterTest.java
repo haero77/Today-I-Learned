@@ -11,6 +11,13 @@ public class PasswordStrengthMeterTest {
 
 	private PasswordStrengthMeter meter = new PasswordStrengthMeter();
 
+	@DisplayName("값이 없는 경우 강도는 INVALID")
+	@Test
+	void null_input_then_invalid() {
+		assertStrength("", PasswordStrength.INVALID);
+		assertStrength(null, PasswordStrength.INVALID);
+	}
+
 	@Test
 	void meetsAllCriteria_then_strong() {
 		assertStrength("0934AB!@", STRONG);
