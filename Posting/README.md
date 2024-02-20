@@ -29,6 +29,11 @@
   - 인지부하를 줄이기 위해 Repository 하나만 꽂고 싶다.
     - interface와 구현체에서 public 을 뗀다
     - interface의 추상 메서드이기 때문에, 구현체의 접근제어자는 무조건 public. protected로 바꾸면 에러 난다.
+- [ ] LocalDate의 plusMonths는 어떻게 정확하게 처리하는가
+  - 2019.3.1 + 1달을 하면 2019.4.1 이 나온다.
+  - 반면, 2019.1.31 + 1달을 하면 2019.2.28 이 나온다. 
+    - 대체 plusMonths는 어떻게 이를 처리했을까 궁금하다.
+  
 
 # Spring
 
