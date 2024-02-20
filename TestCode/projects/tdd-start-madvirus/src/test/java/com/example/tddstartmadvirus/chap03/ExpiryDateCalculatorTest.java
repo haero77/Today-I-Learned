@@ -2,6 +2,7 @@ package com.example.tddstartmadvirus.chap03;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -15,9 +16,32 @@ public class ExpiryDateCalculatorTest {
 		assertExpiryDate(
 				LocalDate.of(2019, 3, 1), 10_000,
 				LocalDate.of(2019, 4, 1));
+
 		assertExpiryDate(
 				LocalDate.of(2019, 5, 5), 10_000,
 				LocalDate.of(2019, 6, 5));
+	}
+
+	/**
+	 * 쉬운 구현을 했으니, 예외 상황을 찾아보자!
+	 */
+	@DisplayName("납부일과 한 달 뒤 일자가 같지 않음")
+	@Test
+	void date_not_same() {
+		assertExpiryDate(
+				LocalDate.of(2019, 1, 31), 10_000,
+				LocalDate.of(2019, 2, 28)
+		);
+
+		assertExpiryDate(
+				LocalDate.of(2019, 5, 31), 10_000,
+				LocalDate.of(2019, 6, 30)
+		);
+
+		assertExpiryDate(
+				LocalDate.of(2020, 1, 31), 10_000,
+				LocalDate.of(2020, 2, 29)
+		);
 	}
 
 	/**
