@@ -2,7 +2,6 @@ package com.example.tddstartmadvirus.chap03;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -51,7 +50,7 @@ public class ExpiryDateCalculatorTest {
 	/**
 	 * 첫 번째 파라미터와 세 번째 파라미터가 둘 다 LocalDate이므로,
 	 * 둘 중 어떤 파라미터가 납부일이고 어떤 파라미터가 기댓값인지 구분하려면 이 메서드의 구현을 살펴봐야한다.
-	 *
+	 * <p>
 	 * 그래도 해당 메서드가 길지 않고,
 	 * 파라미터 개수도 세 개여서 테스트 코드를 볼 때 어떤 것을 검증하는지 쉽게 확인가능하다.
 	 * 👉 이 정도면 중복을 제거 해도 괜찮겠다고 판단.
