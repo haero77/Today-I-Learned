@@ -59,7 +59,7 @@ public class GroupingTest {
 				.filter(dish -> dish.getCalories() > 500)
 				.collect(groupingBy(Dish::getType));
 
-		System.out.println(caloricDishesByType);
+		System.out.println(caloricDishesByType); // fixme: 없는 type 에 대해서 get 하면 에러가 날 것
 
 		// groupingBy의 팩토리 메서드를 오버로드해 문제를 해결
 		Map<DishType, List<Dish>> dishes2 = menu.stream()
