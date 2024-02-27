@@ -1,0 +1,6 @@
+package hellojpa;
+
+
+class MemberTest {
+
+}
