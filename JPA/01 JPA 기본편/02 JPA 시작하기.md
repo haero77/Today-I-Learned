@@ -14,7 +14,7 @@
 
 # JPA 구동 방식
 
-![img.png](img.png)
+![img.png](img/img2/img.png)
 
 # 주의
 
