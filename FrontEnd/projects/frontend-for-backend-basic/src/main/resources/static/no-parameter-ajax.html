@@ -1,0 +1,31 @@
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>title</title>
+</head>
+<body>
+
+<br>asdasdsadas<br/>
+
+<script>
+
+    function onReadyStateChange(event) {
+        if (ajaxRequest.readyState === XMLHttpRequest.DONE) {
+            console.log(event);
+            console.log(ajaxRequest.readyState);
+            if (ajaxRequest.status === 200) {
+                console.log(ajaxRequest.responseText);
+            } else {
+                console.error('request failed');
+            }
+        }
+    }
+
+    const ajaxRequest = new XMLHttpRequest();
+
+    ajaxRequest.onreadystatechange = onReadyStateChange;
+    ajaxRequest.open('GET', '/get-with-no-parameter');
+    ajaxRequest.send();
+</script>
+</body>
+</html>
