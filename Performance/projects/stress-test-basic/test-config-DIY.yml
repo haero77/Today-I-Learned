@@ -1,0 +1,12 @@
+config:
+  # target
+  target: "http://localhost:8080"
+  # define load phases
+  phases:
+    - duration: 20
+      arrivalRate: 5 # 매 초마다 5명의 가상 유저를 만든다. 10초에는 50번씩 요청
+scenarios:
+  - name: Hello API
+    flow:
+      - get:
+          url: "/hello"
