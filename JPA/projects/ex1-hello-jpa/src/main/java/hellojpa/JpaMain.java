@@ -11,26 +11,20 @@ public class JpaMain {
 
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
-
         EntityManager em = emf.createEntityManager();
-
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin(); // transaction start
+        EntityTransaction tx = em.getTransaction();
+        tx.begin(); // [트랜잭션] 시작
 
         try {
-            Member member = new Member(2L, "HelloB");
-            em.persist(member);
+            Member member10 = em.find(Member.class, 10L);
 
-//            Member findMember = em.find(Member.class, 2L);
-//            System.out.println("findMember.getId() = " + findMember.getId());
-//            System.out.println("findMember.getName() = " + findMember.getName());
-//
-//            List<Member> result = em.createQuery("select m from Member m", Member.class)
-//                    .getResultList();
+            member10.setName("changed-name");
 
-            transaction.commit(); // transaction commit
+            System.out.println("===BEFORE COMMIT===");
+            tx.commit(); // [트랜잭션] 커밋
+            System.out.println("===AFTER COMMIT===");
         } catch (Exception e) {
-            transaction.rollback();
+            tx.rollback();
         } finally {
             em.close();
         }
