@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public class PayData {
 
+    private LocalDate firstBillingDate;
     private LocalDate billingDate;
     private int payAmount;
 
@@ -30,6 +31,11 @@ public class PayData {
     public static class Builder {
 
         private final PayData payData = new PayData();
+
+        public Builder firstBillingDate(LocalDate firstBillingDate) {
+            payData.firstBillingDate = firstBillingDate;
+            return this;
+        }
 
         public Builder billingDate(LocalDate billingDate) {
             payData.billingDate = billingDate;
