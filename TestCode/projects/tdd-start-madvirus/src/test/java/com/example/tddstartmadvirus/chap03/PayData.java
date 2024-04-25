@@ -16,6 +16,10 @@ public class PayData {
         this.payAmount = payAmount;
     }
 
+    public LocalDate getFirstBillingDate() {
+        return firstBillingDate;
+    }
+
     public LocalDate getBillingDate() {
         return billingDate;
     }
