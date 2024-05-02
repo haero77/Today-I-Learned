@@ -1,6 +1,6 @@
 package starbuzz;
 
-public class Coffee {
+public class Coffee extends CaffeineBeverage {
 
 	void prepareRecipe() {
 		boilWater();
@@ -9,16 +9,8 @@ public class Coffee {
 		addSugarAndMilk();
 	}
 
-	public void boilWater() {
-		System.out.println("물을 끓인다.");
-	}
-
 	public void brewCoffeeGrinds() {
 		System.out.println("필터를 활용해 커피를 내린다.");
-	}
-
-	public void pourInCup() {
-		System.out.println("컵에 붓는다.");
 	}
 
 	public void addSugarAndMilk() {
