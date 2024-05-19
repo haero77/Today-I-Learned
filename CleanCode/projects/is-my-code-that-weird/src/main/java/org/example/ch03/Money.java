@@ -5,10 +5,10 @@ import java.util.Objects;
 
 public class Money {
 
-    int amount;
-    Currency currency;
+    final int amount;
+    final Currency currency;
 
-    public Money(final int amount, final Currency currency) {
+    Money(final int amount, final Currency currency) {
         if (amount < 0) {
             throw new IllegalArgumentException("금액은 0 이상의 값을 지정해주세요.");
         }
@@ -21,12 +21,13 @@ public class Money {
         this.currency = currency;
     }
 
-    public void addAmount(final int other) {
-        this.amount += other;
-    }
+    Money add(final Money other) {
+        if (!currency.equals(other.currency)) {
+            throw new IllegalArgumentException("통화 단위가 다릅니다.");
+        }
 
-    public int getAmount() {
-        return this.amount;
+        final int added = this.amount + other.amount;
+        return new Money(added, this.currency);
     }
 
 }
