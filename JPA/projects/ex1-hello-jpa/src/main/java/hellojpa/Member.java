@@ -1,38 +1,23 @@
 package hellojpa;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
 public class Member {
 
-	@Id
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String name;
+    private int age;
 
-	private String name;
+    @Embedded
+    private Period workPeriod; // 근무 기간
 
-	public Member() {
-	}
-
-	public Member(Long id, String name) {
-		this.id = id;
-		this.name = name;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Embedded
+    private Address homeAddress; // 집 주소
 
 }
