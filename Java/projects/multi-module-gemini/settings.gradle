@@ -1,0 +1,5 @@
+rootProject.name = 'multi-module-gemini'
+
+include(
+        "hello-spring-api"
+)
