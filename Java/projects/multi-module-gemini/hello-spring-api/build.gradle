@@ -7,5 +7,7 @@ tasks.named("jar") {
 }
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation(project(":support:logging"))
+
+    implementation ("org.springframework.boot:spring-boot-starter-web")
 }
