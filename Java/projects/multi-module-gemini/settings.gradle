@@ -2,5 +2,6 @@ rootProject.name = 'multi-module-gemini'
 
 include(
         "hello-spring-api",
-        "support:logging"
+//        "support:logging",
+        "storage:db-core"
 )
