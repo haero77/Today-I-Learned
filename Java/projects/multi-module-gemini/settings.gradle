@@ -1,7 +1,15 @@
+pluginManagement {
+    plugins {
+        id 'org.springframework.boot' version "${springBootVersion}"
+        id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+        id 'org.asciidoctor.jvm.convert' version "${asciidoctorConvertVersion}"
+        id 'io.spring.javaformat' version "${springJavaFormatVersion}"
+    }
+}
+
 rootProject.name = 'multi-module-gemini'
 
-include(
-        "hello-spring-api",
-//        "support:logging",
-        "storage:db-core"
-)
+include 'core:core-api'
+include 'core:core-domain'
+include 'storage:db-core'
+include 'support:logging'
