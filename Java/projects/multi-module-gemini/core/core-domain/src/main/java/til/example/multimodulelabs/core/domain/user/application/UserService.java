@@ -1,7 +1,9 @@
-package til.example.multimodulelabs.user;
+package til.example.multimodulelabs.core.domain.user.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import til.example.multimodulelabs.core.domain.user.domain.User;
+import til.example.multimodulelabs.core.domain.user.domain.UserId;
 
 @Service
 @RequiredArgsConstructor

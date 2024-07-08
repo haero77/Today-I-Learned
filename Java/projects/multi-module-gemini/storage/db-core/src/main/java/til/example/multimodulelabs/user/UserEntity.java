@@ -5,6 +5,8 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import til.example.multimodulelabs.BaseJpaEntity;
+import til.example.multimodulelabs.core.domain.user.domain.User;
+import til.example.multimodulelabs.core.domain.user.domain.UserId;
 
 @Getter
 @Table(name = "users")

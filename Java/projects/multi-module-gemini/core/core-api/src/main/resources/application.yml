@@ -6,7 +6,7 @@ spring:
     import:
 #      - monitoring.yml
       - logging.yml
-      - db-core.yml
+      - file:./storage/db-core/src/main/resources/db-core.yml # runtimeOnly로 db-core 모듈을 의존하기 때문에 절대 경로 사용
 #      - client-example.yml
   web.resources.add-mappings: false
 

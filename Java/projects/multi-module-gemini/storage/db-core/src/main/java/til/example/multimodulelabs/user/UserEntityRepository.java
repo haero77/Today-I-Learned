@@ -2,6 +2,10 @@ package til.example.multimodulelabs.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import til.example.multimodulelabs.core.domain.user.application.UserRepository;
+import til.example.multimodulelabs.core.domain.user.exception.UserNotFound;
+import til.example.multimodulelabs.core.domain.user.domain.User;
+import til.example.multimodulelabs.core.domain.user.domain.UserId;
 
 import java.util.Optional;
 

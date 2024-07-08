@@ -1,8 +1,11 @@
-package til.example.multimodulelabs.user;
+package til.example.multimodulelabs.core.api.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import til.example.multimodulelabs.core.domain.user.application.UserService;
+import til.example.multimodulelabs.core.domain.user.domain.User;
+import til.example.multimodulelabs.core.domain.user.domain.UserId;
 
 @RestController
 @RequiredArgsConstructor

@@ -1,6 +1,7 @@
-package til.example.multimodulelabs.user;
+package til.example.multimodulelabs.core.api.user;
 
 import lombok.Getter;
+import til.example.multimodulelabs.core.domain.user.domain.User;
 
 @Getter
 public class UserResponse {

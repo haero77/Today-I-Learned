@@ -1,4 +1,4 @@
-package til.example.multimodulelabs.user;
+package til.example.multimodulelabs.core.api.user;
 
 import lombok.Getter;
 

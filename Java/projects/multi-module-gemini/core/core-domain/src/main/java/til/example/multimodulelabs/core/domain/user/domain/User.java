@@ -1,4 +1,4 @@
-package til.example.multimodulelabs.user;
+package til.example.multimodulelabs.core.domain.user.domain;
 
 import lombok.Builder;
 import lombok.Getter;
