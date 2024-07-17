@@ -1,4 +1,4 @@
-package til.example.multimodulelabs.core.domain.user.application;
+package til.example.multimodulelabs.core.domain.user.domain;
 
 import til.example.multimodulelabs.core.domain.user.domain.User;
 import til.example.multimodulelabs.core.domain.user.domain.UserId;
