@@ -1,6 +1,6 @@
 # 03. 관계형 DB와 NoSQL
 
-![img_1.png](img_1.png)
+![img_1.png](images/img2/img_1.png)
 
 - 관계형 모델을 기반으로 한 데이터베이스
 - 관계와 속성으로 이루어진 집합 => 테이블
@@ -36,7 +36,7 @@
 
 ### NoSQL의 분산
 
-![img_3.png](img_3.png)
+![img_3.png](images/img2/img_3.png)
 
 - partition key를 이용해 데이터를 저장할 노드를 결정한다.
   - 어떤 노드에 가야 read할 수 있는지, write를 할 건지 알아낸다.
@@ -44,7 +44,7 @@
 
 ### NoSQL의 종류
 
-![img_4.png](img_4.png)
+![img_4.png](images/img2/img_4.png)
 
 - 전통적인 RDB의 테이블 형태를 벗어나 다양한 데이터 구조 존재.
 
