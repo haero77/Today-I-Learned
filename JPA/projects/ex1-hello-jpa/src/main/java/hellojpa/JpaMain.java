@@ -24,13 +24,13 @@ public class JpaMain {
             parent.addChild(child1);
             parent.addChild(child2);
 
-            em.persist(parent); // 영속성 전이로 인해 자식 엔티티도 함께 저장.
+            em.persist(parent);
 
             em.flush();
             em.clear();
 
             final Parent parentFound = em.find(Parent.class, parent.getId());
-            parentFound.getChildren().remove(0);
+            em.remove(parentFound);
 
             tx.commit(); // 트랜잭션 커밋
         } catch (Exception e) {

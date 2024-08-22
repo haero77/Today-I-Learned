@@ -13,7 +13,7 @@ public class Parent {
     @Column(name = "parent_id")
     private Long id;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> children = new ArrayList<>();
 
     public Parent() {
