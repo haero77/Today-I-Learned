@@ -17,6 +17,9 @@ public class StockOptimistic {
 
     private long quantity;
 
+    @Version
+    private Integer version;
+
     public StockOptimistic(final long quantity) {
         this.quantity = quantity;
     }

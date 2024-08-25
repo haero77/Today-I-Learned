@@ -1,5 +1,6 @@
-package com.example.concurrency.domain.pessimistic;
+package com.example.concurrency.domain.optimistic;
 
+import com.example.concurrency.domain.pessimistic.StockService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,21 +12,25 @@ import java.util.concurrent.Executors;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-class StockServiceTest {
+class StockFacadeServiceTest {
+
+    @Autowired
+    StockFacadeService stockFacadeService;
 
     @Autowired
     StockService stockService;
 
     @Autowired
-    StockRepository stockRepository;
+    StockOptimisticRepository stockRepository;
 
     @Test
     void decreaseQuantity() throws InterruptedException {
         // given
-        final Stock stock = new Stock(100);
+        final long stockQuantity = 2L;
+        final StockOptimistic stock = new StockOptimistic(stockQuantity);
         stockRepository.save(stock);
 
-        final int threadCount = 100;
+        final int threadCount = (int) stockQuantity;
         final ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 
@@ -33,7 +38,7 @@ class StockServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    stockService.decreaseQuantity(stock.getId(), 1L);
+                    stockFacadeService.decreaseQuantity(stock.getId(), 1L);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -45,7 +50,7 @@ class StockServiceTest {
         countDownLatch.await(); // 모든 스레드의 작업이 끝날 때까지 대기
 
         // then
-        final Stock findStock = stockRepository.findById(stock.getId()).orElseThrow();
+        final StockOptimistic findStock = stockRepository.findById(stock.getId()).orElseThrow();
         assertThat(findStock.getQuantity()).isEqualTo(0L);
     }
 }
