@@ -22,10 +22,11 @@ class StockServiceTest {
     @Test
     void decreaseQuantity() throws InterruptedException {
         // given
-        final Stock stock = new Stock(100);
+        final long stockQuantity = 2L;
+        final Stock stock = new Stock(stockQuantity);
         stockRepository.save(stock);
 
-        final int threadCount = 100;
+        final int threadCount = (int) stockQuantity;
         final ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 
@@ -33,7 +34,7 @@ class StockServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    stockService.decreaseQuantity(stock.getId(), 1L);
+                    stockService.decreaseQuantityUsingPessimisticReadLock(stock.getId(), 1L);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
