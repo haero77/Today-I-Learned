@@ -1,0 +1,28 @@
+###
+http://localhost:8080/actuator
+#{
+#    "_links": {
+#        "self": {
+#            "href": "http://localhost:8080/actuator",
+#            "templated": false
+#        },
+#        "health": {
+#            "href": "http://localhost:8080/actuator/health",
+#            "templated": false
+#        },
+#        "health-path": {
+#            "href": "http://localhost:8080/actuator/health/{*path}",
+#            "templated": true
+#        }
+#    }
+#}
+
+### 헬스 상태
+http://localhost:8080/actuator/health
+
+#{
+#    "status": "UP"
+#}
+
+###
+http://localhost:8080/actuator/threaddump
