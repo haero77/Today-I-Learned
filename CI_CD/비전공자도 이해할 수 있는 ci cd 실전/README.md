@@ -1,0 +1,4 @@
+- 강의 
+  - [비전공자도 이해할 수 있는 CI/CD 입문·실전](https://www.inflearn.com/course/%EB%B9%84%EC%A0%84%EA%B3%B5%EC%9E%90-ci-cd-%EC%9E%85%EB%AC%B8-%EC%8B%A4%EC%A0%84/dashboard)
+- 수업자료 
+  - https://jscode.notion.site/a296752baf914e8ab95a1782a64800c2?pvs=4
