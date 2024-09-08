@@ -23,12 +23,10 @@
   * [IP](#ip)
   * [Port](#port)
     * [브라우저 창에 포트 번호를 입력하지 않는 이유는?](#브라우저-창에-포트-번호를-입력하지-않는-이유는)
+    * [well-known port란?](#well-known-port란-)
 * [4. EC2 설정 - 스토리지 구성](#4-ec2-설정---스토리지-구성)
-* [5. EC2 접속](#5-ec2-접속)
-* [6. 탄력적 IP 연결하기](#6-탄력적-ip-연결하기)
-* [7. Express 서버를 EC2에 배포하기](#7-express-서버를-ec2에-배포하기)
-* [7-2. Spring Boot 서버를 EC2에 배포하기](#7-2-spring-boot-서버를-ec2에-배포하기)
-* [비용 나가지 않게 EC2 깔끔하게 종료하기](#비용-나가지-않게-ec2-깔끔하게-종료하기)
+  * [스토리지 설정하기](#스토리지-설정하기)
+  * [인스턴스 시작](#인스턴스-시작-1)
 <!-- TOC -->
 
 # 배포(Deployment)란?
@@ -52,7 +50,7 @@
 
 ## 리전?
 
-![img_1.png](img_1.png)
+![img_1.png](images/s2_01/img_1.png)
 
 - 리전(Region)
     - 인프라를 지리적으로 나누어 배포한 각각의 데이터 센터.
@@ -66,28 +64,28 @@
 
 ### 콘솔 접속
 
-![img.png](img.png)
+![img.png](images/s2_01/img.png)
 
 ### 리전 설정
 
-![img_2.png](img_2.png)
+![img_2.png](images/s2_01/img_2.png)
 
 
 # 2. EC2 설정 - 기본 설정
 
 ## 인스턴스 시작
 
-![img_3.png](img_3.png)
+![img_3.png](images/s2_01/img_3.png)
 
 ### 운영체제 선택
 
-![img_4.png](img_4.png)
+![img_4.png](images/s2_01/img_4.png)
 
 - OS는 Ubuntu 최신 버전 선택
 
 ### 인스턴스 유형(컴퓨터 사양)
 
-![img_5.png](img_5.png)
+![img_5.png](images/s2_01/img_5.png)
 
 - t2.micro 선택
     - 나름 나쁘지 않은 사양.
@@ -95,11 +93,11 @@
 
 ### 키 페어
 
-![img_6.png](img_6.png)
+![img_6.png](images/s2_01/img_6.png)
 
 - 인스턴스에 접근하기 위한 보안 키
 
-![img_7.png](img_7.png)
+![img_7.png](images/s2_01/img_7.png)
 
 - 키 페어의 이름은 명확하게 짓기.
 
@@ -109,7 +107,7 @@
 
 - 보안 그룹이란 AWS 클라우드에서의 네트워크 보안을 의미
 
-![img_8.png](img_8.png)
+![img_8.png](images/s2_01/img_8.png)
 
 - EC2 인스턴스가 집이라고 치면, 보안 그룹은 **집 바깥의 울타리와 대문** 느낌으로 보면 된다.
 
@@ -126,14 +124,14 @@
 
 ## 보안 그룹 설정하기
 
-![img_9.png](img_9.png)
+![img_9.png](images/s2_01/img_9.png)
 
 ### 인바운드 보안 그룹 규칙
 
 - 원격 접속하기 위한 경로. ssh로 22번 포트가 허용되어야만 ec2에 접근 가능.
 - 즉 현재 어떤 PC에서든지 EC2에 접근 가능하다.(소스유형이 `위치 무관` 이므로)
 
-![img_10.png](img_10.png)
+![img_10.png](images/s2_01/img_10.png)
 
 - 서버를 80포트로 띄우므로 80포트를 허용했다.
 - 어떤 IP에서든 전부 접근할 수 있게 소스 유형은 `위치 무관`으로 설정했다.
@@ -147,7 +145,7 @@
 - IP는 특정 컴퓨터의 주소를 가리킨다.
 - 예를 들어 naver.com 이라는 서비스도 IP 주소를 가진다. 
 
-![img_11.png](img_11.png)
+![img_11.png](images/s2_01/img_11.png)
 
 ## Port
 
@@ -160,7 +158,7 @@
 
 ### 브라우저 창에 포트 번호를 입력하지 않는 이유는?
 
-<img alt="img_12.png" src="img_12.png" width="300"/>
+<img alt="img_12.png" src="images/s2_01/img_12.png" width="300"/>
 
 - 특정 서버에 접근하기 위해서는 IP와 포트 번호를 알아야하는데, 브라우저 창에는 포트 번호를 입력하지 않아도 서버에 접속된다.
 - 주소창에 도메인을 입력한 후 요청하면 **브라우저는 기본적으로 80포트로 통신을 보내게 되어있다.**
@@ -178,15 +176,22 @@
 
 # 4. EC2 설정 - 스토리지 구성
 
-# 5. EC2 접속
+- EC2가 갖는 저장 공간을 EBS(Elastic Block Storage)라고 한다.
+- EBS와 같은 저장 공간을 조금 더 포괄적인 용어로 스토리지(Storage), 볼륨(Volume)이라고 부른다.
 
-# 6. 탄력적 IP 연결하기
+## 스토리지 설정하기
 
-# 7. Express 서버를 EC2에 배포하기
+![img_13.png](images/s2_01/img_13.png)
 
-# 7-2. Spring Boot 서버를 EC2에 배포하기
+## 인스턴스 시작
 
-# 비용 나가지 않게 EC2 깔끔하게 종료하기
+![img_14.png](images/s2_01/img_14.png)
+
+![img_15.png](images/s2_01/img_15.png)
+
+![img_16.png](images/s2_01/img_16.png)
+
+- 인스턴스가 실행 중인 것을 확인.
 
 
 
