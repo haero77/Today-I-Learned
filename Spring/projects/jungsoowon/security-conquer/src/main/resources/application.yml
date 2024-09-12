@@ -1,1 +1,6 @@
-1spring.application.name=security-conquer
+spring:
+  security:
+    user:
+      name: user
+      password: 1111
+      roles: USER
