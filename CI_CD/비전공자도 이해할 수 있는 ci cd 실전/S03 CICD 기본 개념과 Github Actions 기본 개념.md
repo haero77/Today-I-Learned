@@ -17,3 +17,20 @@
 4. 서버에서 배포된 최신 코드로 서버를 재실행
 
 # (실습) Github Actions 기본 문법 정리
+
+```yaml
+name: Github Actions 실행 시켜보기
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  My-Deploy-Job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Hello World 찍기
+        run: echo "Hello World!"
+```
