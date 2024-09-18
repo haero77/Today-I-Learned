@@ -145,24 +145,24 @@ sudo apt install openjdk-17-jdk -y
 
 ### github에서 소스 가져오기
 
-![img.png](img.png)
+![img.png](images/s2_03/img.png)
 
 
 ### yml 파일 설정
 
-![img_1.png](img_1.png)
+![img_1.png](images/s2_03/img_1.png)
 
-![img_2.png](img_2.png)
+![img_2.png](images/s2_03/img_2.png)
 
 - gitignore에 `application.yml`을 설정해서, 직접 yml 파일을 만들었다.
 
 ### 빌드
 
-![img_3.png](img_3.png)
+![img_3.png](images/s2_03/img_3.png)
 
 ### 실행
 
-![img_4.png](img_4.png)
+![img_4.png](images/s2_03/img_4.png)
 
 - `project/build/libs` 에 jar 파일이 생성된다.
 - sudo java -jar 커맨드로 jar 파일 실행
@@ -174,11 +174,11 @@ sudo apt install openjdk-17-jdk -y
 - ⚠️ 주의: 현재 앱은 8081 포트로 뜨도록 되어있는데, 인바운드 규칙에서는 80포트만 연결해두었다. 
 - 따라서 아무리 public IP:80 포트로 접속해도 다음과 같이 서버로부터 응답을 받을 수 없다.
 
-![img_5.png](img_5.png)
+![img_5.png](images/s2_03/img_5.png)
 
 - 서버를 80포트로 띄우면 다음과 같이 접속 가능한 것을 확인 가능
 
-![img_6.png](img_6.png)
+![img_6.png](images/s2_03/img_6.png)
 
 
 ### 80 요청을 8080 포트로 어떻게 보내지?
@@ -217,3 +217,16 @@ graph TD
 ```
 
 # 비용 나가지 않게 EC2 깔끔하게 종료하기
+
+## 인스턴스 종료하기
+
+![img_7.png](images/s2_03/img_7.png)
+
+## 탄력적 IP 삭제
+
+![img_9.png](images/s2_03/img_9.png)
+
+![img_8.png](images/s2_03/img_8.png)
+
+
+
