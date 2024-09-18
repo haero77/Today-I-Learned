@@ -11,6 +11,16 @@
     * [탄력적 IP 연결하기](#탄력적-ip-연결하기)
 * [7. Express 서버를 EC2에 배포하기](#7-express-서버를-ec2에-배포하기)
 * [7-2. Spring Boot 서버를 EC2에 배포하기](#7-2-spring-boot-서버를-ec2에-배포하기)
+  * [JDK 설치](#jdk-설치)
+  * [애플리케이션 실행](#애플리케이션-실행)
+    * [github에서 소스 가져오기](#github에서-소스-가져오기)
+    * [yml 파일 설정](#yml-파일-설정)
+    * [빌드](#빌드)
+    * [실행](#실행)
+  * [서버 접근](#서버-접근)
+    * [접근이 불가능하다?](#접근이-불가능하다)
+    * [80 요청을 8080 포트로 어떻게 보내지?](#80-요청을-8080-포트로-어떻게-보내지)
+    * [Reverse Proxy](#reverse-proxy)
 * [비용 나가지 않게 EC2 깔끔하게 종료하기](#비용-나가지-않게-ec2-깔끔하게-종료하기)
 <!-- TOC -->
 
@@ -120,6 +130,90 @@
 
 # 7. Express 서버를 EC2에 배포하기
 
+
+
 # 7-2. Spring Boot 서버를 EC2에 배포하기
+
+## JDK 설치
+
+```text
+$ sudo apt update && /
+sudo apt install openjdk-17-jdk -y
+```
+
+## 애플리케이션 실행
+
+### github에서 소스 가져오기
+
+![img.png](img.png)
+
+
+### yml 파일 설정
+
+![img_1.png](img_1.png)
+
+![img_2.png](img_2.png)
+
+- gitignore에 `application.yml`을 설정해서, 직접 yml 파일을 만들었다.
+
+### 빌드
+
+![img_3.png](img_3.png)
+
+### 실행
+
+![img_4.png](img_4.png)
+
+- `project/build/libs` 에 jar 파일이 생성된다.
+- sudo java -jar 커맨드로 jar 파일 실행
+
+## 서버 접근
+
+### 접근이 불가능하다?
+
+- ⚠️ 주의: 현재 앱은 8081 포트로 뜨도록 되어있는데, 인바운드 규칙에서는 80포트만 연결해두었다. 
+- 따라서 아무리 public IP:80 포트로 접속해도 다음과 같이 서버로부터 응답을 받을 수 없다.
+
+![img_5.png](img_5.png)
+
+- 서버를 80포트로 띄우면 다음과 같이 접속 가능한 것을 확인 가능
+
+![img_6.png](img_6.png)
+
+
+### 80 요청을 8080 포트로 어떻게 보내지?
+
+- 리버스 프록시 사용:
+  - Nginx나 Apache와 같은 웹 서버를 사용하여 80번 포트의 요청을 8080 포트로 프록시한다.
+- 로드 밸런서 사용: 
+  - AWS ELB(Elastic Load Balancer)를 사용하여 80번 포트의 트래픽을 EC2 인스턴스의 8080 포트로 라우팅한다.
+ 
+### Reverse Proxy 사용
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant ReverseProxy as Reverse Proxy (Nginx, port 80)
+    participant Application as Spring Boot App (port 8080)
+
+    Client->>ReverseProxy: HTTP Request (port 80)
+    ReverseProxy->>Application: Forward Request (port 8080)
+    Application->>ReverseProxy: HTTP Response
+    ReverseProxy->>Client: Forward Response
+```
+
+### 로드 밸런서 사용
+
+```mermaid
+graph TD
+    C[Client] -->|HTTP Request :80| LB[Load Balancer :80]
+    LB -->|Forward Request :8080| S1[EC2 Instance 1 :8080]
+    LB -->|Forward Request :8080| S2[EC2 Instance 2 :8080]
+    LB -->|Forward Request :8080| S3[EC2 Instance 3 :8080]
+    S1 -->|Response| LB
+    S2 -->|Response| LB
+    S3 -->|Response| LB
+    LB -->|HTTP Response| C
+```
 
 # 비용 나가지 않게 EC2 깔끔하게 종료하기
