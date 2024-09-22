@@ -5,6 +5,9 @@
     * [단점](#단점)
     * [이 방법은 언제 주로 쓰는가?](#이-방법은-언제-주로-쓰는가-)
 * [[실습] EC2에 Docker 설치, ECR 셋팅하기](#실습-ec2에-docker-설치-ecr-셋팅하기)
+  * [도커 설치 명령어](#도커-설치-명령어)
+  * [GitHub Actions에 IAM 권한 추가하기](#github-actions에-iam-권한-추가하기)
+    * [AWS IAM 접속](#aws-iam-접속)
 * [[실습] 컨테이너 기반의 프로젝트에서 많이 쓰는 CI/CD 구축 방법](#실습-컨테이너-기반의-프로젝트에서-많이-쓰는-cicd-구축-방법)
 * [방법 5 - 컨테이너 기반 + 확장성을 고려한 프로젝트에서 많이 쓰는 CI/CD 구축 방법 (Docker, CodeDeploy)](#방법-5---컨테이너-기반--확장성을-고려한-프로젝트에서-많이-쓰는-cicd-구축-방법-docker-codedeploy)
 * [[실습] 컨테이너 기반 + 확장성을 고려한 프로젝트에서 많이 쓰는 CI/CD 구축 방법](#실습-컨테이너-기반--확장성을-고려한-프로젝트에서-많이-쓰는-cicd-구축-방법)
@@ -44,6 +47,42 @@
 
 
 # [실습] EC2에 Docker 설치, ECR 셋팅하기
+
+## 도커 설치 명령어
+
+```text
+$ sudo apt-get update && \
+	sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common && \
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && \
+	sudo apt-key fingerprint 0EBFCD88 && \
+	sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
+	sudo apt-get update && \
+	sudo apt-get install -y docker-ce && \
+	sudo usermod -aG docker ubuntu && \
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+	sudo chmod +x /usr/local/bin/docker-compose && \
+	sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+	
+# 잘 설치됐는 지 확인
+$ docker -v # Docker 버전 확인
+$ docker compose version # Docker Compose 버전 확인
+```
+
+## GitHub Actions에 IAM 권한 추가하기
+
+<img alt="img_1.png" src="img_1.png" width="600"/>
+
+- actions 가 ECR에 도커 이미지를 전달하기 위해서는 ECR에 접근할 수 있는 권한이 있어야한다.
+
+### AWS IAM 접속
+
+![img_2.png](img_2.png)
+
+- ECR = Elastic Container Registry
+- 
+
+
+
 # [실습] 컨테이너 기반의 프로젝트에서 많이 쓰는 CI/CD 구축 방법
 
 
