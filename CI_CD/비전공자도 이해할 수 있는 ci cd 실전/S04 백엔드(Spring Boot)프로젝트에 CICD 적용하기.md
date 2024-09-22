@@ -10,7 +10,13 @@
     * [git clone 진행](#git-clone-진행-)
     * [git clone 실패](#git-clone-실패-)
     * [프로젝트 빌드 & 실행](#프로젝트-빌드--실행)
+    * [실행 실패](#실행-실패)
+    * [서버 접속 확인 - 접속 불가](#서버-접속-확인---접속-불가)
     * [git pull 할 때마다 토큰 입력 안 하도록 수정](#git-pull-할-때마다-토큰-입력-안-하도록-수정)
+  * [실습 - Github Actions 배포 자동화](#실습---github-actions-배포-자동화)
+    * [workflows script](#workflows-script)
+    * [Github Secret](#github-secret)
+    * [git push & run github actions](#git-push--run-github-actions)
   * [(실습) .gitignore에 추가된 application.yml을 CI/CD로 관리하기](#실습-gitignore에-추가된-applicationyml을-cicd로-관리하기)
 * [방법 2 - 일반 프로젝트에서 많이 쓰는 CI/CD 구축 방법 (Github Actions, SCP)](#방법-2---일반-프로젝트에서-많이-쓰는-cicd-구축-방법-github-actions-scp)
   * [(실습) 일반 프로젝트에서 많이 쓰는 CI/CD 구축 방법](#실습-일반-프로젝트에서-많이-쓰는-cicd-구축-방법)
@@ -43,7 +49,7 @@
 
 - 빌드 작업을 EC2에서 직접 진행하기 때문에 운영하고 있는 서버의 성능에 영향을 미칠 수 있다.
   - 프로젝트 빌드 작업은 생각보다 컴퓨터 메모리와 CPU 자원을 많이 잡아 먹는다.
-- Github 계정 정보가 해당 EC2에 저장되기 때문에 개인 프로젝트 또는 믿을만한 사람들과 같이 진행하는 토이 프로젝트에서만 사용해야 한다.
+- **Github 계정 정보가 해당 EC2에 저장**되기 때문에 개인 프로젝트 또는 믿을만한 사람들과 같이 진행하는 토이 프로젝트에서만 사용해야 한다.
 
 ### 이 방법은 언제 주로 쓰는 지?
 
@@ -150,11 +156,86 @@ Caused by: java.net.BindException: Permission denied
 
 - 서버 접속 확인 ✅
 
-
-
 ### git pull 할 때마다 토큰 입력 안 하도록 수정
 
+> git config --global credential.helper store
 
+![img_16.png](img_16.png)
+
+## 실습 - Github Actions 배포 자동화
+
+### workflows script
+
+```yaml
+name: Deploy To EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH로 EC2에 접속하기
+        uses: appleboy/ssh-action@v1.0.3 # https://github.com/marketplace/actions/ssh-remote-commands
+        env:
+          APPLICATION_PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
+        with:
+          host: ${{ secrets.EC2_HOST }} # EC2의 주소
+          username: ${{ secrets.EC2_USERNAME }} # EC2 접속 username
+          key: ${{ secrets.EC2_PRIVATE_KEY }} # EC2의 Key 파일의 내부 텍스트
+          envs: APPLICATION_PROPERTIES
+          script_stop: true # 아래 script 중 실패하는 명령이 하나라도 있으면 실패로 처리 
+          script: |
+            cd /home/ubuntu/instagram-server # 여기 경로는 자신의 EC2에 맞는 경로로 재작성하기
+            rm -rf src/main/resources/application.yml
+            git pull origin main
+            echo "$APPLICATION_PROPERTIES" > src/main/resources/application.yml
+            ./gradlew clean build
+            sudo fuser -k -n tcp 8080 || true . # || true를 붙인 이유는 8080에 종료시킬 프로세스가 없더라도 실패로 처리하지 않기 위해서이다 
+            nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
+```
+
+- 프로젝트 경로로 이동해서(cd /home/ubuntu/instagram-server),
+- git pull 받고,  빌드 새로 하고,
+- 기존 서비스를 종료 시키고(`sudo fuser -k -n tcp 8080`)
+  - 그런데 서버가 안 돌아가고 있을 때도 있으므로 (`|| true`) 추가
+    - 추가 안 하면 종료할 앱이 없다고 에러가 뜨므로 배포 과정이 중단됨.
+
+---
+
+- ${{ secrets.EC2_HOST }}
+  - EC2 인스턴스의 주소
+  - SSH를 이용해서 원격 컴퓨터로 접속할 건데, 어떤 컴퓨터로 접속할 것인지 컴퓨터의 호스트(=주소=IP)를 알아야한다.
+- ${{ secrets.EC2_USERNAME }}
+  - ![img_17.png](img_17.png)
+  - ec2에 접속할 때 사용자 이름을 위처럼 입력한다. 이게 바로 ec2 username이다.
+- ${{ secrets.EC2_PRIVATE_KEY }}
+  - Kep Pair of EC2 instance
+
+### Github Secret
+
+> EC2_HOST
+
+<img alt="img_18.png" height="500" src="img_18.png"/>
+
+> EC2_USERNAME
+
+![img_20.png](img_20.png)
+
+> EC2_PRIVATE_KEY
+
+![img_19.png](img_19.png)
+
+- PEM KEY를 입력 시에는 cat 명령어로 키의 텍스트값을 조회하고 '%' 전까지 복붙한다.
+
+### git push & run github actions
+
+![img_21.png](img_21.png)
+
+- 정상적으로 배포되고 서버 접속 가능한 것 확인 완료 ✅
 
 
 ## (실습) .gitignore에 추가된 application.yml을 CI/CD로 관리하기
