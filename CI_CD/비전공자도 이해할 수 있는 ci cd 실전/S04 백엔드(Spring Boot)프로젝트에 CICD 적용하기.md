@@ -278,7 +278,103 @@ jobs:
 
 # 방법 2 - 일반 프로젝트에서 많이 쓰는 CI/CD 구축 방법 (Github Actions, SCP)
 
+## 개요
+
+### 전체적인 흐름
+
+![img_22.png](img_22.png)
+
+### 장점
+
+- 빌드 작업을 Github Actions에서 하기 때문에 운영하고 있는 서버의 성능에 영향을 거의 주지 않는다.
+- CI/CD 툴로 Github Actions만 사용하기 때문에 인프라 구조가 복잡하지 않고 간단하다.
+
+### 단점 
+
+- 무중단 배포를 구현하거나 여러 EC2 인스턴스에 배포를 해야 하는 상황이라면, 직접 Github Actions에 스크립트를 작성해서 구현해야 한다. 직접 구현을 해보면 알겠지만 생각보다 꽤 복잡하다.
+
+### 이 방법은 언제 주로 쓰는 지
+
+- 현업에서 초기 서비스를 구축할 때 이 방법을 많이 활용한다.
+- **처음 서비스를 구현할 때는 대규모 서비스에 적합한 구조로 구현하지 않는다.**
+  - 즉, 오버 엔지니어링을 하지 않는다. 
+  - 확장의 필요성이 있다고 느끼는 시점에 인프라를 고도화하기 시작한다. 
+  - 왜냐하면 복잡한 인프라 구조를 갖추고 관리하는 건 생각보다 **여러 측면**에서 신경쓸 게 많아지기 때문이다.
+    - **인프라 구조를 변경할 때 시간이 많이 들어감**
+    - 에러가 발생했을 때 트러블 슈팅의 어려움
+    - 팀원이 **인프라 구조를 이해하기 어려워 함**
+    - 기능을 추가하거나 수정할 때 더 많은 시간이 들어감
+    - **금전적인 비용**이 더 많이 발생
+
+
 ## (실습) 일반 프로젝트에서 많이 쓰는 CI/CD 구축 방법
+  
+### Workflows
+
+```yaml
+name: Deploy To EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Github Repository 파일 불러오기
+        uses: actions/checkout@v4
+
+      - name: JDK 17버전 설치
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: application.yml 파일 만들기
+        run: echo "${{ secrets.APP_YML }}" > ./src/main/resources/application.yml
+
+      - name: 테스트 및 빌드하기
+        run: ./gradlew clean build
+
+      - name: 빌드된 파일 이름 변경하기
+        run: mv ./build/libs/*SNAPSHOT.jar ./project.jar
+
+      - name: SCP로 EC2에 빌드된 파일 '전송'하기 (파일 전송 프로토콜)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          source: project.jar
+          target: /home/ubuntu/cicd-example/tobe # tobe 폴더로 전송
+
+      - name: SSH로 EC2에 접속하기
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script_stop: true
+          script: |
+            rm -rf /home/ubuntu/cicd-example/current
+            mkdir /home/ubuntu/cicd-example/current
+            mv /home/ubuntu/cicd-example/tobe/project.jar /home/ubuntu/cicd-example/current/project.jar
+            cd /home/ubuntu/cicd-example/current
+            sudo fuser -k -n tcp 8080 || true
+            nohup java -jar project.jar > ./output.log 2>&1 & 
+            rm -rf /home/ubuntu/cicd-example/tobe
+
+```
+
+![img_23.png](img_23.png)
+
+### 로그 확인
+
+> cat output.log
+
+![img_24.png](img_24.png)
 
 # 방법 3 - 확장성을 고려한 프로젝트에서 많이 쓰는 CI/CD 구축 방법 (Code Deploy)
 
