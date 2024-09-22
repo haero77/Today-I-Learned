@@ -240,6 +240,42 @@ jobs:
 
 ## (실습) .gitignore에 추가된 application.yml을 CI/CD로 관리하기
 
+```yaml
+name: Deploy To EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH로 EC2에 접속하기
+        uses: appleboy/ssh-action@v1.0.3 # https://github.com/marketplace/actions/ssh-remote-commands
+        env:
+          APP_YML: ${{ secrets.APP_YML }}
+        with:
+          host: ${{ secrets.EC2_HOST }} # EC2의 주소
+          username: ${{ secrets.EC2_USERNAME }} # EC2 접속 username
+          key: ${{ secrets.EC2_PRIVATE_KEY }} # EC2의 Key 파일의 내부 텍스트
+          envs: APPLICATION_PROPERTIES
+          script_stop: true # 아래 script 중 실패하는 명령이 하나라도 있으면 실패로 처리 # || true를 붙인 이유는 8080에 종료시킬 프로세스가 없더라도 실패로 처리하지 않기 위해서이다
+          script: |
+            cd /home/ubuntu/cicd-example # 여기 경로는 자신의 EC2에 맞는 경로로 재작성하기
+            rm -rf src/main/resources/application.yml
+            git pull origin main
+            echo "$APP_YML" > src/main/resources/application.yml
+            ./gradlew clean build
+            sudo fuser -k -n tcp 8080 || true . 
+            nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
+
+```
+
+- 기존 yml 삭제(`rm -rf src/main/resources/application.yml`)
+- echo "$APP_YML" > src/main/resources/application.yml
+
 # 방법 2 - 일반 프로젝트에서 많이 쓰는 CI/CD 구축 방법 (Github Actions, SCP)
 
 ## (실습) 일반 프로젝트에서 많이 쓰는 CI/CD 구축 방법
