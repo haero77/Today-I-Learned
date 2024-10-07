@@ -126,7 +126,7 @@ public class BasicTxTest {
      * o.s.j.d.DataSourceTransactionManager     : Initiating transaction commit
      * o.s.j.d.DataSourceTransactionManager     : Committing JDBC transaction on Connection [HikariProxyConnection@1612491156 wrapping conn0: url=jdbc:h2:mem:e9b33176-c1ea-49d0-9cfa-259c057beac3 user=SA]
      * o.s.j.d.DataSourceTransactionManager     : Releasing JDBC Connection [HikariProxyConnection@1612491156 wrapping conn0: url=jdbc:h2:mem:e9b33176-c1ea-49d0-9cfa-259c057beac3 user=SA] after transaction
-     *
+     * <p>
      * o.f.s.propagation.BasicTxTest            : 트랜잭션2 시작
      * o.s.j.d.DataSourceTransactionManager     : Creating new transaction with name [null]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
      * o.s.j.d.DataSourceTransactionManager     : Acquired Connection [HikariProxyConnection@1770893302 wrapping conn0: url=jdbc:h2:mem:e9b33176-c1ea-49d0-9cfa-259c057beac3 user=SA] for JDBC transaction
@@ -147,5 +147,37 @@ public class BasicTxTest {
         final TransactionStatus tx2 = txManager.getTransaction(new DefaultTransactionAttribute());
         log.info("트랜잭션2 롤백");
         txManager.rollback(tx2);
+    }
+
+    /**
+     * o.f.s.propagation.BasicTxTest            : 외부 트랜잭션 시작 👈
+     * o.s.j.d.DataSourceTransactionManager     : Creating new transaction with name [null]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+     * o.s.j.d.DataSourceTransactionManager     : Acquired Connection [HikariProxyConnection@629230908 wrapping conn0: url=jdbc:h2:mem:6dc24db1-a471-4342-91d0-1fe3c1ff985e user=SA] for JDBC transaction
+     * o.s.j.d.DataSourceTransactionManager     : Switching JDBC Connection [HikariProxyConnection@629230908 wrapping conn0: url=jdbc:h2:mem:6dc24db1-a471-4342-91d0-1fe3c1ff985e user=SA] to manual commit
+     * o.f.s.propagation.BasicTxTest            : outer.isNewTransaction()=true
+     * <p>
+     * o.f.s.propagation.BasicTxTest            : 내부 트랜잭션 시작 👈
+     * o.s.j.d.DataSourceTransactionManager     : Participating in existing transaction
+     * o.f.s.propagation.BasicTxTest            : inner.isNewTransaction()=false
+     * o.f.s.propagation.BasicTxTest            : 내부 트랜잭션 커밋
+     * <p>
+     * o.f.s.propagation.BasicTxTest            : 외부 트랜잭션 커밋 👈
+     * o.s.j.d.DataSourceTransactionManager     : Initiating transaction commit
+     * o.s.j.d.DataSourceTransactionManager     : Committing JDBC transaction on Connection [HikariProxyConnection@629230908 wrapping conn0: url=jdbc:h2:mem:6dc24db1-a471-4342-91d0-1fe3c1ff985e user=SA]
+     * o.s.j.d.DataSourceTransactionManager     : Releasing JDBC Connection [HikariProxyConnection@629230908 wrapping conn0: url=jdbc:h2:mem:6dc24db1-a471-4342-91d0-1fe3c1ff985e user=SA] after transaction*/
+    @Test
+    void inner_commit() {
+        log.info("외부 트랜잭션 시작");
+        TransactionStatus outer = txManager.getTransaction(new DefaultTransactionAttribute());
+        log.info("outer.isNewTransaction()={}", outer.isNewTransaction());
+
+        log.info("내부 트랜잭션 시작");
+        TransactionStatus inner = txManager.getTransaction(new DefaultTransactionAttribute()); // 외부 트랜잭션을 하고 있는데 또 트랜잭션을 시작. 이것이 바로 내부 트랜잭션.
+        log.info("inner.isNewTransaction()={}", inner.isNewTransaction());
+        log.info("내부 트랜잭션 커밋");
+        txManager.commit(inner);
+
+        log.info("외부 트랜잭션 커밋");
+        txManager.commit(outer);
     }
 }
