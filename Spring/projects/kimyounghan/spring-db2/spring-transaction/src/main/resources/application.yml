@@ -8,4 +8,13 @@ logging:
     org:
       springframework:
         transaction:
-          interceptor: trace
+          interceptor: TRACE
+        jdbc:
+          datasource:
+            DataSourceTransactionManager: DEBUG
+        orm:
+          jpa:
+            JpaTransactionManager: DEBUG
+      hibernate:
+        resource:
+          transaction: DEBUG
