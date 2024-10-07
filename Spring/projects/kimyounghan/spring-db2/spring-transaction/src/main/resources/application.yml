@@ -18,3 +18,4 @@ logging:
       hibernate:
         resource:
           transaction: DEBUG
+        SQL: DEBUG
