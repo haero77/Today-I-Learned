@@ -1,0 +1,72 @@
+package org.festilog.springtransaction.apply;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+@Slf4j
+@SpringBootTest
+public class TxLevelTest {
+
+    @Autowired
+    LevelService service;
+
+    @TestConfiguration
+    static class TxApplyLevelConfig {
+
+        @Bean
+        LevelService levelService() {
+            return new LevelService();
+        }
+    }
+
+    @Slf4j
+    @Transactional(readOnly = true)
+    static class LevelService {
+
+        @Transactional(readOnly = false)
+        public void write() {
+            log.info("call write");
+            printTxInfo();
+        }
+
+        public void read() {
+            log.info("call read");
+            printTxInfo();
+        }
+
+        private void printTxInfo() {
+            boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
+            log.info("tx active={}", txActive);
+
+            boolean readOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
+            log.info("tx readOnly={}", readOnly);
+        }
+    }
+
+    @Test
+    void orderTest() {
+        /**
+         * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.apply.TxLevelTest$LevelService.write]
+         * o.f.s.apply.TxLevelTest$LevelService     : call write
+         * o.f.s.apply.TxLevelTest$LevelService     : tx active=true
+         * o.f.s.apply.TxLevelTest$LevelService     : tx readOnly=false
+         * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.apply.TxLevelTest$LevelService.write]
+         */
+        service.write();
+
+        /**
+         * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.apply.TxLevelTest$LevelService.read]
+         * o.f.s.apply.TxLevelTest$LevelService     : call read
+         * o.f.s.apply.TxLevelTest$LevelService     : tx active=true
+         * o.f.s.apply.TxLevelTest$LevelService     : tx readOnly=true
+         * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.apply.TxLevelTest$LevelService.read]
+         */
+        service.read();
+    }
+}
