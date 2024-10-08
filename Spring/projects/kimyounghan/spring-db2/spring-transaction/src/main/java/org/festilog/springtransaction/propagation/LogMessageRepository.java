@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ public class LogMessageRepository {
 
     private final EntityManager em;
 
-//    @Transactional
+    @Transactional
     public void save(final LogMessage logMessage) {
         log.info("logMessage 저장");
         em.persist(logMessage);
