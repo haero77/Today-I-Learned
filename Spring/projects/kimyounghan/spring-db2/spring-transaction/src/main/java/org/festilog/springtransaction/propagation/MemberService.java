@@ -3,6 +3,7 @@ package org.festilog.springtransaction.propagation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -16,6 +17,7 @@ public class MemberService {
      * 회원과 DB로그를 함께 남기는 비즈니스 로직
      * 현재 별도의 트랜잭션은 설정하지 않음
      */
+    @Transactional
     public void joinV1(final String username) {
         final Member member = new Member(username);
         final LogMessage logMessage = new LogMessage(username);

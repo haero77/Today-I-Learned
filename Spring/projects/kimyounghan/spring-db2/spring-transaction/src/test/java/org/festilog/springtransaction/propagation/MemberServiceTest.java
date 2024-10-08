@@ -74,7 +74,7 @@ class MemberServiceTest {
     /**
      * memberService         @Transactional: OFF
      * memberRepository      @Transactional: ON
-     * logMessageRepository  @Transactional: ON
+     * logMessageRepository  @Transactional: ON Exception
      */
     /**
      * o.f.s.propagation.MemberService          : == memberRepository 호출 시작 ==
@@ -116,5 +116,49 @@ class MemberServiceTest {
         // then
         assertThat(memberRepository.findByUsername(username)).isNotEmpty(); // 회원 저장 트랜잭션은 커밋되었으므로 회원 존재.
         assertThat(logMessageRepository.findByMessage(username)).isEmpty(); // 로그 저장 트랜잭션은 롤백되었으므로 로그 부재.
+    }
+
+    /**
+     * 단일 트랜잭션
+     */
+    /**
+     * memberService         @Transactional: ON
+     * memberRepository      @Transactional: OFF
+     * logMessageRepository  @Transactional: OFF
+     */
+    /**
+     * o.s.orm.jpa.JpaTransactionManager        : Creating new transaction with name [org.festilog.springtransaction.propagation.MemberService.joinV1]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+     * o.s.orm.jpa.JpaTransactionManager        : Opened new EntityManager [SessionImpl(1333633954<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@110f66e3]
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.MemberService.joinV1]
+     * <p>
+     * o.f.s.propagation.MemberService          : == memberRepository 호출 시작 ==
+     * o.f.s.propagation.MemberRepository       : member 저장
+     * org.hibernate.SQL                        : select next value for member_seq
+     * o.f.s.propagation.MemberService          : == memberRepository 호출 종료 ==
+     * <p>
+     * o.f.s.propagation.MemberService          : == logMessageRepository 호출 시작 ==
+     * o.f.s.propagation.LogMessageRepository   : logMessage 저장
+     * org.hibernate.SQL                        : select next value for log_message_seq
+     * o.f.s.propagation.MemberService          : == logMessageRepository 호출 종료 ==
+     * <p>
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberService.joinV1]
+     * o.s.orm.jpa.JpaTransactionManager        : Initiating transaction commit
+     * o.s.orm.jpa.JpaTransactionManager        : Committing JPA transaction on EntityManager [SessionImpl(1333633954<open>)]
+     * org.hibernate.SQL                        : insert into member (username,id) values (?,?)
+     * org.hibernate.SQL                        : insert into log_message (message,id) values (?,?)
+     * o.s.orm.jpa.JpaTransactionManager        : Closing JPA EntityManager [SessionImpl(1333633954<open>)] after transaction
+     */
+    @Test
+    void singleTx() {
+        // given
+        final String username = "singleTx";
+
+        // when
+        memberService.joinV1(username);
+
+        // then
+        assertThat(memberRepository.findByUsername(username)).isNotEmpty();
+        assertThat(logMessageRepository.findByMessage(username)).isNotEmpty();
     }
 }

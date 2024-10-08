@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -15,7 +14,7 @@ public class MemberRepository {
 
     private final EntityManager em;
 
-    @Transactional // JPA의 모든 데이터 변경은 트랜잭션 안에서 이루어져야한다.
+//    @Transactional // JPA의 모든 데이터 변경은 트랜잭션 안에서 이루어져야한다.
     public void save(final Member member) {
         log.info("member 저장");
         em.persist(member);
