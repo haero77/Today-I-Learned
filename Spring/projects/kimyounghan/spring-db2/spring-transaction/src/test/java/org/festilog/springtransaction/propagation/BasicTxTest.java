@@ -180,4 +180,35 @@ public class BasicTxTest {
         log.info("외부 트랜잭션 커밋");
         txManager.commit(outer);
     }
+
+    /**
+     * o.f.s.propagation.BasicTxTest            : 외부 트랜잭션 시작
+     * o.s.j.d.DataSourceTransactionManager     : Creating new transaction with name [null]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+     * o.s.j.d.DataSourceTransactionManager     : Acquired Connection [HikariProxyConnection@1247158141 wrapping conn0: url=jdbc:h2:mem:42e400d3-e6ee-414d-b2f9-1e78f23d8002 user=SA] for JDBC transaction
+     * o.s.j.d.DataSourceTransactionManager     : Switching JDBC Connection [HikariProxyConnection@1247158141 wrapping conn0: url=jdbc:h2:mem:42e400d3-e6ee-414d-b2f9-1e78f23d8002 user=SA] to manual commit 👈 물리 트랜잭션 시작 = setAutoCommit(false)
+     * o.f.s.propagation.BasicTxTest            : outer.isNewTransaction()=true
+     * o.f.s.propagation.BasicTxTest            : 내부 트랜잭션 시작
+     * o.s.j.d.DataSourceTransactionManager     : Participating in existing transaction
+     * o.f.s.propagation.BasicTxTest            : inner.isNewTransaction()=false
+     * o.f.s.propagation.BasicTxTest            : 내부 트랜잭션 커밋
+     * o.f.s.propagation.BasicTxTest            : 외부 트랜잭션 롤백
+     * o.s.j.d.DataSourceTransactionManager     : Initiating transaction rollback
+     * o.s.j.d.DataSourceTransactionManager     : Rolling back JDBC transaction on Connection [HikariProxyConnection@1247158141 wrapping conn0: url=jdbc:h2:mem:42e400d3-e6ee-414d-b2f9-1e78f23d8002 user=SA]
+     * o.s.j.d.DataSourceTransactionManager     : Releasing JDBC Connection [HikariProxyConnection@1247158141 wrapping conn0: url=jdbc:h2:mem:42e400d3-e6ee-414d-b2f9-1e78f23d8002 user=SA] after transaction
+     */
+    @Test
+    void outer_rollback() {
+        log.info("외부 트랜잭션 시작");
+        TransactionStatus outer = txManager.getTransaction(new DefaultTransactionAttribute());
+        log.info("outer.isNewTransaction()={}", outer.isNewTransaction());
+
+        log.info("내부 트랜잭션 시작");
+        TransactionStatus inner = txManager.getTransaction(new DefaultTransactionAttribute());
+        log.info("inner.isNewTransaction()={}", inner.isNewTransaction());
+        log.info("내부 트랜잭션 커밋");
+        txManager.commit(inner);
+
+        log.info("외부 트랜잭션 롤백");
+        txManager.rollback(outer);
+    }
 }
