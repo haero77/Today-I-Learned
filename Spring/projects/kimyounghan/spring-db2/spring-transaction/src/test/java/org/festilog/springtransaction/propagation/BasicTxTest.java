@@ -9,9 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 
 import javax.sql.DataSource;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 @SpringBootTest
@@ -210,5 +213,51 @@ public class BasicTxTest {
 
         log.info("외부 트랜잭션 롤백");
         txManager.rollback(outer);
+    }
+
+    /**
+     * o.f.s.propagation.BasicTxTest            : 외부 트랜잭션 시작
+     * o.s.j.d.DataSourceTransactionManager     : Creating new transaction with name [null]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+     * o.s.j.d.DataSourceTransactionManager     : Acquired Connection [HikariProxyConnection@1247158141 wrapping conn0: url=jdbc:h2:mem:616152a3-8cda-4c86-aa3e-2c2bc523c913 user=SA] for JDBC transaction
+     * o.s.j.d.DataSourceTransactionManager     : Switching JDBC Connection [HikariProxyConnection@1247158141 wrapping conn0: url=jdbc:h2:mem:616152a3-8cda-4c86-aa3e-2c2bc523c913 user=SA] to manual commit
+     * o.f.s.propagation.BasicTxTest            : outer.isNewTransaction()=true
+     *
+     * o.f.s.propagation.BasicTxTest            : 내부 트랜잭션 시작
+     * o.s.j.d.DataSourceTransactionManager     : Participating in existing transaction
+     * o.f.s.propagation.BasicTxTest            : inner.isNewTransaction()=false
+     * o.f.s.propagation.BasicTxTest            : 내부 트랜잭션 롤백
+     * o.s.j.d.DataSourceTransactionManager     : Participating transaction failed - marking existing transaction as rollback-only 👈 내부 트랜잭션에서 참여 중인 트랜잭션에 rollback-only로 마킹한다.
+     * o.s.j.d.DataSourceTransactionManager     : Setting JDBC transaction [HikariProxyConnection@1247158141 wrapping conn0: url=jdbc:h2:mem:616152a3-8cda-4c86-aa3e-2c2bc523c913 user=SA] rollback-only
+     *
+     * o.f.s.propagation.BasicTxTest            : 외부 트랜잭션 커밋
+     * o.s.j.d.DataSourceTransactionManager     : Global transaction is marked as rollback-only but transactional code requested commit
+     * o.s.j.d.DataSourceTransactionManager     : Initiating transaction rollback 👈
+     * o.s.j.d.DataSourceTransactionManager     : Rolling back JDBC transaction on Connection [HikariProxyConnection@1247158141 wrapping conn0: url=jdbc:h2:mem:616152a3-8cda-4c86-aa3e-2c2bc523c913 user=SA]
+     * o.s.j.d.DataSourceTransactionManager     : Releasing JDBC Connection [HikariProxyConnection@1247158141 wrapping conn0: url=jdbc:h2:mem:616152a3-8cda-4c86-aa3e-2c2bc523c913 user=SA] after transaction
+     *
+     * org.springframework.transaction.UnexpectedRollbackException: Transaction rolled back because it has been marked as rollback-only
+     *
+     * 	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processRollback(AbstractPlatformTransactionManager.java:938)
+     * 	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:754)
+     * 	at org.festilog.springtransaction.propagation.BasicTxTest.inner_rollback(BasicTxTest.java:228)
+     * 	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+     * 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+     * 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+     */
+    @Test
+    void inner_rollback() {
+        log.info("외부 트랜잭션 시작");
+        TransactionStatus outer = txManager.getTransaction(new DefaultTransactionAttribute());
+        log.info("outer.isNewTransaction()={}", outer.isNewTransaction());
+
+        log.info("내부 트랜잭션 시작");
+        TransactionStatus inner = txManager.getTransaction(new DefaultTransactionAttribute());
+        log.info("inner.isNewTransaction()={}", inner.isNewTransaction());
+        log.info("내부 트랜잭션 롤백");
+        txManager.rollback(inner); // rollback-only로 어딘가에 표시.
+
+        log.info("외부 트랜잭션 커밋");
+        assertThatThrownBy(() -> txManager.commit(outer))
+                .isInstanceOf(UnexpectedRollbackException.class);
     }
 }
