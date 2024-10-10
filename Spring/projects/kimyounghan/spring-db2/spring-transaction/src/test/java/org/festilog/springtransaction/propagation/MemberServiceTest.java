@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.UnexpectedRollbackException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -225,7 +226,7 @@ class MemberServiceTest {
      * o.s.orm.jpa.JpaTransactionManager        : Opened new EntityManager [SessionImpl(1333633954<open>)] for JPA transaction
      * o.s.orm.jpa.JpaTransactionManager        : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@110f66e3]
      * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.MemberService.joinV1]
-     *
+     * <p>
      * 👉member 내부 트랜잭션
      * o.f.s.propagation.MemberService          : == memberRepository 호출 시작 ==
      * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(1333633954<open>)] for JPA transaction
@@ -235,7 +236,7 @@ class MemberServiceTest {
      * org.hibernate.SQL                        : select next value for member_seq
      * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberRepository.save]
      * o.f.s.propagation.MemberService          : == memberRepository 호출 종료 ==
-     *
+     * <p>
      * 👉log 내부 트랜잭션
      * o.f.s.propagation.MemberService          : == logMessageRepository 호출 시작 ==
      * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(1333633954<open>)] for JPA transaction
@@ -248,7 +249,7 @@ class MemberServiceTest {
      * o.s.orm.jpa.JpaTransactionManager        : Participating transaction failed - marking existing transaction as rollback-only 👈 새 트랜잭션 아니므로 물리 롤백은 안 하고, 롤백 마킹만.
      * o.s.orm.jpa.JpaTransactionManager        : Setting JPA transaction on EntityManager [SessionImpl(1333633954<open>)] rollback-only
      * cResourceLocalTransactionCoordinatorImpl : JDBC transaction marked for rollback-only (exception provided for stack trace)
-     *
+     * <p>
      * 👉 외부 트랜잭션의 물리 트랜잭션 롤백
      * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberService.joinV1] after exception: java.lang.RuntimeException: 런타임 예외 발생
      * o.s.orm.jpa.JpaTransactionManager        : Initiating transaction rollback
@@ -263,6 +264,69 @@ class MemberServiceTest {
 
         // when
         memberService.joinV1(username);
+
+        // then: 모든 데이터는 롤백된다.
+        assertThat(memberRepository.findByUsername(username)).isEmpty();
+        assertThat(logMessageRepository.findByMessage(username)).isEmpty();
+    }
+
+    /**
+     * MemberService           @Transactional:ON & recover RuntimeException from LogMessageRepository, try commit. but meets UnexpectedRollbackException
+     * MemberRepository        @Transactional:ON
+     * LogMessageRepository    @Transactional:ON & throws RuntimeException
+     */
+    /**
+     * 👉 외부 트랜잭션 시작
+     * o.s.orm.jpa.JpaTransactionManager        : Creating new transaction with name [org.festilog.springtransaction.propagation.MemberService.joinV2]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+     * o.s.orm.jpa.JpaTransactionManager        : Opened new EntityManager [SessionImpl(696321613<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@74471600]
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.MemberService.joinV2]
+     *
+     * 👉 내부 트랜잭션 시작
+     * o.f.s.propagation.MemberService          : == memberRepository 호출 시작 ==
+     * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(696321613<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Participating in existing transaction
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.MemberRepository.save]
+     * o.f.s.propagation.MemberRepository       : member 저장
+     * org.hibernate.SQL                        : select next value for member_seq
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberRepository.save]
+     * o.f.s.propagation.MemberService          : == memberRepository 호출 종료 ==
+     *
+     * 👉 내부 트랜잭션 시작
+     * o.f.s.propagation.MemberService          : == logMessageRepository 호출 시작 ==
+     * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(696321613<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Participating in existing transaction
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.LogMessageRepository.save]
+     * o.f.s.propagation.LogMessageRepository   : logMessage 저장
+     * org.hibernate.SQL                        : select next value for log_message_seq
+     * o.f.s.propagation.LogMessageRepository   : log 저장시 런타임 예외 발생
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.LogMessageRepository.save] after exception: java.lang.RuntimeException: 런타임 예외 발생
+     * o.s.orm.jpa.JpaTransactionManager        : Participating transaction failed - marking existing transaction as rollback-only 👈 SET Rollback Only!!! AOP 프록시에서 롤백 요청 -> 트랜잭션 매니저에서 트랜잭션 동기화 매니저에 롤백 마킹 요청
+     * o.s.orm.jpa.JpaTransactionManager        : Setting JPA transaction on EntityManager [SessionImpl(696321613<open>)] rollback-only
+     * cResourceLocalTransactionCoordinatorImpl : JDBC transaction marked for rollback-only (exception provided for stack trace)
+     * <p>
+     * java.lang.Exception: exception just for purpose of providing stack trace
+     * at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.markRollbackOnly(JdbcResourceLocalTransactionCoordinatorImpl.java:309) ~[hibernate-core-6.5.3.Final.jar:6.5.3.Final]
+     * at org.hibernate.engine.transaction.internal.TransactionImpl.markRollbackOnly(TransactionImpl.java:203) ~[hibernate-core-6.5.3.Final.jar:6.5.3.Final]
+     * at org.hibernate.engine.transaction.internal.TransactionImpl.setRollbackOnly(TransactionImpl.java:224) ~[hibernate-core-6.5.3.Final.jar:6.5.3.Final]
+     * <p>
+     * o.f.s.propagation.MemberService          : logMessage 저장에 실패했습니다. logMessage=로그예외_recoverException_fail
+     * o.f.s.propagation.MemberService          : 정상 흐름 반환 👈 정상 흐름을 반환했기 때문에, 외부 트랜잭션 AOP 프록시에서는 트랜잭션 매니저한테 커밋 요청을 한다.
+     * o.f.s.propagation.MemberService          : == logMessageRepository 호출 종료 ==
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberService.joinV2]
+     * o.s.orm.jpa.JpaTransactionManager        : Initiating transaction commit 👈 외부 트랜잭션 커밋 시도. 트랜잭션 매니저가 트랜잭션 동기화 매니저의 rollbackOnly 여부 확인(rollbackOnly=true)
+     * o.s.orm.jpa.JpaTransactionManager        : Committing JPA transaction on EntityManager [SessionImpl(696321613<open>)]
+     * cResourceLocalTransactionCoordinatorImpl : On commit, transaction was marked for roll-back only, rolling back
+     * o.s.orm.jpa.JpaTransactionManager        : Closing JPA EntityManager [SessionImpl(696321613<open>)] after transaction
+     */
+    @Test
+    void recoverException_fail() {
+        // given
+        final String username = "로그예외_recoverException_fail";
+
+        // when
+        assertThatThrownBy(() -> memberService.joinV2(username))
+                .isInstanceOf(UnexpectedRollbackException.class);
 
         // then: 모든 데이터는 롤백된다.
         assertThat(memberRepository.findByUsername(username)).isEmpty();
