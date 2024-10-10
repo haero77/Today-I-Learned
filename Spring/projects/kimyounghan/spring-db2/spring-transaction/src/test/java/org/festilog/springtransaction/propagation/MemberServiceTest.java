@@ -210,8 +210,63 @@ class MemberServiceTest {
         // when
         memberService.joinV1(username);
 
-        // then
+        // then: 모든 데이터 커
         assertThat(memberRepository.findByUsername(username)).isNotEmpty();
         assertThat(logMessageRepository.findByMessage(username)).isNotEmpty();
     }
+
+    /**
+     * MemberService           @Transactional:ON 👉 LogMessageRepository에서 예외 올라와서 롤백 요청. 신규 트랜잭션이므로 물리 롤백
+     * MemberRepository        @Transactional:ON 👉 내부 트랜잭션 & 신규 트랜잭션 X. 커밋해도 트랜잭션 매니저에서 실제 커밋 X
+     * LogMessageRepository    @Transactional:ON Exception  👉 내부 트랜잭션 & 신규 트랜잭션 X. 예외 발생하므로 AOP 프록시에서 롤백 요청. 신규 트랜잭션 아니므로 롤백 마킹처리
+     */
+    /**
+     * o.s.orm.jpa.JpaTransactionManager        : Creating new transaction with name [org.festilog.springtransaction.propagation.MemberService.joinV1]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+     * o.s.orm.jpa.JpaTransactionManager        : Opened new EntityManager [SessionImpl(1333633954<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@110f66e3]
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.MemberService.joinV1]
+     *
+     * 👉member 내부 트랜잭션
+     * o.f.s.propagation.MemberService          : == memberRepository 호출 시작 ==
+     * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(1333633954<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Participating in existing transaction
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.MemberRepository.save]
+     * o.f.s.propagation.MemberRepository       : member 저장
+     * org.hibernate.SQL                        : select next value for member_seq
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberRepository.save]
+     * o.f.s.propagation.MemberService          : == memberRepository 호출 종료 ==
+     *
+     * 👉log 내부 트랜잭션
+     * o.f.s.propagation.MemberService          : == logMessageRepository 호출 시작 ==
+     * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(1333633954<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Participating in existing transaction
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.LogMessageRepository.save]
+     * o.f.s.propagation.LogMessageRepository   : logMessage 저장
+     * org.hibernate.SQL                        : select next value for log_message_seq
+     * o.f.s.propagation.LogMessageRepository   : log 저장시 런타임 예외 발생
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.LogMessageRepository.save] after exception: java.lang.RuntimeException: 런타임 예외 발생
+     * o.s.orm.jpa.JpaTransactionManager        : Participating transaction failed - marking existing transaction as rollback-only 👈 새 트랜잭션 아니므로 물리 롤백은 안 하고, 롤백 마킹만.
+     * o.s.orm.jpa.JpaTransactionManager        : Setting JPA transaction on EntityManager [SessionImpl(1333633954<open>)] rollback-only
+     * cResourceLocalTransactionCoordinatorImpl : JDBC transaction marked for rollback-only (exception provided for stack trace)
+     *
+     * 👉 외부 트랜잭션의 물리 트랜잭션 롤백
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberService.joinV1] after exception: java.lang.RuntimeException: 런타임 예외 발생
+     * o.s.orm.jpa.JpaTransactionManager        : Initiating transaction rollback
+     * o.s.orm.jpa.JpaTransactionManager        : Rolling back JPA transaction on EntityManager [SessionImpl(1333633954<open>)]
+     * o.s.orm.jpa.JpaTransactionManager        : Closing JPA EntityManager [SessionImpl(1333633954<open>)] after transaction
+     * 에러 트레이스 로그 발생:                   java.lang.RuntimeException: 런타임 예외 발생
+     */
+    @Test
+    void outerTxOn_fail() {
+        // given
+        final String username = "로그예외_outerTxOn_fail";
+
+        // when
+        memberService.joinV1(username);
+
+        // then: 모든 데이터는 롤백된다.
+        assertThat(memberRepository.findByUsername(username)).isEmpty();
+        assertThat(logMessageRepository.findByMessage(username)).isEmpty();
+    }
 }
+
