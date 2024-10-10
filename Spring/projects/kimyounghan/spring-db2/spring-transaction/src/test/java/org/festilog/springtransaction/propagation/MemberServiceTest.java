@@ -281,7 +281,7 @@ class MemberServiceTest {
      * o.s.orm.jpa.JpaTransactionManager        : Opened new EntityManager [SessionImpl(696321613<open>)] for JPA transaction
      * o.s.orm.jpa.JpaTransactionManager        : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@74471600]
      * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.MemberService.joinV2]
-     *
+     * <p>
      * 👉 내부 트랜잭션 시작
      * o.f.s.propagation.MemberService          : == memberRepository 호출 시작 ==
      * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(696321613<open>)] for JPA transaction
@@ -291,7 +291,7 @@ class MemberServiceTest {
      * org.hibernate.SQL                        : select next value for member_seq
      * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberRepository.save]
      * o.f.s.propagation.MemberService          : == memberRepository 호출 종료 ==
-     *
+     * <p>
      * 👉 내부 트랜잭션 시작
      * o.f.s.propagation.MemberService          : == logMessageRepository 호출 시작 ==
      * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(696321613<open>)] for JPA transaction
@@ -331,6 +331,75 @@ class MemberServiceTest {
         // then: 모든 데이터는 롤백된다.
         assertThat(memberRepository.findByUsername(username)).isEmpty();
         assertThat(logMessageRepository.findByMessage(username)).isEmpty();
+    }
+
+    /**
+     * 비즈니스 요구사항: 회원가입을 시도한 로그를 남기는데 실패하더라도 회원 가입은 유지되어야한다.
+     * 👉 이 요구사항을 만족하기 위해 REQUIRES_NEW 옵션 사용.
+     */
+    /**
+     * MemberService           @Transactional:ON & recover RuntimeException from LogMessageRepository
+     * MemberRepository        @Transactional:ON
+     * LogMessageRepository    @Transactional:ON(REQUIRES_NEW) & throws RuntimeException
+     */
+    /**
+     * 👉 외부 트랜잭션
+     * o.s.orm.jpa.JpaTransactionManager        : Creating new transaction with name [org.festilog.springtransaction.propagation.MemberService.joinV2]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+     * o.s.orm.jpa.JpaTransactionManager        : Opened new EntityManager [SessionImpl(641306471<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@4a49ce3a]
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.MemberService.joinV2]
+     * <p>
+     * 👉 내부 트랜잭션
+     * o.f.s.propagation.MemberService          : == memberRepository 호출 시작 ==
+     * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(641306471<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Participating in existing transaction
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.MemberRepository.save]
+     * o.f.s.propagation.MemberRepository       : member 저장
+     * org.hibernate.SQL                        : select next value for member_seq
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberRepository.save]
+     * o.f.s.propagation.MemberService          : == memberRepository 호출 종료 ==
+     * <p>
+     * 👉 내부 트랜잭션
+     * o.f.s.propagation.MemberService          : == logMessageRepository 호출 시작 ==
+     * o.s.orm.jpa.JpaTransactionManager        : Found thread-bound EntityManager [SessionImpl(641306471<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Suspending current transaction, creating new transaction with name [org.festilog.springtransaction.propagation.LogMessageRepository.save] 👈 신규 트랜잭션 시작 (REQUIRES_NEW)
+     * o.s.orm.jpa.JpaTransactionManager        : Opened new EntityManager [SessionImpl(2047785273<open>)] for JPA transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@54a7d1b9]
+     * o.s.t.i.TransactionInterceptor           : Getting transaction for [org.festilog.springtransaction.propagation.LogMessageRepository.save]
+     * o.f.s.propagation.LogMessageRepository   : logMessage 저장
+     * org.hibernate.SQL                        : select next value for log_message_seq
+     * o.f.s.propagation.LogMessageRepository   : log 저장시 런타임 예외 발생
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.LogMessageRepository.save] after exception: java.lang.RuntimeException: 런타임 예외 발생
+     * o.s.orm.jpa.JpaTransactionManager        : Initiating transaction rollback 👈 두 번째 물리 트랜잭션 롤백. 신규 트랜잭션이므로 롤백 마킹이 아니라 실제 롤백을 함!!!
+     * o.s.orm.jpa.JpaTransactionManager        : Rolling back JPA transaction on EntityManager [SessionImpl(2047785273<open>)]
+     * o.s.orm.jpa.JpaTransactionManager        : Closing JPA EntityManager [SessionImpl(2047785273<open>)] after transaction
+     * o.s.orm.jpa.JpaTransactionManager        : Resuming suspended transaction after completion of inner transaction
+     * o.f.s.propagation.MemberService          : logMessage 저장에 실패했습니다. logMessage=로그예외_recoverException_success
+     * o.f.s.propagation.MemberService          : 정상 흐름 반환
+     * o.f.s.propagation.MemberService          : == logMessageRepository 호출 종료 ==
+     * <p>
+     * 👉 외부 트랜잭션 커밋 시도
+     * o.s.t.i.TransactionInterceptor           : Completing transaction for [org.festilog.springtransaction.propagation.MemberService.joinV2]
+     * o.s.orm.jpa.JpaTransactionManager        : Initiating transaction commit 👈 첫 번째 물리 트랜잭션 커밋
+     * o.s.orm.jpa.JpaTransactionManager        : Committing JPA transaction on EntityManager [SessionImpl(641306471<open>)]
+     * org.hibernate.SQL                        : insert into member (username,id) values (?,?)
+     * o.s.orm.jpa.JpaTransactionManager        : Closing JPA EntityManager [SessionImpl(641306471<open>)] after transaction
+     * org.hibernate.SQL                        : select m1_0.id,m1_0.username from member m1_0 where m1_0.username=?
+     * org.hibernate.SQL                        : select lm1_0.id,lm1_0.message from log_message lm1_0 where lm1_0.message=?
+     */
+    @Test
+    void recoverException_success() {
+        // given
+        final String username = "로그예외_recoverException_success";
+
+        // when
+        memberService.joinV2(username);
+
+        // then: 회원가입은 진행되고, 로그는 롤백.
+        assertAll(
+                () -> assertThat(memberRepository.findByUsername(username)).isNotEmpty(),
+                () -> assertThat(logMessageRepository.findByMessage(username)).isEmpty()
+        );
     }
 }
 
