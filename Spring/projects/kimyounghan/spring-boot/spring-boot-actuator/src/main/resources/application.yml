@@ -1,5 +1,7 @@
 management:
   endpoint:
+    health:
+      show-components: always
     shutdown:
       enabled: true # shutdown 기본으로 활성되지 않음. 실행 시 앱 종료
   endpoints:

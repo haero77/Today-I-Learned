@@ -32,3 +32,6 @@ http://localhost:8080/actuator/beans
 
 ### 웹 서버 shutdown
 GET http://localhost:8080/actuator/threaddump
+
+###
+GET http://localhost:8080/actuator/health
