@@ -26,3 +26,9 @@ http://localhost:8080/actuator/health
 
 ###
 http://localhost:8080/actuator/threaddump
+
+### 스프링 컨테이너에 등록된 빈을 보여준다.
+http://localhost:8080/actuator/beans
+
+### 웹 서버 shutdown
+GET http://localhost:8080/actuator/threaddump
