@@ -1,4 +1,11 @@
 management:
+  info:
+    java:
+      enabled: true
+    os:
+      enabled: true
+    env:
+      enabled: true # info.app 프로퍼티
   endpoint:
     health:
       show-components: always
@@ -8,3 +15,10 @@ management:
     web:
       exposure:
         include: "*" # 모든 엔드포인트를 웹에 노출
+
+
+info:
+  app:
+    name: hello-actuator
+    company: yh
+
