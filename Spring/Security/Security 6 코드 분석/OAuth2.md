@@ -81,7 +81,7 @@ sequenceDiagram
 %% get clientRegistration
     af ->> af: extract registrationId from authorizationRequest
     af ->> crr: findByRegistrationId(registartionId)
-    crr -->> af: ClientRegistration
+    crr -->> af: ClientRegistration`
     af ->> af: generates authenticationRequest(=OAuth2LoginAuthenticationToken)<br>with clientRegistration, authorizationExchange
 
 %% attempts authentication
