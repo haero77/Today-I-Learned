@@ -1,0 +1,1 @@
+# [장애를 허용하는 견고한 시스템 만들기](https://www.inflearn.com/course/%EC%9E%A5%EC%95%A0%EB%A5%BC-%ED%97%88%EC%9A%A9%ED%95%98%EB%8A%94-%EA%B2%AC%EA%B3%A0%ED%95%9C-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EB%A7%8C%EB%93%A4%EA%B8%B0) 강의록
