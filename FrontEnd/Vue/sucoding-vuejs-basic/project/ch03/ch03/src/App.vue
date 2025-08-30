@@ -1,13 +1,23 @@
 <template>
-  <div v-html="message"></div>
+  <!-- <HelloWorld /> -->
+  <!--  <VBind />-->
+<!--  <VIf/>-->
+  <VShow/>
 </template>
 
 <script>
+import HelloWorld from "@/components/HelloWorld.vue";
+import VBind from './components/VBind.vue'
+import VIf from './components/VIf.vue'
+import VShow from './components/VShow.vue'
+
 export default {
-  data() {
-    return {
-      message: '<h1>Hello Vue.js!!</h1>'
-    }
-  },
+  components: {
+    HelloWorld,
+    VBind,
+    VIf,
+    VShow,
+
+  }
 }
 </script>
