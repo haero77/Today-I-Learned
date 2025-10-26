@@ -15,28 +15,28 @@
 
 > 한 줄 요약: 핵심 도메인을 선정해서, 개발 역량을 집중하기 위해 전략적 설계를 한다.
 
-![img_12.png](images/img_12.png)
+![img_12.png](images/img_1/img_12.png)
 
-![img_11.png](images/img_11.png)
+![img_11.png](images/img_1/img_11.png)
 
 
 
 # 1. 비즈니스 도메인에서 문제 도메인 추출하기
 
-![img.png](images/img.png)
+![img.png](images/img_1/img.png)
 
-![img_1.png](images/img_1.png)
+![img_1.png](images/img_1/img_1.png)
 
 - 도메인에서 하위 도메인을 추출
 
-![img_2.png](images/img_2.png)
+![img_2.png](images/img_1/img_2.png)
 
 - 증류(distillation)를 통해, 중요한 것, 덜 중요한 것 구분.
   - 즉, 증류를 통해 핵심 하위 도메인, 지원 도메인, 일반 도메인을 구분
 
 # 2. 문제 도메인을 하위 도메인으로 나누기
 
-![img_3.png](images/img_3.png)
+![img_3.png](images/img_1/img_3.png)
 
 - 증류를 통해서 핵심 하위 도메을 추출하는 이유?
   - 핵심 도메인에 회사의 역량, 리소스를 투입하기 위해서.
@@ -48,7 +48,7 @@
 
 # 3. 문제 공간 식별 
 
-![img_4.png](images/img_4.png)
+![img_4.png](images/img_1/img_4.png)
 
 - 당연히, 지식 탐구(유비쿼터스 언어, 도메인 전문가와 소통)를 곁들여서 해결공간을 추출해내야함.
 - 문제공간에서의 지식 탐구는 도메인 전문가가 주가되지만, 해결공간에서는 개발자가 주가됨.
@@ -61,7 +61,7 @@
 
 ## 브라운필드
 
-![img_5.png](images/img_5.png)
+![img_5.png](images/img_1/img_5.png)
 
 > 브라운필드: 기존 시스템이 있는 상태에서 새로운 시스템을 도입하는 것
 > (<-> 맨땅에서 새로 시작하는 경우는 그린 필드)
@@ -70,20 +70,20 @@
 
 ## Big Ball of Mud
 
-![img_6.png](images/img_6.png)
+![img_6.png](images/img_1/img_6.png)
 
 - 안티패턴은 아님. 특별한 구획이 없는 상태가 Big Ball of Mud.
 
 ## 브라운 필드 전략적 설계
 
-![img_7.png](images/img_7.png)
+![img_7.png](images/img_1/img_7.png)
 
 - fastticket.com 에서도 Big Ball of Mud 아키텍처에서 서비스가 커지면서 복잡도가 폭발하게 됨.
 - 이 시기에 DDD를 도입해서, 해결 공간을 사진과 같이 추출해냈다고 함.
 
 ### 전략적 설계 시 유용한 도구
 
-![img_8.png](images/img_8.png)
+![img_8.png](images/img_1/img_8.png)
 
 - 이벤트 스토밍: 브라운 필드 프로젝트 상황에서 매우 유용.
   - 구현 모델에서 도메인 지식을 복구할때도 유용.
@@ -92,24 +92,24 @@
   - 중요한 것은 언제 어디서나 도메인 컨텍스트 내부에서 유비쿼터스 언어를 사용하는 것.
     - 이것 때문에 단어 사전을 만들자고도 하는데, 그것보다 유비쿼터스 언어는 몸에 패시브로 들고 있어야함 🤣
     
-![img_9.png](images/img_9.png)
+![img_9.png](images/img_1/img_9.png)
 
 ## 전략적 설계 Vs. 전술적 설계
 
-![img_10.png](images/img_10.png)
+![img_10.png](images/img_1/img_10.png)
 
 > 애그리게이트(모으다의 동사)가 아니라 애그리거트(집합체)
 
 # 4. 문제 공간에서 해결 공간으로 
 
-![img_11.png](images/img_11.png)
+![img_11.png](images/img_1/img_11.png)
 
 - 문제 공간까지는 확인이 되었음. 
 - **_문제 공간에서 해결 공간으로 가야하는데, 여기서 바운디드 컨텍스트에 대한 이해가 필요함!!._**
 
 ## 4-1 바운디드 컨텍스트
 
-![img_13.png](images/img_13.png)
+![img_13.png](images/img_1/img_13.png)
 
 - 바운디드 컨텍스트: '경계'가 있는 '문맥'
   - 여기서 말하는 경계? 👉 해결 공간에서 모델의 경계.
@@ -118,98 +118,98 @@
 
 ## 4-2 모델의 모호함을 줄여주는 모델의 무결성
 
-![img_14.png](images/img_14.png)
+![img_14.png](images/img_1/img_14.png)
 
 - 이름은 같은데 다른 개념을 담는 도메인 모델
 
-![img_15.png](images/img_15.png)
+![img_15.png](images/img_1/img_15.png)
 
 - 예매 바운디드 컨텍스트에서 티켓은 '예매 티켓'
 - 고객센터 바운디드 컨텍스트에서 티켓은 '고객 문의'
 - 회원 바운디드 컨텍스트에서 Account는 '회원 계정'
 - 은행 Bounded Context에서 Account는 '은행 계좌'
 
-![img_16.png](images/img_16.png)
+![img_16.png](images/img_1/img_16.png)
 
-![img_17.png](images/img_17.png)
+![img_17.png](images/img_1/img_17.png)
 
 - 컨텍스트별로 필요한 기능을 수행하는 모델이면 충분. 다른 컨텍스트에서 필요한 기능은 알 필요가 없음.
 - **_해당 컨텍스트에서 요구하는 데이터와 행위만 알면됨. 이게 바로 모델의 본질._**
 
 ### 바운디드 컨텍스트가 합쳐질 때 
 
-![img_18.png](images/img_18.png)
+![img_18.png](images/img_1/img_18.png)
 
 ## 하나의 하위 도메인에 바운디드 컨텍스트가 (보통) 한 개 이상 포함될 수도 있음
 
-![img_19.png](images/img_19.png)
+![img_19.png](images/img_1/img_19.png)
 
 ## 바운디드 컨텍스트별 전술 선택
 
-![img_20.png](images/img_20.png)
-![img_21.png](images/img_21.png)
+![img_20.png](images/img_1/img_20.png)
+![img_21.png](images/img_1/img_21.png)
 
 - 핵심 도메인은 개발 조직의 역량을 집중할 수 있게 모델 드리븐으로 선택.
 - 다른 도메인은 단순 CRUD로 선택할 수도 있어.
  
 ### 콘웨이 법칙
 
-![img_22.png](images/img_22.png)
-![img_23.png](images/img_23.png)
-![img_24.png](images/img_24.png)
+![img_22.png](images/img_1/img_22.png)
+![img_23.png](images/img_1/img_23.png)
+![img_24.png](images/img_1/img_24.png)
 
 ## 컨텍스트 맵
 
 - 바운디드 컨텍스트와 맵핑관계를 그린 다이어그램.
 - 의존 관계 등을 화살표 등으로 그리면 됨. 간단.
 
-![img_25.png](images/img_25.png)
-![img_26.png](images/img_26.png)
-![img_40.png](images/img_40.png)
+![img_25.png](images/img_1/img_25.png)
+![img_26.png](images/img_1/img_26.png)
+![img_40.png](images/img_1/img_40.png)
 
 # 예제로 알아보는 전략적 설계의 진화 과정
 
-![img_27.png](images/img_27.png)
-![img_28.png](images/img_28.png)
-![img_29.png](images/img_29.png)
+![img_27.png](images/img_1/img_27.png)
+![img_28.png](images/img_1/img_28.png)
+![img_29.png](images/img_1/img_29.png)
 
 - 스파게티 코드에 도메인 지식이 많이 숨겨져있고, 특별한 도메인 전문가도 없음.
 - 핵심 하위 도메인부터 분리하기 시작하는데, 일반적으로는 일반이나 지원 서브 도메인부터 분리함.
   - 왜? 핵심 도메인은 너무 복잡하게 얽혀있는 경우가 많아서, 분리해내기 어렵기 때문.
  
-![img_31.png](images/img_31.png)
-![img_32.png](images/img_32.png)
+![img_31.png](images/img_1/img_31.png)
+![img_32.png](images/img_1/img_32.png)
 
 - DDD 지속하면서 고도화. 드디어 컨텍스트 맵이 제대로 나옴
 
-![img_30.png](images/img_30.png)
-![img_33.png](images/img_33.png)
+![img_30.png](images/img_1/img_30.png)
+![img_33.png](images/img_1/img_33.png)
 
 - 티켓을 핵심 도메인으로 삼고, 이벤트 소싱 전술적 패턴 적용.
 
-![img_34.png](images/img_34.png)
-![img_35.png](images/img_35.png)
+![img_34.png](images/img_1/img_34.png)
+![img_35.png](images/img_1/img_35.png)
 
 - 2014년에는 도면이 핵심 도메인이 됨.
 - 티켓이 핵심에서 지원 도메인으로 다운 그레이드 됨.
 - 도면과 상품 바운디드 컨텍스트간 맵핑 관계에 변화가 일어났음.
   - 도면 바운디드 컨텍스트가 핵심으로 업그레이드 됨에따라, 상품이 도면을 지원해야하기 때문.
 
-![img_36.png](images/img_36.png)
-![img_37.png](images/img_37.png)
+![img_36.png](images/img_1/img_36.png)
+![img_37.png](images/img_1/img_37.png)
 
 - 예매 하위 도메인에서 결제 바운디드 컨텍스트가 새로 분리됨.
 - 도면이 지원 도메이으로 다운그레이드 됨.
 
-![img_38.png](images/img_38.png)
-![img_39.png](images/img_39.png)
+![img_38.png](images/img_1/img_38.png)
+![img_39.png](images/img_1/img_39.png)
 
 
 - 예매 예측 서브 도메인을 추출하고 핵심 도메인으로 선정.
 - 예매 예측에서 예매로 비동기적 바운디드 컨텍스트 맵핑 추가
 
 
-![img_41.png](images/img_41.png)
+![img_41.png](images/img_1/img_41.png)
 
 
 # 정리 
@@ -217,6 +217,6 @@
 - DDD는 Domain Driven Design
 - 구체적인 방법론이 아니라, 철학에 해당. 예술의 영역.
 
-![img_42.png](images/img_42.png)
+![img_42.png](images/img_1/img_42.png)
 
-![img_43.png](images/img_43.png)
+![img_43.png](images/img_1/img_43.png)
