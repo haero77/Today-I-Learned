@@ -2,6 +2,16 @@ plugins {
     id 'org.springframework.boot' version '2.6.8'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    // Kotlin 기본 플러그인 - Kotlin 코드 컴파일을 위해 필요
+    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
+    // Spring Framework에서 Kotlin 클래스를 사용하기 위한 플러그인
+    // - 모든 클래스를 open으로 만들어 Spring의 CGLIB 프록시가 동작하도록 함
+    // - @Component, @Service, @Controller 등의 어노테이션이 붙은 클래스에 자동 적용
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.6.21'
+    // JPA 엔티티를 Kotlin으로 작성하기 위한 플러그인
+    // - 엔티티 클래스를 open으로 만들고 no-arg 생성자를 자동 생성
+    // - @Entity, @Embeddable, @MappedSuperclass 어노테이션이 붙은 클래스에 자동 적용
+    id 'org.jetbrains.kotlin.plugin.jpa' version '1.6.21'
 }
 
 group = 'com.group'
@@ -15,10 +25,51 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Kotlin용 Jackson 모듈 - JSON 직렬화/역직렬화 시 Kotlin 클래스 지원
+    // - data class의 불변 프로퍼티 처리
+    // - 기본값이 있는 파라미터 처리
+    // - null 가능 타입 처리
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+
+    // Kotlin 리플렉션 라이브러리 - 런타임에 Kotlin 클래스 정보에 접근
+    // - Spring의 각종 어노테이션 처리에 필요
+    // - JPA 프록시 생성에 필요
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+
+    // Kotlin 표준 라이브러리 (JDK 8 버전)
+    // - Kotlin의 기본 함수들 (let, apply, run 등)
+    // - 컬렉션 확장 함수들 (map, filter 등)
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// Kotlin 메인 소스 컴파일 옵션
+compileKotlin {
+    kotlinOptions {
+        // JSR-305 strict 모드 활성화
+        // - JSR-305: Java의 @Nullable, @NonNull 등의 null 안전성 어노테이션 표준
+        // - strict 모드: Java 라이브러리의 null 관련 어노테이션을 엄격하게 검사
+        // - 예: Spring의 @NonNull이 붙은 파라미터에 null을 전달하면 컴파일 에러 발생
+        // - null 안전성을 더 강력하게 보장하여 런타임 NPE를 방지
+        freeCompilerArgs = ['-Xjsr305=strict']
+
+        // 컴파일된 바이트코드의 JVM 버전 지정
+        // - Java 11 바이트코드로 컴파일
+        jvmTarget = '11'
+    }
+}
+
+// Kotlin 테스트 소스 컴파일 옵션 (메인 소스와 동일한 설정)
+compileTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ['-Xjsr305=strict']
+        jvmTarget = '11'
+    }
 }
