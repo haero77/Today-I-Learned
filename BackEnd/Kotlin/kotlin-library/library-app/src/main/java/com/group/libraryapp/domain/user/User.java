@@ -1,13 +1,19 @@
 package com.group.libraryapp.domain.user;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import com.group.libraryapp.domain.book.Book;
 import com.group.libraryapp.domain.user.loanhistory.UserLoanHistory;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Entity
 public class User {
@@ -46,16 +52,18 @@ public class User {
 
   public void returnBook(String bookName) {
     UserLoanHistory targetHistory = this.userLoanHistories.stream()
-        .filter(history -> history.getBookName().equals(bookName))
-        .findFirst()
-        .orElseThrow();
+      .filter(history -> history.getBookName().equals(bookName))
+      .findFirst()
+      .orElseThrow();
     targetHistory.doReturn();
   }
 
+  @NotNull
   public String getName() {
     return name;
   }
 
+  @Nullable // 플랫폼 타입: 코틀린에서 기본적으로 not null로 판단하는데, 뒤에 null체크 시 에러 발생
   public Integer getAge() {
     return age;
   }
@@ -63,5 +71,4 @@ public class User {
   public Long getId() {
     return id;
   }
-
 }
