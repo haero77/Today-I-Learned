@@ -5,17 +5,17 @@ import com.group.libraryapp.domain.user.loanhistory.UserLoanHistory
 import javax.persistence.*
 
 @Entity
-class User(
+class User constructor(
   var name: String,
 
   val age: Int? = null,
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  val id: Long? = null,
 ) {
   @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
   val userLoanHistories: MutableList<UserLoanHistory> = ArrayList()
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  val id: Long? = null
 
   init {
     if (name.isBlank()) {
