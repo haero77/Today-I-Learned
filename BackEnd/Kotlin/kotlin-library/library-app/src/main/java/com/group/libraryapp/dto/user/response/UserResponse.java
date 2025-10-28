@@ -25,5 +25,4 @@ public class UserResponse {
   public Integer getAge() {
     return age;
   }
-
 }

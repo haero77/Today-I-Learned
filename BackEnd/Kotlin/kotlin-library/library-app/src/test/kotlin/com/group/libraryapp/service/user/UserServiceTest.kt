@@ -13,73 +13,75 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 class UserServiceTest @Autowired constructor(
-    private val userService: UserService,
-    private val userRepository: UserRepository,
+  private val userService: UserService,
+  private val userRepository: UserRepository,
 ) {
-    @AfterEach
-    fun clean() {
-        userRepository.deleteAll()
-    }
+  @AfterEach
+  fun clean() {
+    userRepository.deleteAll()
+  }
 
-    @Test
-    @DisplayName("유저 저장이 정상 동작한다")
-    fun saveUserTest() {
-        // given
-        val request = UserCreateRequest("name", null)
+  @Test
+  @DisplayName("유저 저장이 정상 동작한다")
+  fun saveUserTest() {
+    // given
+    val request = UserCreateRequest("name", null)
 
-        // when
-        userService.saveUser(request)
+    // when
+    userService.saveUser(request)
 
-        // then
-        val results = userRepository.findAll()
-        assertThat(results).hasSize(1)
-        assertThat(results[0].name).isEqualTo("name")
-        assertThat(results[0].age).isNull()
-    }
+    // then
+    val results = userRepository.findAll()
+    assertThat(results).hasSize(1)
+    assertThat(results[0].name).isEqualTo("name")
+    assertThat(results[0].age).isNull()
+  }
 
-    @Test
-    @DisplayName("유저 조회가 정상 동작한다")
-    fun getUsersTest() {
-        // given
-        userRepository.saveAll(listOf(
-            User("A", 20),
-            User("B", null)
-        ))
+  @Test
+  @DisplayName("유저 조회가 정상 동작한다")
+  fun getUsersTest() {
+    // given
+    userRepository.saveAll(
+      listOf(
+        User("A", 20),
+        User("B", null)
+      )
+    )
 
-        // when
-        val results = userService.getUsers()
+    // when
+    val results = userService.getUsers()
 
-        // then
-        assertThat(results).hasSize(2)
-        assertThat(results).extracting("name").containsExactlyInAnyOrder("A", "B")
-        assertThat(results).extracting("age").containsExactlyInAnyOrder(20, null)
-    }
+    // then
+    assertThat(results).hasSize(2)
+    assertThat(results).extracting("name").containsExactlyInAnyOrder("A", "B")
+    assertThat(results).extracting("age").containsExactlyInAnyOrder(20, null)
+  }
 
-    @Test
-    @DisplayName("유저 업데이트가 정상 동작한다")
-    fun updateUserName() {
-        // given
-        val savedUser = userRepository.save(User("A", null))
-        val request = UserUpdateRequest(savedUser.id, "B")
+  @Test
+  @DisplayName("유저 업데이트가 정상 동작한다")
+  fun updateUserName() {
+    // given
+    val savedUser = userRepository.save(User("A", null))
+    val request = UserUpdateRequest(savedUser.id!!, "B")
 
-        // when
-        userService.updateUserName(request)
+    // when
+    userService.updateUserName(request)
 
-        // then
-        val result = userRepository.findAll()[0]
-        assertThat(result.name).isEqualTo("B")
-    }
+    // then
+    val result = userRepository.findAll()[0]
+    assertThat(result.name).isEqualTo("B")
+  }
 
-    @Test
-    @DisplayName("유저 삭제가 정상 동작한다")
-    fun deleteUserTest() {
-        // given
-        userRepository.save(User("A", null))
+  @Test
+  @DisplayName("유저 삭제가 정상 동작한다")
+  fun deleteUserTest() {
+    // given
+    userRepository.save(User("A", null))
 
-        // when
-        userService.deleteUser("A")
+    // when
+    userService.deleteUser("A")
 
-        // then
-        assertThat(userRepository.findAll()).isEmpty()
-    }
+    // then
+    assertThat(userRepository.findAll()).isEmpty()
+  }
 }
