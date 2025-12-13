@@ -16,4 +16,29 @@ public class Lec05Main {
       return "F";
     }
   }
+
+  private String getGrade(int score) {
+    if (score >= 90) {
+      return "A";
+    } else if (score >= 80) {
+      return "B";
+    } else if (score >= 70) {
+      return "C";
+    } else {
+      return "D";
+    }
+  }
+
+  private String getGradeWithSwitch(int score) {
+    switch (score / 10) {
+      case 9:
+        return "A";
+      case 8:
+        return "B";
+      case 7:
+        return "C";
+      default:
+        return "D";
+    }
+  }
 }
