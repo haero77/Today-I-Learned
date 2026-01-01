@@ -26,7 +26,7 @@
 
 # Kent Beck의 Simple Design(revised by Martin Fowler)
 
-![img.png](img.png)
+![img.png](images/img.png)
 
 ## 영록님의 Simple Design: 중복이 없으면서 구성요소가 최소한인 코드
 
