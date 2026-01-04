@@ -24,6 +24,11 @@
   * [불필요한 조건문 - True/False를 리턴하는 조건문](#불필요한-조건문---truefalse를-리턴하는-조건문)
     * [⭐️ 함수 실행 성공 여부를 리턴하지 말고 예외를 던져라](#-함수-실행-성공-여부를-리턴하지-말고-예외를-던져라-)
 * [3. 부울 논리표를 이용한 조건문의 간소화](#3-부울-논리표를-이용한-조건문의-간소화)
+  * [부울 논리표를 이용해서 if 문 분석하기](#부울-논리표를-이용해서-if-문-분석하기)
+    * [조건문 개선하기](#조건문-개선하기)
+    * [⭐️ else 줄어드는 것이 중요한 이유](#-else-줄어드는-것이-중요한-이유)
+  * [데코레이터 패턴을 이용한 중복 제거와 그 장점 (with Gemini)](#데코레이터-패턴을-이용한-중복-제거와-그-장점-with-gemini)
+    * [`ActiveUserDecorator` 사용했을 때의 장점](#activeuserdecorator-사용했을-때의-장점)
 * [4. 본질적인 복잡성과 우발적인 복잡성, 그리고 약간 비슷한 중복 코드를 제거하는 법](#4-본질적인-복잡성과-우발적인-복잡성-그리고-약간-비슷한-중복-코드를-제거하는-법)
 * [5. 인지하기 어려운 중복코드의 유형, 중복코드 제거를 도와주는 AI 등의 도구들](#5-인지하기-어려운-중복코드의-유형-중복코드-제거를-도와주는-ai-등의-도구들)
 <!-- TOC -->
@@ -442,6 +447,191 @@ def login(self, account: AccountInfo, **kwargs):
     - 앞의 코드는 `login` 함수에서 예외가 던져진 것처럼 보이기 때문에, 디버깅할 때 `login` 함수부터 따라가야 했음.
 
 # 3. 부울 논리표를 이용한 조건문의 간소화
+
+## 부울 논리표를 이용해서 if 문 분석하기
+
+```java
+public boolean isAllowedTo(User user) {
+    if (user.isAdmin()) {
+        if (user.isActive()) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        if (user.isActive() && user.hasPaid()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+```
+
+- 문제는 없지만 코드를 더 단순하게 만들 수 있다. (물론 boolean 리턴 자체도 문제같지만, 일단 여기서는 조건문 간소화에 집중)
+
+
+**isAdmin=1**
+
+|           | isActive=0 | isActive=1 |
+|-----------|------------|------------|
+| hasPaid=0 | 0          | 1          |
+| hasPaid=1 | 0          | 1          |
+
+
+**isAdmin=0**
+
+|           | isActive=0 | isActive=1 |
+|-----------|------------|------------|
+| hasPaid=0 |     0      |     0      |
+| hasPaid=1 |     0      |     1      |
+
+- 검사하는 조건이 3개니까 2^3 = 8가지 경우의 수가 나옴.
+- (1) 일단 isActive가 0인 경우는 무조건 false임.
+- (2) 그 다음 isAdmin이 1인 경우는 isActive 관계 없이 무조건 true임.
+
+### 조건문 개선하기
+
+**_개선된 조건문_**
+
+```java
+public boolean isAllowedTo(User user) {
+  if (user.isActive()) {
+    if (user.isAdmin()) {
+      return true;
+    }
+    if (user.hasPaid()) {
+      return true;
+    }
+  } else {
+    return false;
+  }
+}
+```
+
+**_else 제거 버전_**
+
+```java
+public boolean isAllowedTo(User user) {
+  if (!user.isActive()) {
+    return false;
+  }
+  if (user.isAdmin()) {
+    return true;
+  }
+  if (user.hasPaid()) {
+    return true;
+  }
+  return false;  
+}
+```
+
+**_더 간소화된 버전_**
+
+```java
+public boolean isAllowedTo(User user) {
+  if (!user.isActive()) {
+    return false;
+  }
+  return user.isAdmin() || user.hasPaid();
+}
+```
+
+**_의도를 더 드러낸 버전_**
+
+```java
+public boolean isAllowedTo(User user) {
+  if (!user.isActive()) { // 권한검사가 단독으로 빠져나와있어 추출하기 쉽다. 데코레이터 패턴 등으로 추출 가능
+    return false;
+  }
+  // 이런 기능은 유료 사용자에 대해 포커스가 맞춰저 있기 때문에, hasPaid를 앞에 둠
+  // 어드민은 실험용으로 허용해준다든지 하기 때문에 더 뒤에 배치시킴
+  return user.hasPaid() || user.isAdmin(); 
+}
+```
+
+### ⭐️ else 줄어드는 것이 중요한 이유
+
+- 위의 else 제거 전 코드를 읽을 때는, 코드를 쭉 읽다가 else를 만났을 때 이 else가 뭐에 대한 else인지를 알아야함. 그래야 이해할 수 있음. (지금은 코드가 간단하지만 복잡해지면 else가 어떤 if에 대한 else인지 헷갈릴 수 있음). 지금만 봐도 isActive에 대한 else인지를 쭉 이해하고 있어야함.
+- else가 제거되면 머리 속의 맥락이 줄어들 수 있음
+
+## 데코레이터 패턴을 이용한 중복 제거와 그 장점 (with Gemini)
+
+```java
+public interface PermissionChecker {
+  boolean isAllowed(User user);
+}
+
+// (핵심) ⭐️비즈니스 정책만 담음
+public class PremiumContentChecker implements PermissionChecker {
+  @Override
+  public boolean isAllowed(User user) {
+    // "유료 사용자거나 어드민이면 통과!"라는 본질에만 집중
+    return user.hasPaid() || user.isAdmin();
+  }
+}
+
+// 데코레이터
+public class ActiveUserDecorator implements PermissionChecker {
+  private final PermissionChecker next; // 다음에 실행할 체크 도구
+
+  public ActiveUserDecorator(PermissionChecker next) {
+    this.next = next;
+  }
+
+  @Override
+  public boolean isAllowed(User user) {
+    // 1. 여기서 먼저 "활성 상태"인지 검사 (Guard Clause 추출)
+    if (!user.isActive()) {
+      return false;
+    }
+
+    // 2. 통과했다면, 품고 있던 다음 로직(알맹이)에 실행을 넘김
+    return next.isAllowed(user);
+  }
+}
+
+// PermissionChecker 빈 등록(판단은 도메인에서, 조립은 인프라에서)
+@Configuration
+public class PermissionConfig {
+  @Bean
+  public PermissionChecker premiumChecker() {
+    // 딱 한 번만 조립해두면, 꺼내 쓸 때는 그냥 checker.isAllowed()만 하면 됨!
+    // 기능은 그대로인데 정책만 바꾸려면? 설정 코드 한 줄(여기)만 바꾸면 됨!
+    return new ActiveUserDecorator(new PremiumContentChecker());
+  }
+}
+
+// PermissionChecker 사용 예시
+@Service
+public class ContentService {
+    private final PermissionChecker permissionChecker;
+    
+    public ContentService(PremiumContentChecker permissionChecker) {
+        this.permissionChecker = permissionChecker;
+    }
+    
+    public void accessPremiumContent(User user) {
+        if (!permissionChecker.isAllowed(user)) {
+            throw new AccessDeniedException("프리미엄 콘텐츠에 접근할 권한이 없습니다.");
+        }
+        // 프리미엄 콘텐츠 접근 로직...
+    }
+}
+```
+
+###  `ActiveUserDecorator` 사용했을 때의 장점
+
+- 나중에 `isActive` 조건이 바뀌더라도, 데코레이터만 수정하면 된다.
+- isActive 조건은 일종의 필터였고, 가드절로 작성되어있었는데, 이거를 분리했기 때문에 유지보수성(특히 기능 확장성)이 좋아짐.
+  - ⭐️ 예를 들어, "휴면 계정은 isActive가 true여도 접근을 막아야한다"라는 요구사항이 생기면, ActiveUserDecorator만 수정하면 된다!!
+  - 만약에 isActive 조건을 일일히 확인하고 있었다면(즉 판단 로직이 중복이 되어있었다면) -> 모든 곳을 다 수정해야했고 -> 이는 버그 발생 가능성을 높였을 것!!!
+- 도메인 이벤트와의 결합도 좋아짐
+- 알맹이 로직의 순수성
+  - PremiumContentChecker의 본질은 "돈을 냈는가? 혹은 관리자인가?"를 판단하는 것.
+  - 직접 호출하게 될 경우: "활동 중인지 보고, 아니면 튕기고, 활동 중이면 그때서야 돈 냈는지 확인하고..." (로직이 섞임)
+  - 데코레이터: "나는 돈 냈는지만 본다. (활동 중인지는 밖에서 누군가 걸러줬겠지)"
+  
 
 # 4. 본질적인 복잡성과 우발적인 복잡성, 그리고 약간 비슷한 중복 코드를 제거하는 법
 
