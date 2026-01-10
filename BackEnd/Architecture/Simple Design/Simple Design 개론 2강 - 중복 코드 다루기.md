@@ -30,6 +30,13 @@
   * [데코레이터 패턴을 이용한 중복 제거와 그 장점 (with Gemini)](#데코레이터-패턴을-이용한-중복-제거와-그-장점-with-gemini)
     * [`ActiveUserDecorator` 사용했을 때의 장점](#activeuserdecorator-사용했을-때의-장점)
 * [4. 본질적인 복잡성과 우발적인 복잡성, 그리고 약간 비슷한 중복 코드를 제거하는 법](#4-본질적인-복잡성과-우발적인-복잡성-그리고-약간-비슷한-중복-코드를-제거하는-법)
+  * [본질적인 복잡성과 우발적인 복잡성](#본질적인-복잡성과-우발적인-복잡성)
+  * [그럼 본질적인 복잡성은 내버려둬야 하나?](#그럼-본질적인-복잡성은-내버려둬야-하나)
+    * [개발자가 복잡하게 느낀다면, 사용자에게는 더 복잡하다!](#개발자가-복잡하게-느낀다면-사용자에게는-더-복잡하다)
+    * [본질적인 복잡성에도 도전하자!](#본질적인-복잡성에도-도전하자)
+  * [약간 다른 중복 코드 다루기](#약간-다른-중복-코드-다루기)
+    * [약간 다른 중복 코드 예시: react-router](#약간-다른-중복-코드-예시-react-router)
+    * [중복 코드 제거 방법: 동일하게 구조 맞추고 함수 통합](#중복-코드-제거-방법-동일하게-구조-맞추고-함수-통합)
 * [5. 인지하기 어려운 중복코드의 유형, 중복코드 제거를 도와주는 AI 등의 도구들](#5-인지하기-어려운-중복코드의-유형-중복코드-제거를-도와주는-ai-등의-도구들)
 <!-- TOC -->
 
@@ -634,5 +641,313 @@ public class ContentService {
   
 
 # 4. 본질적인 복잡성과 우발적인 복잡성, 그리고 약간 비슷한 중복 코드를 제거하는 법
+
+## 본질적인 복잡성과 우발적인 복잡성
+
+## 그럼 본질적인 복잡성은 내버려둬야 하나?
+
+### 개발자가 복잡하게 느낀다면, 사용자에게는 더 복잡하다!
+
+### 본질적인 복잡성에도 도전하자!
+
+- 강의자는 개발자가 비즈니스 사이드에 알려줄 의무도 있다고 생각함.
+
+## 약간 다른 중복 코드 다루기
+
+### 약간 다른 중복 코드 예시: react-router
+
+```js
+export function createBrowserRouter(
+  routes: RouteObject[],
+  opts?: DOMRouterOpts,
+): DataRouter {
+  return createRouter({
+    basename: opts?.basename,
+    unstable_getContext: opts?.unstable_getContext,
+    future: opts?.future,
+    history: createBrowserHistory({ window: opts?.window }), // 이 부분만 다름
+    hydrationData: opts?.hydrationData || parseHydrationData(),
+    routes,
+    mapRouteProperties,
+    hydrationRouteProperties,
+    dataStrategy: opts?.dataStrategy,
+    patchRoutesOnNavigation: opts?.patchRoutesOnNavigation,
+    window: opts?.window,
+  }).initialize();
+}
+
+export function createHashRouter(
+  routes: RouteObject[],
+  opts?: DOMRouterOpts,
+): DataRouter {
+  return createRouter({
+    basename: opts?.basename,
+    unstable_getContext: opts?.unstable_getContext,
+    future: opts?.future,
+    history: createHashHistory({ window: opts?.window }), // createBrowserRouter과 비교 시 이 부분만 다름
+    hydrationData: opts?.hydrationData || parseHydrationData(),
+    routes,
+    mapRouteProperties,
+    hydrationRouteProperties,
+    dataStrategy: opts?.dataStrategy,
+    patchRoutesOnNavigation: opts?.patchRoutesOnNavigation,
+    window: opts?.window,
+  }).initialize();
+}
+
+export function createMemoryRouter(
+  routes: RouteObject[],
+  opts?: MemoryRouterOpts,
+): DataRouter {
+  return createRouter({
+    basename: opts?.basename,
+    unstable_getContext: opts?.unstable_getContext,
+    future: opts?.future,
+    history: createMemoryHistory({
+      initialEntries: opts?.initialEntries,
+      initialIndex: opts?.initialIndex,
+    }),
+    hydrationData: opts?.hydrationData, // parseHydrationData 호출 없음
+    routes,
+    hydrationRouteProperties,
+    mapRouteProperties,
+    dataStrategy: opts?.dataStrategy,
+    patchRoutesOnNavigation: opts?.patchRoutesOnNavigation,
+    // window 옵션도 없음
+  }).initialize();
+}
+```
+
+- createBrowserHistory(), createHashHistory() 호출하는 부분만 다르고, 나머지는 완전히 동일함 (createMemoryHistory()도 마찬가지)
+
+### 중복 코드 제거 방법: 동일하게 구조 맞추고 함수 통합
+
+> 서로 다른 함수의 구조를 동일하게 맞춤 -> 차이점은 파라미터로 추출 -> 동일해진 함수를 하나로 합침
+
+- 이럴 때는 최대한 동일하게 맞춰놓고 리팩토링 시작하면 됨. 먼저 동일하게 구조를 맞춰볼 것임.
+- 여기서는 createMemoryRouter를 createHashRouter에 맞게 구조를 변경해보겠음.
+- 일단 두 메서드의 차이를 diff로 비교해보니까, createMemoryRouter에는 hydrationData, window 옵션이 빠져있음.
+- createMemoryRouter는 테스트 용도로 사용되는 함수로써, hydrationData 인자에서 parseHydrationData()를 추가로 호출해도 괜찮음(null 리턴할 것이기 때문)
+- 마찬가지로, window 옵션도 추가해도 무관함(null 리턴 할 것이기 때문)
+
+```js
+// 참고용
+function parseHydrationData(): HydrationState | undefined {
+  let state = window?.__staticRouterHydrationData;
+  if (state && state.errors) {
+    state = {
+      ...state,
+      errors: deserializeErrors(state.errors),
+    };
+  }
+  return state;
+}
+
+// 변경된 createMemoryRouter, createHashRouter와 동일한 구조로 맞춤
+export function createMemoryRouter(
+  routes: RouteObject[],
+  opts?: MemoryRouterOpts,
+): DataRouter {
+  return createRouter({
+    basename: opts?.basename,
+    unstable_getContext: opts?.unstable_getContext,
+    future: opts?.future,
+    history: createMemoryHistory({
+      initialEntries: opts?.initialEntries,
+      initialIndex: opts?.initialIndex,
+    }),
+    hydrationData: opts?.hydrationData || parseHydrationData(), // 추가해도 무관
+    routes,
+    hydrationRouteProperties,
+    mapRouteProperties,
+    dataStrategy: opts?.dataStrategy,
+    patchRoutesOnNavigation: opts?.patchRoutesOnNavigation,
+    window: opts?.window, // 추가해도 무관
+  }).initialize();
+}
+```
+
+- 이렇게 변경하고 나면, 이제 (history 하나만 다르고) 세 메서드의 구조가 완전히 동일해짐. 그럼 이제 history 부분만 합치면 됨.
+  - 즉, 이제 구조를 동일하게 맞췄으니까, 리팩토링 진행해보겠음.
+- history 부분만 다르니까, history를 파라미터로 추출해보겠다.
+
+```js
+// createHashRouter 리팩토링 
+export function createHashRouter(
+        routes: RouteObject[],
+        opts?: DOMRouterOpts,
+        history: History // history를 파라미터로 추가
+): DataRouter {
+  return createRouter({
+    basename: opts?.basename,
+    unstable_getContext: opts?.unstable_getContext,
+    future: opts?.future,
+    history, // 파라미터로 주입 받은 history 사용
+    hydrationData: opts?.hydrationData || parseHydrationData(),
+    routes,
+    mapRouteProperties,
+    hydrationRouteProperties,
+    dataStrategy: opts?.dataStrategy,
+    patchRoutesOnNavigation: opts?.patchRoutesOnNavigation,
+    window: opts?.window,
+  }).initialize();
+}
+
+// createHashRouter를 사용하는 코드
+createHashRouter(
+    [ /* routes */ ], 
+    { /* opts */ }, 
+    createHashHistory({ window: opts?.window }) 
+);
+
+// createBrowserRouter 리팩토링
+export function createMemoryRouter(
+    routes: RouteObject[],
+    opts?: MemoryRouterOpts,
+    history: History // history를 파라미터로 추가
+): DataRouter {
+  return createRouter({
+    basename: opts?.basename,
+    unstable_getContext: opts?.unstable_getContext,
+    future: opts?.future,
+    history, // 파라미터로 주입 받은 history 사용
+    hydrationData: opts?.hydrationData || parseHydrationData(),
+    routes,
+    hydrationRouteProperties,
+    mapRouteProperties,
+    dataStrategy: opts?.dataStrategy,
+    patchRoutesOnNavigation: opts?.patchRoutesOnNavigation,
+    window: opts?.window,
+  }).initialize();
+}
+
+// createMemoryRouter를 사용하는 코드
+createMemoryRouter(
+    [ /* routes */ ],
+    { /* opts */ },
+    createMemoryHistory({
+        initialEntries: opts?.initialEntries,
+        initialIndex: opts?.initialIndex,
+    }
+);
+```
+
+- 이제 createHashRouter와 createMemoryRouter가 99% 동일해졌음!!!
+- 문제는, opts 파라미터의 타입이 각각 DOMRouterOpts, MemoryRouterOpts로 다르다는 것임.
+- 그래서 DomRouterOpts와 MemoryRouterOpts를 살펴보니, DomRouterOpts에는 window 옵션이 있고, MemoryRouterOpts에는 window 옵션은 없고, initialEntries, initialIndex 옵션이 있음. 그래서 다음과 같이 코드를 수정하겠음.
+
+```js
+export function createHashRouter(
+    routes: RouteObject[],
+    opts?: DOMRouterOpts,
+    history: History,
+    initialEntries?: InitialEntry[], // initialEntries 파라미터 추가
+    initialIndex?: number, // initialIndex 파라미터 추가
+): DataRouter {
+  return createRouter({
+    basename: opts?.basename,
+    unstable_getContext: opts?.unstable_getContext,
+    future: opts?.future,
+    history, // 파라미터로 주입 받은 history 사용
+    hydrationData: opts?.hydrationData || parseHydrationData(),
+    routes,
+    mapRouteProperties,
+    hydrationRouteProperties,
+    dataStrategy: opts?.dataStrategy,
+    patchRoutesOnNavigation: opts?.patchRoutesOnNavigation,
+    window: opts?.window,
+  }).initialize();
+}
+
+export function createMemoryRouter(
+    routes: RouteObject[],
+    opts?: DomRouterOpts, // MemoryRouterOpts -> DOMRouterOpts로 변경
+    history: History,
+    initialEntries?: InitialEntry[], // initialEntries 파라미터 추가
+    initialIndex?: number, // initialIndex 파라미터 추가
+): DataRouter {
+  return createRouter({
+    basename: opts?.basename,
+    unstable_getContext: opts?.unstable_getContext,
+    future: opts?.future,
+    history,
+    hydrationData: opts?.hydrationData || parseHydrationData(),
+    routes,
+    hydrationRouteProperties,
+    mapRouteProperties,
+    dataStrategy: opts?.dataStrategy,
+    patchRoutesOnNavigation: opts?.patchRoutesOnNavigation,
+    window: opts?.window,
+  }).initialize();
+}
+```
+
+- 이제 createHashRouter와 createMemoryRouter가 완전히 동일해졌음!!!
+  - 완전히 동일해졌으므로, 이제 이 둘을 합칠 수 있게되었음!!
+- 두 함수를 하나로 합치기 위해서, 두 가지 다 가능함을 내포하는 이름으로, 함수 이름을 바꿔야함.
+- 이름을 바꾸려고 보니까, 사실 원래 함수 이름도 좀 잘못 지어졌음.
+  - create Router & initialize 라는 두 가지 일을 하고 있는데, 이름은 createXXXRouter라고만 되어있음.
+  - 내가 봤을 때는 이건 initializeRouter로 지었어야함.
+
+```js
+// 기존 createHashRouter 호출부
+initializeRouter([], {}, createHashHistory(window: opts?.window)); 
+
+// 기존 createMemoryRouter 호출부
+initializeRouter(
+    [], 
+    {},  
+    createMemoryHistory({ 
+      initialEntries: opts?.initialEntries, 
+      initialIndex: opts?.initialIndex,
+    }),
+    opts?.initialEntries,
+    opts?.initialIndex
+); 
+```
+
+- 이렇게 리팩토링하고 잘보니까, initializeRouter에서는 opts?.initialEntries, opts?.initialIndex를 직접 사용하지 않고, history 생성할 때만 사용하고 있음.
+- 그래서 이 두 파라미터도 빼버리겠음.
+
+```js
+export function initializeRouter(
+    routes: RouteObject[],
+    opts?: DomRouterOpts,
+    history: History,
+    // 불필요한 initialEntries, initialIndex 파라미터 제거
+): DataRouter {
+  return createRouter({
+    basename: opts?.basename,
+    unstable_getContext: opts?.unstable_getContext,
+    future: opts?.future,
+    history,
+    hydrationData: opts?.hydrationData || parseHydrationData(),
+    routes,
+    hydrationRouteProperties,
+    mapRouteProperties,
+    dataStrategy: opts?.dataStrategy,
+    patchRoutesOnNavigation: opts?.patchRoutesOnNavigation,
+    window: opts?.window,
+  }).initialize();
+}
+
+// 기존 createHashRouter 호출부
+initializeRouter(
+    [], 
+    {}, 
+    createHashHistory(window: opts?.window)
+);
+
+// 기존 createMemoryRouter 호출부
+initializeRouter(
+    [],
+    {},
+    createMemoryHistory({ 
+      initialEntries: opts?.initialEntries, 
+      initialIndex: opts?.initialIndex,
+    }),
+);
+```
+
 
 # 5. 인지하기 어려운 중복코드의 유형, 중복코드 제거를 도와주는 AI 등의 도구들
