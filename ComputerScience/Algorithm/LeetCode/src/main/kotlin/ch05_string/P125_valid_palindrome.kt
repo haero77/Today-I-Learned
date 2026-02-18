@@ -1,4 +1,5 @@
-class Solution {
+package ch05_string
+class Solution_ {
     fun isPalindrome(s: String): Boolean {
         var start = 0
         var end = s.length - 1

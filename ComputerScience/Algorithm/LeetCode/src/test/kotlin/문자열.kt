@@ -17,6 +17,7 @@ class 문자열 {
 
     // 문자열 마지막 인덱스
     println(str[str.length - 1]) // !
+    println(str[str.lastIndex])
     println(str.last())          // ! (더 간결한 방법)
   }
 
