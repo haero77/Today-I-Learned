@@ -15,6 +15,7 @@ class 문자열 {
     // 문자열 길이
     println(str.length) // 13
 
+
     // 문자열 마지막 인덱스
     println(str[str.length - 1]) // !
     println(str[str.lastIndex])
@@ -93,11 +94,13 @@ class 문자열 {
     println(c1.isLowerCase())    // false - 소문자
     println(c2.isDigit())        // true  - 숫자
     println(c1.isLetterOrDigit())// true  - 영문자 또는 숫자
+    println()
     println(c3.isWhitespace())   // true  - 공백
 
     // Java 방식 (동일한 기능, 예전 코드에서 자주 보임)
     println(Character.isLetter('A'))   // true
     println(Character.isDigit('5'))    // true
+    println(Character.isLetterOrDigit(' ')) // false
   }
 
   @Test
@@ -116,5 +119,14 @@ class 문자열 {
     val chars = "hello".toCharArray()   // [h, e, l, l, o]
     val back = chars.joinToString("")   // "hello"
     println(back)
+  }
+
+  @Test
+  fun asdf() {
+    val str = "Hello World! Hello!"
+    val splitted = str.split(" ", limit = 2)
+    println(splitted) // [Hello, World! Hello!]
+    println(splitted[0]) // Hello
+    println(splitted[1]) // World! Hello!
   }
 }
