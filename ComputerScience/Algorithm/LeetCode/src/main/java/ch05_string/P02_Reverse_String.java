@@ -1,6 +1,6 @@
 package ch05_string;
 
-public class P344_Reverse_String {
+public class P02_Reverse_String {
   public void reverseString(char[] s) {
     int start = 0;
     int end = s.length - 1;

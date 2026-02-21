@@ -2,7 +2,7 @@ package ch05_string;
 
 import java.util.ArrayList;
 
-public class P125_valid_palindrome_self {
+public class P01_valid_palindrome_self {
   public boolean isPalindrome(String s) {
     // 영숫자만 남긴 상태에서 앞뒤로 뒤집었을 때 똑같으면 팰린드롬
     var str = s.trim().toLowerCase(); // 공백 제거
