@@ -1,4 +1,6 @@
-class Solution {
+package ch05_string
+
+class P04_Most_Common_Word_self {
   fun mostCommonWord(paragraph: String, banned: Array<String>): String {
     // !?',;.
     val replaced = paragraph
@@ -53,8 +55,3 @@ class Solution {
     return maxCountWord
   }
 }
-
-//fun main() {
-////  Solution().mostCommonWord("a b.b", arrayOf())
-//  Solution().mostCommonWord("Bob. hIt, baLl", arrayOf("bob", "hit"))
-//}

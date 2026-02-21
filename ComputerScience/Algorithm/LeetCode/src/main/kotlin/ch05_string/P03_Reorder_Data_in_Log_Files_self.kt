@@ -1,6 +1,6 @@
 package ch05_string
 
-class P03_Reorder_Data_in_Log_Files_with_AI {
+class P03_Reorder_Data_in_Log_Files_self {
   fun reorderLogFiles(logs: Array<String>): Array<String> {
     // 숫자를 별도 바구니에 다음
     val digits = mutableListOf<String>()

@@ -66,4 +66,16 @@ class 맵 {
     assertThat(map1.containsKey("c")).isTrue()
     assertThat(map1["c"]).isEqualTo(1)
   }
+
+  @Test
+  fun map_순회() {
+    val map1 = mapOf(
+      "a" to 1,
+      "b" to 2
+    )
+
+    for ((key, value) in map1) {
+      println("$key: $value")
+    }
+  }
 }
