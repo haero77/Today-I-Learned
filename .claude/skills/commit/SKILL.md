@@ -37,12 +37,32 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 ## 워크플로우
 
-1. 인자로 전달된 파일/디렉토리 확인 (없으면 현재 staged/unstaged 변경사항 확인)
-2. 경로에서 카테고리 결정
-3. 변경 내용을 읽고 학습 주제 파악
-4. 한국어로 간결한 커밋 메시지 작성
-5. `git add <경로>` 실행
-6. Co-author 포함하여 커밋
+### 인자가 있는 경우
+
+1. 전달된 파일/디렉토리에서 카테고리 결정
+2. 변경 내용을 읽고 학습 주제 파악
+3. 한국어로 간결한 커밋 메시지 작성
+4. `git add <경로>` 후 Co-author 포함하여 바로 커밋 (승인 불필요)
+
+### 인자가 없는 경우
+
+1. `git status`로 staged 파일 목록 확인
+2. 파일들을 카테고리/주제별로 그룹화하여 커밋 단위 분석
+3. **커밋 분리 계획을 사용자에게 제시 후 승인 요청**
+
+   예시 제시 형식:
+   ```
+   아래와 같이 N개 커밋으로 분리하려고 합니다. 진행할까요?
+
+   1. [AI] Claude Code 구조 정리
+      - AI/claude-code/claude-code-structure.md
+
+   2. [커리어] 이력서 작성 가이드 정리
+      - Others/Careers/Resume/jemini-resume/01 강의소개.md
+      - Others/Careers/Resume/jemini-resume/02 하지 말아야할 것.md
+   ```
+
+4. 승인 시 순서대로 각 커밋 실행
 
 ## 커밋 명령어
 
