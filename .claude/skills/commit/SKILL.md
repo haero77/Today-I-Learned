@@ -42,7 +42,10 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 1. 전달된 파일/디렉토리에서 카테고리 결정
 2. 변경 내용을 읽고 학습 주제 파악
 3. 한국어로 간결한 커밋 메시지 작성
-4. `git add <경로>` 후 Co-author 포함하여 바로 커밋 (승인 불필요)
+4. `git add <경로>` 후 **pathspec 명시**하여 해당 파일만 커밋 (승인 불필요)
+
+> ⚠️ **중요**: 인자로 받은 파일만 커밋해야 한다. 다른 staged 파일이 함께 들어가면 안 된다.
+> `git commit -m "..."` 만 쓰면 staging 영역 전체가 커밋되므로, 반드시 `git commit -- <경로>` 형태로 pathspec을 끝에 명시한다.
 
 ### 인자가 없는 경우
 
@@ -66,6 +69,8 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 ## 커밋 명령어
 
+### 인자가 있는 경우 (pathspec으로 격리)
+
 ```bash
 git add <file-or-directory>
 git commit -m "$(cat <<'EOF'
@@ -73,8 +78,14 @@ git commit -m "$(cat <<'EOF'
 
 Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 EOF
-)"
+)" -- <file-or-directory>
 ```
+
+> 끝의 `-- <file-or-directory>` pathspec이 있어야 다른 staged 파일을 무시하고 지정 경로만 커밋된다.
+
+### 인자가 없는 경우 (그룹 단위 커밋)
+
+승인된 그룹별로 `git reset` → 해당 그룹만 `git add` → `git commit` 으로 분리 실행한다.
 
 ## 메시지 작성 원칙
 
