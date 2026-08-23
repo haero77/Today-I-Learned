@@ -1,5 +1,7 @@
-package io.refactoring.buckpal.application.port.in;
+package io.refactoring.buckpal.application.domain.service;
 
+import io.refactoring.buckpal.application.port.in.SendMoneyCommand;
+import io.refactoring.buckpal.application.port.in.SendMoneyUseCase;
 import io.refactoring.buckpal.application.port.out.LoadAccountPort;
 import io.refactoring.buckpal.application.port.out.UpdateAccountStatePort;
 
