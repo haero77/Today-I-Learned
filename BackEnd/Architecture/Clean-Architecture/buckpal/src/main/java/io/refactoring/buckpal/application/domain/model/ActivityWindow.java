@@ -1,4 +1,4 @@
-package io.refactoring.buckpal.application.doamin.model;
+package io.refactoring.buckpal.application.domain.model;
 
 
 import java.time.LocalDateTime;
@@ -11,17 +11,17 @@ import java.util.List;
 import lombok.NonNull;
 
 /**
- * A window of account activities.
+ * 계좌에서 최근에 발생한 거래 내역을 모아 둔 객체다.
  */
 public class ActivityWindow {
 
   /**
-   * The list of account activities within this window.
+   * 이 객체가 관리하는 거래 내역 목록이다.
    */
   private List<Activity> activities;
 
   /**
-   * The timestamp of the first activity within this window.
+   * 보관 중인 거래 내역 가운데 가장 오래된 거래의 시간을 반환한다.
    */
   public LocalDateTime getStartTimestamp() {
     return activities.stream()
@@ -31,9 +31,9 @@ public class ActivityWindow {
   }
 
   /**
-   * The timestamp of the last activity within this window.
+   * 보관 중인 거래 내역 가운데 가장 최근 거래의 시간을 반환한다.
    *
-   * @return
+   * @return 가장 최근 거래가 발생한 날짜와 시간
    */
   public LocalDateTime getEndTimestamp() {
     return activities.stream()
@@ -43,7 +43,8 @@ public class ActivityWindow {
   }
 
   /**
-   * Calculates the balance by summing up the values of all activities within this window.
+   * 주어진 계좌의 거래 내역을 모두 계산하여 잔액 변화량을 구한다.
+   * 해당 계좌로 들어온 금액은 더하고, 해당 계좌에서 나간 금액은 뺀다.
    */
   public Money calculateBalance(Account.AccountId accountId) {
     Money depositBalance = activities.stream()
